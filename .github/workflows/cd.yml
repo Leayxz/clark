@@ -28,25 +28,14 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
 
-          # APAGA REPO EXISTENTE / PESSIMA PRATICA E INEFICIENTE
-          rm -rf clark
-
-          # COPIA PROJETO E ENTRA NO REPO
-          git clone https://github.com/Leayxz/clark.git /home/ubuntu/clark
-          cd clark
-
-          # ATIVA VENV
-          python3 -m venv venv
+          cd /home/ubuntu/clark
+          git pull
           source venv/bin/activate
           pip install -r deps.txt
-          pip install gunicorn
 
-          # Django commands
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput
 
-          # Reiniciar serviço
           sudo systemctl restart gunicorn
           sudo systemctl restart celery
-
         EOF

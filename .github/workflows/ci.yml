@@ -9,6 +9,9 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: "ci"
+      DJANGO_DUBG: "0"
 
     steps:
       - name: Checkout Código

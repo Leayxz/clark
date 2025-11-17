@@ -1,0 +1,29 @@
+name: CI - Testes e Qualidade
+
+on:
+  push:
+    branches: [ "*" ]   # roda para qualquer push
+  pull_request:
+    branches: [ "main" ]  # roda em PRs para main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+
+      - name: Instalar Deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r deps.txt
+
+      - name: Rodar testes
+        run: |
+          pytest

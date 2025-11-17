@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
-      DEBUG: "DEBUG"
+      DEBUG: "True"
       CELERY_BROKER_URL: "CELERY_BROKER_URL"
 
 

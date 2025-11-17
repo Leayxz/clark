@@ -1,6 +1,5 @@
 name: CD para EC2
 
-# Rodar sempre que houver push na branch main
 on:
   push:
     branches:

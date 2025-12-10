@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'telegram.css' %}">
+
+      <div class="container_telegram">
+            <form class="form_telegram" action="{% url 'salvar_telegram' %}" method="POST"> {% csrf_token %}
+                  
+                  <label> Token Telegram: <input id="TOKEN_TELEGRAM" name="TOKEN_TELEGRAM" placeholder="TOKEN TELEGRAM" required> </label>
+                  <label> ID Telegram: <input id="ID_TELEGRAM" name="ID_TELEGRAM" placeholder="ID TELEGRAM" required> </label>
+                  {% if erro %} <p> {{ erro }} </p> {% endif %}
+
+                  <button class="botao" type="submit"> Salvar Telegram </button>
+                  <a class="botao" href="{% url 'pagina_inicial' %}"> Página Inicial </a>
+            </form>
+      </div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title> {% block title %} Página Inicial {% endblock %} </title>
+      <link rel = "stylesheet" href = "{% static 'layout.css' %}">
+</head>
+
+<body>
+
+      <main>
+            {% block main %}
+            <!-- CONTEUDO DAS PAGINAS -->
+            {% endblock %}
+            <p class="footer"> &copy; 2025 Clark 丰 </p>
+
+      </main>
+
+
+</body>
+</html>

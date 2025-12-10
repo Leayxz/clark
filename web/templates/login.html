@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'layout.css' %}">
+
+      <div class="lado_esquerdo">
+            <!-- IMAGEM CLARK -->
+            <img src="{% static 'PERPM.png' %}" alt="img" class="img">
+            <h2 class="perp" > PERP USDⓈ-M</h2>
+      </div>
+
+      <div class="lado_direito">
+            <h2> Clark 丰 </h2>
+            <p class="p"> Log in </p>
+
+            <form class="form" action="{% url 'login_user' %}" method="POST"> {% csrf_token %}
+
+                  <label> Email: <input id="email" type="email" name="email" placeholder="Digite seu email" required> </label>
+                  <label> Senha: <input id="senha" type="password" name="senha" placeholder="Digite sua senha" required> </label>
+                  {% if erro %} <p class="erro"> {{ erro }}</p> {% endif %}
+
+                  <button type="submit"> Log in </button>
+                  <a href="{% url 'cadastro_user' %}"> Sign Up </a>
+            </form>      
+      </div>
+{% endblock %}

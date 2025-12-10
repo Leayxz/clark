@@ -1,0 +1,205 @@
+html, body {
+overflow: hidden;
+}
+
+.lado_esquerdo_pagina_inicial {
+width: 100%;
+height: 100vh;
+margin-top: 200px;
+font-size: 40px;
+}
+
+.lado_direito_pagina_inicial {
+width: 100%;
+height: 100%;
+margin-top: 190px;
+}
+
+.status {
+color: white;
+text-align: center;
+}
+
+.tutorial {
+display: flex;
+justify-content: center;
+color: white;
+font-size: 18px;
+margin-top: 40px;
+}
+
+.botao {
+width: 700px;
+font-size: 40px;
+}
+
+.botao_desabilitado {
+width: 700px;
+font-size: 50px;
+pointer-events: none;
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+/* ####################### MODAL ####################### */
+
+.modal_invoice {
+background: rgba(0, 0, 0, 0.9);
+position: fixed;
+display: none; /* começa invisível */
+justify-content: center;
+align-items: center;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 999;
+}
+
+.conteudo_invoice {
+background: rgb(0, 20, 0);
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 20px;
+width: 400px;
+box-shadow: 0px 0px 20px rgba(0, 100, 0, 1);border-radius: 10px;
+color: white;
+}
+
+#qrcode_img {
+width: 200px;   /* ajuste o tamanho conforme quiser */
+height: 200px;
+margin-top: 10px;
+border-radius: 8px;
+}
+
+/* ####################### TEXTO MODAL ####################### */
+
+.titulo {
+margin-bottom: 6px;
+font-size: 28px;
+text-align: center;
+}
+
+.texto_explicacao {
+text-align: center;
+font-size: 15px;
+margin-bottom: 0px;
+}
+
+.texto_lightning {
+text-align: center;
+font-style: italic;
+opacity: 0.6;
+margin-top: 5px;
+}
+
+.id_invoice {
+font-size: 15px;
+color: white;
+margin-top: -8px;
+word-break: break-all;
+}
+
+.payment_hash {
+overflow-wrap: anywhere;
+font-size: 12px;
+color: white;
+margin-top: -3px;
+}
+
+.texto_compra_venda {
+text-align: left;
+font-size: 18px;
+margin-top: -2px;
+}
+
+.expiracao {
+margin-top: -10px;
+font-size: 14px;
+opacity: 0.7;
+}
+
+/* ####################### BOTÃO ####################### */
+
+#btn_pagamento {
+background-color: rgb(0,30,0);
+color: white;
+border-radius: 8px;
+font-size: 30px;
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+margin-top: 8px;
+border: none;
+font-weight: bold;
+cursor: pointer;
+padding: 10px 50px;
+transition: all 0.3s ease;
+}
+
+#btn_pagamento:hover {
+background-color: rgb(0,50,0);
+box-shadow: 0px 0px 20px rgba(0,50,0, 0.8);
+}
+
+
+@media screen and (max-width: 600px) {
+
+.lado_esquerdo_pagina_inicial, .lado_direito_pagina_inicial {
+display: flex
+;
+flex-direction: column;
+align-items: center;
+width: 100%;
+height: 100vh;
+}
+
+.status_container {
+margin-top: -31px;
+width: 100%;
+}
+
+.botao_container {
+margin-top: -123px;
+height: 50vh;
+width: 90%;
+}
+
+.botao, .botao_desabilitado {
+max-width: 100%;
+font-size: 25px;
+}
+
+.status {
+margin-bottom: 5px;
+font-size: 23px;
+}
+
+.tutorial {
+margin-top: 11px;
+font-size: 11px;
+}
+
+.conteudo_invoice {
+box-shadow: 0px 0px 36px rgba(0, 125, 0, 1);
+width: 100%;
+padding: 15px;
+}
+
+.payment_hash {
+overflow-wrap: anywhere;
+font-size: 12px;
+color: white;
+margin-top: -3px;
+}
+
+#qrcode_img {
+width: 150px;
+height: 150px;
+}
+
+#btn_pagamento {
+font-size: 1.5rem;
+padding: 8px 20px;
+}
+}

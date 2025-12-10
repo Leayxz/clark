@@ -1,0 +1,58 @@
+services:
+  web:
+    image: ghcr.io/leayxz/clark:latest
+    container_name: clark_web
+    command: gunicorn _projeto.wsgi:application --bind 0.0.0.0:8000
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
+    volumes:
+    - static_data:/app/staticfiles
+
+  nginx:
+    image: nginx:alpine
+    container_name: clark_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    volumes:
+      - static_data:/staticfiles
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/certs:ro
+
+  db:
+    image: postgres:15
+    container_name: clark_db_postgresql
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: clark_redis
+    env_file:
+      - .env.docker
+
+  celery:
+    image: ghcr.io/leayxz/clark:latest
+    container_name: clark_celery
+    command: celery -A _projeto worker -l info
+    env_file:
+      - .env.docker
+    depends_on:
+      - redis
+
+volumes:
+  postgres_data:
+  static_data:
+
+# SEMPRE QUE ALGO FOR EDITADO, PRECISA SER REPASSADO MANUALMENTE PARA EC2

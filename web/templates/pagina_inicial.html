@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'pagina_inicial.css' %}">
+
+      <div class="lado_esquerdo_pagina_inicial">
+            <div class="status_container">
+                  <div class="status"> 💵 Última Cotação: ${{ preco_atual }} </div>
+                  {% if id_task %} <div class="status"> 🟢 Sessão Rodando </div> {% else %} <div class = "status"> 🔴 Sessão Parada </div> {% endif %}
+                  {% if telegram %} <div class = "status"> 📱 Telegram Salvo e Ativo </div> {% else %} <div class = "status"> 📵 Telegram Não Salvo </div> {% endif %}
+                  {% if pagamento_confirmado %} <div class = "status"> 📅 Seu Plano Está Ativo Até {{ data_expiracao|date:"d/m/y "}} </div> {% else %} <div class = "status"> ❌ Seu Plano Não Está Ativo </div>  {% endif %}
+                  <p class="tutorial"> Tutorial: https://youtu.be/B0hWxMv_b0E </p>
+            </div>
+      </div>
+
+      <div class="lado_direito_pagina_inicial">
+            <div class="botao_container">
+                  {% if pagamento_confirmado %} <a class="botao" href = "{% url 'config_automacao' %}"> Configurar Sessão </a> {% else %} <a class="botao_desabilitado"> Configurar Sessão </a> {% endif %}
+                  {% if not pagamento_confirmado %} <a id="gerar_invoice" class="botao" onclick="this.disabled=true; this.textContent='Processando...'"> Gerar Invoice </a> {% endif %}     
+                  <a class="botao" href="{% url 'salvar_telegram' %}"> Telegram </a>
+                  <a class="botao" href = "{% url 'logout' %}"> Sair </a>
+            </div>
+      </div>
+
+
+      <!-- ------------------- INVOICE ------------------- -->
+
+      <div class="modal_invoice" id="modal_invoice">
+            <div class="conteudo_invoice">
+                  <h3 class="titulo">Confirme Seu Pagamento</h3>
+                  <p class="texto_explicacao">
+                        Se o pagamento foi feito e não foi confirmado, <br>
+                        aguarde alguns minutos e atualize a página. Se mesmo <br>
+                        assim não for, entre em contato enviando comprovante, <br>
+                        email, e o id abaixo.
+                  </p>
+
+                  <img id="qrcode_img" src="" alt="QR Code">
+                  <p class="texto_lightning">⚡ Lightning: R$25</p>
+                  <p id="id_invoice" class="id_invoice"></p>
+                  <p id="payment_hash" class="payment_hash"></p>      
+                  <p class="texto_compra_venda">✅ Compra Automática <br> ✅ Venda Automática</p>
+                  <p class="expiracao">Expira em 2 minutos</p>
+
+                  <button id="btn_pagamento" data-url="{% url 'pagina_inicial' %}">Já Paguei</button>
+            </div>
+      </div>
+
+      <script> const btnInvoice = document.getElementById("gerar_invoice");
+      if (btnInvoice) { btnInvoice.addEventListener("click", async () => {
+
+            let response = await fetch("{% url 'pagina_inicial' %}", {method: "POST", headers: {"X-CSRFToken": "{{ csrf_token }}"}})
+            let data = await response.json();
+            if (data.erro) { alert("ERRO AO GERAR INVOICE"); return window.location.href = "{% url 'pagina_inicial' %}" }
+            let modal = document.getElementById("modal_invoice");
+            let qr_img = document.getElementById("qrcode_img")
+
+            // MONTA MODAL
+            qr_img.src = "data:image/png;base64," + data.qrcode;
+            modal.style.display = "flex"
+
+            // MONTA ID_INVOICE E PAYMENTHASH
+            document.getElementById('id_invoice').textContent = "ID: " + data.id_invoice
+            document.getElementById('payment_hash').textContent = data.paymenthash
+
+            // REDIRECIONA PÓS 2 MINUTOS
+            setTimeout(() => {window.location.href = "{% url 'pagina_inicial' %}"}, 2 * 60 * 1000)})}
+     </script>
+
+     <script> document.getElementById("btn_pagamento").addEventListener("click", () => {
+            window.location.href = document.getElementById("btn_pagamento").dataset.url});
+     </script>
+
+{% endblock %}

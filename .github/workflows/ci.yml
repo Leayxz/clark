@@ -1,0 +1,40 @@
+name: CI - Testes e Qualidade
+
+on:
+  push:
+    branches: [ "*" ]   # roda para qualquer push
+  pull_request:
+    branches: [ "main" ]  # roda em PRs para main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
+      DEBUG: "True"
+      CELERY_BROKER_URL: "CELERY_BROKER_URL"
+      CELERY_RESULT_BACKEND: "CELERY_RESULT_BACKEND"
+      REDIS_URL: "REDIS_URL"
+      DB_NAME: "DB_NAME"
+      DB_USER: "DB_USER"
+      DB_PASSWORD: "DB_PASSWORD"
+      DB_HOST: "DB_HOST"
+      DB_PORT: "DB_PORT"
+
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+
+      - name: Instalar Deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r deps.txt
+
+      - name: Rodar testes
+        run: |
+          pytest

@@ -3,38 +3,37 @@ from infra.index import buscar_saldo, buscar_ordens, abrir_ordem, fechar_ordem, 
 
 @patch("infra.index.requests.get")
 def test_buscar_saldo(mock_get):
-      mock_get.return_value.json.return_value = {"msg": "", "data": [{"availableMargin": "1234.56"}]}
+      mock_get.return_value.json.return_value = {"msg": None, "data": [{"availableMargin": "1234.56"}]}
       result = buscar_saldo("fake_api", "fake_secret")
 
-      assert type(result) == float, "Resultado Deve Ser Float"
-      assert result == 1234.56, "Resultado Inválido"
+      assert type(result) == dict, "Resultado Deve Ser Dict"
+      assert result['saldo'] == 1234.56, "Resultado Inválido"
 
 @patch("infra.index.requests.get")
 def test_buscar_ordens(mock_get):
 
-      mock_get.return_value.json.return_value = {'data': [{'ordem1': 'ordem1'}]}
+      mock_get.return_value.json.return_value = {'msg': None, 'data': [{'ordem1': 'ordem1'}]}
       resultado = buscar_ordens('FAKE_API', 'FAKE_SECRET')
 
-      assert type(resultado) == list, "Resultado Deve Ser Uma Lista"
-      assert resultado[0], "Resultado Deve Conter Um Elemento"
+      assert type(resultado) == dict, "Resultado Deve Ser Uma Dict"
+      assert resultado['ordens_abertas'], "Resultado Deve Conter Um Elemento"
 
 @patch("infra.index.requests.post")
 def test_abrir_ordem(mock_post):
-      mock_post.return_value.json.return_value = {'msg': '', 'data': {'order': {'avgPrice': 12345.67}}}
+      mock_post.return_value.json.return_value = {'msg': None, 'data': {'order': {'avgPrice': 12345.67}}}
       resultado = abrir_ordem(100, 120_000, 'FAKE', 'FAKE')
 
-      assert type(resultado) == float, "Resultado Não Float"
-      assert resultado == 12345.67, "Resultado Inválido"
+      assert type(resultado) == dict, "Resultado Não Dict"
+      assert resultado['novo_preco_referencia'] == 12345.67, "Resultado Inválido"
 
 @patch("infra.index.requests.post")
 def test_fechar_ordem(mock_post):
 
-      mock_post.return_value.json.return_value = {'msg': '', 'data': {'positionId': '123456789'}}
+      mock_post.return_value.json.return_value = {'msg': None, 'data': {'positionId': '123456789'}}
       resultado = fechar_ordem('123456789', 'FAKE', 'FAKE')
 
-      assert type(resultado) == str, "Resultado Não É Uma String"
-      assert resultado.isdigit(), "Resultado Não É Apenas Numérico"
-      assert resultado == '123456789'
+      assert type(resultado) == dict, "Resultado Não É Uma String"
+      assert resultado['positionId'] == '123456789'
 
 @patch("infra.index.telebot.TeleBot")
 @patch("infra.index.cache.get")

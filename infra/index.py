@@ -38,10 +38,10 @@ def abrir_ordem(quantity_usdt, preco_atual, API_KEY, SECRET_KEY) -> dict:
       headers = {"X-BX-APIKEY": API_KEY}
 
       response = requests.post(url, headers = headers).json()
-      if response['msg']: return {'novo_preco_referencia': '', 'msg': response['msg']}
+      if response['msg']: return {'novo_preco_referencia': None, 'msg': response['msg']}
 
       novo_preco_referencia = float(response['data']['order']['avgPrice'])
-      return {'novo_preco_referencia': novo_preco_referencia, 'msg': ''}
+      return {'novo_preco_referencia': novo_preco_referencia, 'msg': None}
 
 def fechar_ordem(positionId, API_KEY, SECRET_KEY) -> dict:
 
@@ -51,10 +51,10 @@ def fechar_ordem(positionId, API_KEY, SECRET_KEY) -> dict:
       headers = {"X-BX-APIKEY": API_KEY}
 
       response = requests.post(url, headers = headers).json()
-      if response['msg']: return {'positionId': '', 'msg': response['msg']}
+      if response['msg']: return {'positionId': None, 'msg': response['msg']}
 
       positionId = response['data']['positionId']
-      return {'positionId': positionId, 'msg': ''}
+      return {'positionId': positionId, 'msg': None}
 
 def injetar_margem(positionId, quantidade_injetada, API_KEY, SECRET_KEY) -> dict:
 

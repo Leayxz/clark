@@ -13,13 +13,14 @@ CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 DATABASES = { 'default': { 'ENGINE':'django.db.backends.postgresql', 'NAME': config('DB_NAME'), 'USER': config('DB_USER'), 'PASSWORD': config('DB_PASSWORD'), 'HOST': config('DB_HOST'), 'PORT': config('DB_PORT')} }
 CACHES = {'default': { 'BACKEND': 'django_redis.cache.RedisCache', 'LOCATION': config('REDIS_URL'), 'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'} }}
 
+LOGIN_URL = '/'
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 ALLOWED_HOSTS = ['localhost', 'clark.lat', 'www.clark.lat']
 CSRF_TRUSTED_ORIGINS = ['https://localhost', 'https://www.clark.lat', 'https://clark.lat']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False # MUDAR EM PROD
+SESSION_COOKIE_SECURE = False # MUDAR EM PROD
 
 #########################################  #########################################  #########################################
 

@@ -1,5 +1,6 @@
 .env
 .env.docker
 venv
+logs
 **/__pycache__/
 *.sqlite3

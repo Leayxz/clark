@@ -9,6 +9,7 @@
 - **Redis** – Cacheando dados de uso frequente e broker para o Celery;
 - **Celery** – Tarefas assíncronas contínuas e escaláveis;
 - **WebSockets** – Em thread dedicada para atualização de preço em tempo real;
+- **Locust** - Teste de carga simulando usuários concorrentes.
 - **Nginx + Gunicorn** – Deploy seguro e performático;
 - **Docker + GHCR** – Build e distribuição de imagens para EC2;
 - **CI/CD** - Pipelines CI/CD com testes e deploy automático via GitHub Actions;
@@ -16,6 +17,7 @@
 
 ### 🧠 APRENDIZADOS
 - Desenvolvi meu melhor algoritmo até o momento, abrindo compras sem repetir faixas de preço;
+- Prints são pontuais para debug apenas;
 - Arquitetura hexagonal, DDD e princípios SOLID, modelando aplicação, domínio, infra e web;
 - Criação de pipelines completos de CI/CD;
 - Gerenciamento de estado distribuído entre API, tarefas assíncronas e webSocket;
@@ -25,6 +27,7 @@
 - Escalabilidade com Celery + Redis;
 - Deploy contínuo em Docker, incluindo Gunicorn e Nginx;
 - Testes unitários com mocking de integrações externas;
+- Testes de carga analisando comportamento, identificando gargalos e falhas sob concorrência;
 
 ### 📌 FUNCIONALIDADES
 - Cadastro e login de usuários;

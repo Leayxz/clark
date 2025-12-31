@@ -5,11 +5,15 @@ from decouple import config
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from infra.models import InvoicesPagos
+from infra.index import log_sys, log_user
 
 options = {"key": config("LNM_API_KEY"), "secret": config("LNM_SECRET_KEY"), "passphrase": config("LNM_PASSPHRASE"), "network": 'mainnet'}
 lnm = rest.LNMarketsRest(**options)
+logger_sys = log_sys()
 
 def gerar_invoice(username) -> dict | None :
+
+      logger_user = log_user(username)
 
       # VALOR ATUAL DA AUTOMACAO EM SATS
       preco_automacao = 1
@@ -18,12 +22,11 @@ def gerar_invoice(username) -> dict | None :
 
       # GERA INTENCAO DE COMPRA
       resposta = lnm.new_deposit({"amount": preco_em_sats})
-      if 'depositId' not in resposta: print(f"❌ Resposta Inválida LnMarkets: {resposta}"); return None
-
+      if 'message' in resposta: logger_sys.error(f"❌ Resposta Inválida Invoice LnMarkets: {resposta}"); return None
       intencao_compra = json.loads(resposta)
 
       # ARMAZENA EMAIL + ID INVOICE EM CACHE POR 30 DIAS
-      invoice = {'username': username, 'id_invoice': intencao_compra['depositId'], 'timestamp': time.time() * 1000, 'status': False }
+      invoice = {'username': username, 'id_invoice': intencao_compra['depositId'], 'timestamp': time.time() * 1000, 'status': False}
       cache.set(f"INVOICE_{username}", invoice)
 
       # GERA QR CODE BASE64
@@ -32,12 +35,13 @@ def gerar_invoice(username) -> dict | None :
       qrc.save(buffer, "PNG")
       qrc_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
 
-      qr_code = {"qrcode": qrc_base64, 'id_invoice': intencao_compra['depositId'], 'paymenthash': intencao_compra["paymentRequest"]}
-      return qr_code
+      logger_user.info(f"QRCode Gerado.")
+      return {"qrcode": qrc_base64, 'id_invoice': intencao_compra['depositId'], 'paymenthash': intencao_compra["paymentRequest"]}
 
-def validar_pagamento(username) -> bool:
+def validar_pagamento(user) -> bool:
 
-      user = User.objects.get(username = username)
+      username = user.username
+      logger_user = log_user(username)
 
       # BUSCA INVOICE EM CACHE E SE NAO EXISTIR TENTA NO DB
       ultimo_invoice = cache.get(f"INVOICE_{username}")
@@ -48,7 +52,6 @@ def validar_pagamento(username) -> bool:
                   cache.set(f"INVOICE_{username}", invoice_cache, timeout = 30*24*60*60)
                   ultimo_invoice = invoice_cache
             except:
-                  print(f"⚠️ Usuário Sem Invoice Em Cache/DB {ultimo_invoice}")
                   return False
 
       # DATA ATUAL E EXPIRACAO DO INVOICE
@@ -57,11 +60,11 @@ def validar_pagamento(username) -> bool:
 
       # VERIFICA SE EXISTE PAGAMENTO VALIDO E NAO EXPIRADO
       if ultimo_invoice['status'] == True:
-          if timestamp_atual < timestamp_expiracao: print(f"✅ User Com Invoice Válido"); return True
+            if timestamp_atual < timestamp_expiracao: return True
 
       # BUSCA INVOICE NA LNMARKETS
       resposta = lnm.get_deposit({'id': ultimo_invoice['id_invoice']})
-      if 'success' not in resposta: print(f"❌ Resposta Inválida Validação Invoice: {resposta}"); return False
+      if 'success' not in resposta: logger_sys.error(f"Resposta Inválida Validação Invoice | {username} | {resposta}"); return False
       invoice = json.loads(resposta)
 
       # VERIFICA SE O DEPOSITO E PAGO E NAO EXPIRADO
@@ -74,10 +77,9 @@ def validar_pagamento(username) -> bool:
 
                   # ARMAZENA USER E INVOICE PAGO NO DB
                   InvoicesPagos.objects.create(user = user, id_invoice = invoice['id'], timestamp = invoice['ts'], status = invoice['success'])
-                  print(f"✅ INVOICE SALVO NO DB")
+                  logger_user.info(f"Invoice Buscado, Validado e Salvo | {invoice['id']}")
                   return True
 
       # DELETA INVOICE NAO PAGO OU EXPIRADO
-      print(f"⚠️ User Sem Invoice Pago")
       cache.delete(f"INVOICE_{username}")
       return False

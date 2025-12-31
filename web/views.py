@@ -7,8 +7,13 @@ from django.http import JsonResponse
 from aplicacao.task import rodar_automacao
 from django.core.cache import cache
 from infra.pagamentos import validar_pagamento, gerar_invoice
+from infra.index import log_user, log_sys
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def login_user(request):
+
+      logger_sys = log_sys()
 
       if request.method == "GET":
             return render(request, "login.html")
@@ -18,56 +23,66 @@ def login_user(request):
             senha = request.POST.get("senha")
 
             # VERIFICA EMAIL E SENHA
-            usuario = authenticate(request, username = email, password = senha)
-            if usuario == None: return render(request, "login.html", {"erro": "Email ou Senha Inválidos."})
+            try:
+                  usuario = authenticate(request, username = email, password = senha)
+                  if usuario == None: return render(request, "login.html", {"erro": "Email ou Senha Inválidos."})
+            except Exception as erro:
+                  logger_sys.error(f"⚠️ Erro ao logar usuário: {erro}")
+                  return render(request, "login.html", {'erro': '⚠️ Erro interno. Tente novamente.'})
 
             login(request, usuario)
-            print(f"✅ Usuário Autenticado e Logado: {email}")
-            return redirect("/pagina_inicial")
+            print(f"✅ USUÁRIO LOGADO E AUTENTICADO {email}")
+            logger_user = log_user(request.user.username)
+            logger_user.info(f"Usuário Autenticado/Logado")
+            return redirect("/pagina_inicial/")
 
       return redirect("/login_user/")
 
 def cadastro_user(request):
 
+      logger_sys = log_sys() 
+
       if request.method == "GET":
-
-            print("==== DEBUG CSRF ====")
-            print("HTTP_ORIGIN:", request.META.get("HTTP_ORIGIN"))
-            print("HTTP_HOST:", request.META.get("HTTP_HOST"))
-            print("HOST header:", request.get_host())
-            print("X_FORWARDED_PROTO:", request.META.get("HTTP_X_FORWARDED_PROTO"))
-            print("SCHEME:", request.scheme)
-
             return render(request, "cadastro.html")
-      
+
       if request.method == "POST":
             email = request.POST.get('email')
             senha = request.POST.get('senha')
+            if not email or not senha: return render(request, "cadastro.html", {"erro": "Email e Senha São Obrigatórios."})
 
-            # VERIFICA SE E VAZIO OU DUPLICADO
-            if email == None or senha == None: return render(request, "cadastro.html", {"erro": "Username, Email e Senha São Obrigatórios."})
-            if User.objects.filter(username = email).exists(): return render(request, "cadastro.html", {"erro": "Email Já Cadastrado."})
+            try:
+                  User.objects.create_user(username = email, password = senha)
+            except Exception as erro:
+                  logger_sys.error(f"⚠️ Erro ao cadastrar usuário: {erro}")
+                  return render(request, "cadastro.html", {"erro": "⚠️ Erro interno. Tente novamente."})
 
-            User.objects.create_user(username = email, password = senha)
-            print(f"🔑 Novo Usuário Cadastrado: {email}")
+            logger_sys.info(f"✨ Novo Usuário Cadastrado")
             return redirect("login_user")
 
       return redirect("/cadastro_user/")
 
-@login_required
+@login_required()
 def logout_user(request):
+
+      email = request.user.username
+      logger_user = log_user(email)
       logout(request)
+      logger_user.info(f"🔒 Log Out.")
+
       return redirect('login_user')
 
 @login_required()
+@csrf_exempt
 def pagina_inicial(request):
 
       user = request.user
+      #logger_sys = log_sys()
+      logger_user = log_user(user.username)
 
       if request.method == 'GET':
 
             # VERIFICA PAGAMENTO
-            pagamento_confirmado = validar_pagamento(user.username)
+            pagamento_confirmado = validar_pagamento(user)
 
             # BUSCA DATA EXPIRACAO PARA O HTML
             data_expiracao = None
@@ -75,9 +90,9 @@ def pagina_inicial(request):
                   invoice = cache.get(f"INVOICE_{user.username}")
                   data_expiracao_timestamp = (invoice['timestamp'] / 1000) + 30 * 24 * 60 * 60
                   data_expiracao = datetime.datetime.fromtimestamp(data_expiracao_timestamp)
-       
+      
             # TELEGRAM SALVO PARA O HTML
-            telegram = cache.get(f"USER_TELEGRAM_{request.user.username}")
+            telegram = cache.get(f"USER_TELEGRAM_{user.username}")
 
             # BUSCA CONFIGS E SETA SE NAO HOUVER
             config = cache.get(f"CONFIGS_USER_{user.username}")
@@ -87,25 +102,43 @@ def pagina_inicial(request):
 
             # PAGAMENTO, TASK, PRECO ATUAL E TELEGRAM PRA PAGINA INICIAL
             preco_atual = cache.get('preco_atual')
+
             return render(request, "pagina_inicial.html", { 'preco_atual': preco_atual, 'id_task': config['id_task'], 'pagamento_confirmado': pagamento_confirmado, 'data_expiracao': data_expiracao, 'telegram': telegram })
 
-      if request.method == 'POST':
+      if request.method == 'POST': # FAZER UMA ROTA ESPECIFICA PARA GERAR QRCODE FORA DA PAG INICIAL?
             qr_code = gerar_invoice(user.username)
-            if qr_code: return JsonResponse(qr_code)
-            return JsonResponse({'erro': "Erro Ao Gerar Invoice"})
+            if qr_code: logger_user.info(f"✅ QRCode Gerado."); return JsonResponse(qr_code)
+            return JsonResponse({'erro': "Erro ao gerar invoice."})
 
       return redirect("/pagina_inicial/")
 
 @login_required
 def config_automacao(request):
 
-      user = request.user
-      config = cache.get(f"CONFIGS_USER_{user.username}")
+      username = request.user.username
+      logger_user = log_user(username)
+      logger_sys = log_sys()
+      config = cache.get(f"CONFIGS_USER_{username}")
+      
+      if config is None:
+            config = {
+            "id_task": False,
+            "quantity1": 0,
+            "quantity2": 0,
+            "quantity3": 0,
+            "quantity4": 0,
+            "preco_referencia": 0,
+            "comprar_abaixo": 0,
+            "limite_margem": 0,
+            "percentual_lucro": 0.0,
+            "variacao_compra": 0,
+            "percentual_seguranca_liquidacao": 0.0,
+            }
 
       if request.method == "GET":
 
             # PROTECAO ROTA PARA USUARIOS SEM PAGAMENTO
-            pagamento_confirmado = validar_pagamento(user.username)
+            pagamento_confirmado = validar_pagamento(request.user)
             if pagamento_confirmado:
                   return render(request, "config_automacao.html", {"config": config, 'id_task': config['id_task']})
 
@@ -113,7 +146,7 @@ def config_automacao(request):
 
       if request.method == "POST":
 
-            # SALVA AS CONFIGURAÇOES EM CACHE OU REDIRECIONA CASO O USER DIGITE ERRADO
+            # SALVA AS CONFIGURAÇOES EM CACHE
             try:
                   config['quantity1'] = int(request.POST.get("quantity1"))
                   config['quantity2'] = int(request.POST.get("quantity2"))
@@ -129,10 +162,12 @@ def config_automacao(request):
                   config['limite_margem'] = int(request.POST.get("limite_margem"))
                   config['percentual_seguranca_liquidacao'] = float(request.POST.get("percentual_seguranca_liquidacao"))
 
-                  cache.set(f"CONFIGS_USER_{user.username}", config, timeout = 30*24*60*60)
+                  cache.set(f"CONFIGS_USER_{username}", config, timeout = 30*24*60*60)
+                  logger_user.info(f"✅ Novas configurações salvas para automação.")
                   return redirect("/config_automacao/")
 
-            except:
+            except Exception as error:
+                  logger_sys.error(f"❌ Erro ao salvar novas configurações:", exc_info = True)
                   return redirect("/config_automacao/")
 
       return redirect("/pagina_inicial/")
@@ -140,32 +175,37 @@ def config_automacao(request):
 @login_required
 def ligar_desligar_automacao(request):
 
+      username = request.user.username
+      logger_user = log_user(username)
+
       if request.method == "POST":
 
             # CONFIG AUTOMACAO E DADOS API    
-            user = request.user
-            config = cache.get(f"CONFIGS_USER_{user.username}")
+            config = cache.get(f"CONFIGS_USER_{username}")
             dados_api = {"API_KEY": request.POST.get("API_KEY"), "SECRET_KEY": request.POST.get("SECRET_KEY")}
 
-            # SE EXISTIR TASK > DESLIGAR REMOVENDO API
+            # SE EXISTIR TASK > DESLIGA REMOVENDO API
             if config['id_task']:
                   config['id_task'] = False
-                  cache.set(f"CONFIGS_USER_{user.username}", config, timeout = 30 * 24 * 60 * 60)
-                  cache.delete(f"{user.username}_CACHE_API:")
-                  print(f"✅ TASK ENCERRADA E API APAGADA")
+                  cache.set(f"CONFIGS_USER_{username}", config, timeout = 30*24*60*60)
+                  cache.delete(f"{username}_CACHE_API:")
+                  logger_user.info(f"✅ Task Encerrada e API Apagada.")
 
             # SE NAO EXISTIR TASK > LIGAR
             else:
                   config['id_task'] = True
-                  cache.set(f"CONFIGS_USER_{user.username}", config, timeout = 30 * 24 * 60 * 60)
-                  cache.set(f"{user.username}_CACHE_API:", dados_api, timeout = 30 * 24 * 60 * 60)
-                  rodar_automacao.delay(user.username)
-                  print(f"✅ TASK SALVA E ENVIADA")
+                  cache.set(f"CONFIGS_USER_{username}", config, timeout = 30 * 24 * 60 * 60)
+                  cache.set(f"{username}_CACHE_API:", dados_api, timeout = 30 * 24 * 60 * 60)
+                  rodar_automacao.delay(username)
+                  logger_user.info(f"✅ Task Salva e Enviada")
 
       return redirect("/config_automacao")
 
 @login_required
 def salvar_telegram(request):
+
+      username = request.user.username
+      logger_user = log_user(username)
 
       if request.method == 'GET':
             return render(request, "telegram.html")
@@ -176,8 +216,9 @@ def salvar_telegram(request):
             ID_TELEGRAM = request.POST.get('ID_TELEGRAM')
 
             user_telegram = {'TOKEN_TELEGRAM': TOKEN_TELEGRAM, 'ID_TELEGRAM': ID_TELEGRAM }
-            cache.set(f"USER_TELEGRAM_{request.user.username}", user_telegram, timeout = 30 * 24 * 60 * 60)
+            cache.set(f"USER_TELEGRAM_{username}", user_telegram, timeout = 30 * 24 * 60 * 60)
 
+            logger_user.info(f"✅ Telegram Salvo.")
             return redirect('pagina_inicial')
 
       return redirect("pagina_inicial")

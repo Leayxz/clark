@@ -18,7 +18,7 @@
 ### 🧠 APRENDIZADOS
 - Desenvolvi meu melhor algoritmo até o momento, abrindo compras sem repetir faixas de preço;
 - Prints são pontuais para debug apenas;
-- Arquitetura hexagonal, DDD e princípios SOLID, modelando aplicação, domínio, infra e web;
+- POO, arquitetura hexagonal, DDD e princípios SOLID, modelando aplicação, domínio, infra e web;
 - Criação de pipelines completos de CI/CD;
 - Gerenciamento de estado distribuído entre API, tarefas assíncronas e webSocket;
 - Configuração de websocket com reconexão;

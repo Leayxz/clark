@@ -4,16 +4,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from aplicacao.task import rodar_automacao
 from django.core.cache import cache
 from infra.pagamentos import validar_pagamento, gerar_invoice
 from infra.index import log_user, log_sys
-from django.views.decorators.csrf import csrf_exempt
+from aplicacao.task import rodar_automacao
+from Clark.aplicacao.auth import AuthService
 
-@csrf_exempt
 def login_user(request):
 
-      logger_sys = log_sys()
 
       if request.method == "GET":
             return render(request, "login.html")
@@ -22,18 +20,14 @@ def login_user(request):
             email = request.POST.get("email")
             senha = request.POST.get("senha")
 
-            # VERIFICA EMAIL E SENHA
-            try:
-                  usuario = authenticate(request, username = email, password = senha)
-                  if usuario == None: return render(request, "login.html", {"erro": "Email ou Senha Inválidos."})
-            except Exception as erro:
-                  logger_sys.error(f"⚠️ Erro ao logar usuário: {erro}")
-                  return render(request, "login.html", {'erro': '⚠️ Erro interno. Tente novamente.'})
+            # SERVICE PARA VALIDAR SE O USUARIO EXISTE
+            resposta = AuthService().autenticar_usuario(email, senha)
+            if resposta.msg: return render(request, "login.html", {"msg": resposta.msg, "code": resposta.code})
 
-            login(request, usuario)
-            print(f"✅ USUÁRIO LOGADO E AUTENTICADO {email}")
+            # ABRE SESSAO E GRAVA LOGS
+            login(request, resposta.data)
             logger_user = log_user(request.user.username)
-            logger_user.info(f"Usuário Autenticado/Logado")
+            logger_user.info(f"✅ Usuário Autenticado/Logado")
             return redirect("/pagina_inicial/")
 
       return redirect("/login_user/")
@@ -72,7 +66,6 @@ def logout_user(request):
       return redirect('login_user')
 
 @login_required()
-@csrf_exempt
 def pagina_inicial(request):
 
       user = request.user
@@ -90,7 +83,7 @@ def pagina_inicial(request):
                   invoice = cache.get(f"INVOICE_{user.username}")
                   data_expiracao_timestamp = (invoice['timestamp'] / 1000) + 30 * 24 * 60 * 60
                   data_expiracao = datetime.datetime.fromtimestamp(data_expiracao_timestamp)
-      
+
             # TELEGRAM SALVO PARA O HTML
             telegram = cache.get(f"USER_TELEGRAM_{user.username}")
 
@@ -119,28 +112,12 @@ def config_automacao(request):
       logger_user = log_user(username)
       logger_sys = log_sys()
       config = cache.get(f"CONFIGS_USER_{username}")
-      
-      if config is None:
-            config = {
-            "id_task": False,
-            "quantity1": 0,
-            "quantity2": 0,
-            "quantity3": 0,
-            "quantity4": 0,
-            "preco_referencia": 0,
-            "comprar_abaixo": 0,
-            "limite_margem": 0,
-            "percentual_lucro": 0.0,
-            "variacao_compra": 0,
-            "percentual_seguranca_liquidacao": 0.0,
-            }
 
       if request.method == "GET":
 
             # PROTECAO ROTA PARA USUARIOS SEM PAGAMENTO
             pagamento_confirmado = validar_pagamento(request.user)
-            if pagamento_confirmado:
-                  return render(request, "config_automacao.html", {"config": config, 'id_task': config['id_task']})
+            if pagamento_confirmado: return render(request, "config_automacao.html", {"config": config, 'id_task': config['id_task']})
 
             return redirect("/pagina_inicial/")
 

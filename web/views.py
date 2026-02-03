@@ -1,14 +1,16 @@
-import datetime
+from dataclasses import asdict
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.cache import cache
 from infra.pagamentos import validar_pagamento, gerar_invoice
 from infra.index import log_user, log_sys
 from aplicacao.task import rodar_automacao
-from Clark.aplicacao.auth import AuthService
+from aplicacao.services.auth import AuthService
+from aplicacao.services.usuarios_service import Usuarios
+from aplicacao.services.dashboard import DashboardService
+from aplicacao.services.qrcode import GerarQrCode
 
 def login_user(request):
 
@@ -40,16 +42,13 @@ def cadastro_user(request):
             return render(request, "cadastro.html")
 
       if request.method == "POST":
-            email = request.POST.get('email')
-            senha = request.POST.get('senha')
-            if not email or not senha: return render(request, "cadastro.html", {"erro": "Email e Senha São Obrigatórios."})
 
-            try:
-                  User.objects.create_user(username = email, password = senha)
-            except Exception as erro:
-                  logger_sys.error(f"⚠️ Erro ao cadastrar usuário: {erro}")
-                  return render(request, "cadastro.html", {"erro": "⚠️ Erro interno. Tente novamente."})
+            # VALIDACAO INPUT
+            email = request.POST.get('email'); senha = request.POST.get('senha')
+            if not email or not senha: return render(request, "cadastro.html", {"erro": "Email e senha são obrigatórios."})
 
+            # SERVICE PARA CADASTRAR NOVO USUARIO
+            Usuarios().cadastrar_novo_usuario(email, senha) # TRATAR EXCEPTIONS NO MIDDLEWARE COM CONTEXTO
             logger_sys.info(f"✨ Novo Usuário Cadastrado")
             return redirect("login_user")
 
@@ -69,39 +68,14 @@ def logout_user(request):
 def pagina_inicial(request):
 
       user = request.user
-      #logger_sys = log_sys()
-      logger_user = log_user(user.username)
 
       if request.method == 'GET':
+            resposta = DashboardService(user).inicializar_dashboard()
+            return render(request, "pagina_inicial.html", asdict(resposta)) # asdict() ENVIA O DTO COMPLETO COMO CHAVE:VALOR
 
-            # VERIFICA PAGAMENTO
-            pagamento_confirmado = validar_pagamento(user)
-
-            # BUSCA DATA EXPIRACAO PARA O HTML
-            data_expiracao = None
-            if pagamento_confirmado:
-                  invoice = cache.get(f"INVOICE_{user.username}")
-                  data_expiracao_timestamp = (invoice['timestamp'] / 1000) + 30 * 24 * 60 * 60
-                  data_expiracao = datetime.datetime.fromtimestamp(data_expiracao_timestamp)
-
-            # TELEGRAM SALVO PARA O HTML
-            telegram = cache.get(f"USER_TELEGRAM_{user.username}")
-
-            # BUSCA CONFIGS E SETA SE NAO HOUVER
-            config = cache.get(f"CONFIGS_USER_{user.username}")
-            if config == None:
-                  config = { "id_task": False, "quantity1": 0, "quantity2": 0, "quantity3": 0, "quantity4": 0, "preco_referencia": 0, 'comprar_abaixo': 0, "limite_margem": 0, "percentual_lucro": 0.0, "variacao_compra": 0, "percentual_seguranca_liquidacao": 0.0 }
-                  cache.set(f"CONFIGS_USER_{user.username}", config, timeout = 30*24*60*60)
-
-            # PAGAMENTO, TASK, PRECO ATUAL E TELEGRAM PRA PAGINA INICIAL
-            preco_atual = cache.get('preco_atual')
-
-            return render(request, "pagina_inicial.html", { 'preco_atual': preco_atual, 'id_task': config['id_task'], 'pagamento_confirmado': pagamento_confirmado, 'data_expiracao': data_expiracao, 'telegram': telegram })
-
-      if request.method == 'POST': # FAZER UMA ROTA ESPECIFICA PARA GERAR QRCODE FORA DA PAG INICIAL?
-            qr_code = gerar_invoice(user.username)
-            if qr_code: logger_user.info(f"✅ QRCode Gerado."); return JsonResponse(qr_code)
-            return JsonResponse({'erro': "Erro ao gerar invoice."})
+      if request.method == 'POST':
+            resposta = GerarQrCode(user).gerar_qrcode()
+            return JsonResponse(asdict(resposta), status = resposta.code)
 
       return redirect("/pagina_inicial/")
 

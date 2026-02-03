@@ -22,8 +22,11 @@ def login_user(request):
 
             email = request.POST.get("email"); senha = request.POST.get("senha")
 
-            # VALIDA USUARIO, ABRE SESSAO E GRAVA LOGS
+            # VALIDA USUARIO
             resposta = AuthService().autenticar_usuario(email, senha)
+            if resposta.msg: return render(request, "login.html", asdict(resposta))
+
+            # ABRE SESSAO E GRAVA LOGS
             login(request, resposta.data)
             log_user(request.user.username).info(f"✅ Usuário Autenticado/Logado")
             return redirect("/pagina_inicial/")

@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.cache import cache
-from infra.pagamentos import validar_pagamento, gerar_invoice
+from infra.pagamentos import validar_pagamento
 from infra.index import log_user, log_sys
 from aplicacao.task import rodar_automacao
 from aplicacao.services.auth import AuthService
@@ -19,24 +19,18 @@ def login_user(request):
             return render(request, "login.html")
 
       if request.method == "POST":
-            email = request.POST.get("email")
-            senha = request.POST.get("senha")
 
-            # SERVICE PARA VALIDAR SE O USUARIO EXISTE
+            email = request.POST.get("email"); senha = request.POST.get("senha")
+
+            # VALIDA USUARIO, ABRE SESSAO E GRAVA LOGS
             resposta = AuthService().autenticar_usuario(email, senha)
-            if resposta.msg: return render(request, "login.html", {"msg": resposta.msg, "code": resposta.code})
-
-            # ABRE SESSAO E GRAVA LOGS
             login(request, resposta.data)
-            logger_user = log_user(request.user.username)
-            logger_user.info(f"✅ Usuário Autenticado/Logado")
+            log_user(request.user.username).info(f"✅ Usuário Autenticado/Logado")
             return redirect("/pagina_inicial/")
 
       return redirect("/login_user/")
 
 def cadastro_user(request):
-
-      logger_sys = log_sys() 
 
       if request.method == "GET":
             return render(request, "cadastro.html")
@@ -49,7 +43,7 @@ def cadastro_user(request):
 
             # SERVICE PARA CADASTRAR NOVO USUARIO
             Usuarios().cadastrar_novo_usuario(email, senha) # TRATAR EXCEPTIONS NO MIDDLEWARE COM CONTEXTO
-            logger_sys.info(f"✨ Novo Usuário Cadastrado")
+            log_sys().info(f"✨ Novo Usuário Cadastrado")
             return redirect("login_user")
 
       return redirect("/cadastro_user/")
@@ -58,10 +52,8 @@ def cadastro_user(request):
 def logout_user(request):
 
       email = request.user.username
-      logger_user = log_user(email)
       logout(request)
-      logger_user.info(f"🔒 Log Out.")
-
+      log_user(email).info(f"🔒 Log Out.")
       return redirect('login_user')
 
 @login_required()

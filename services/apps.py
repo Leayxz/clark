@@ -1,4 +1,3 @@
-import sys
 from django.apps import AppConfig
 
 class AplicacaoConfig(AppConfig):

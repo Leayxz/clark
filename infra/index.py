@@ -16,7 +16,8 @@ def buscar_saldo(API_KEY, SECRET_KEY) -> dict:
       return {'saldo': saldo_usuario, 'msg': None}
 
 def buscar_ordens(API_KEY, SECRET_KEY) -> dict:
-
+# REFATORAR TUDO PARA RETORNAR TUPLAS EM VEZ DE DICTS
+# REFATORAR TUDO PARA if not resposta.ok or resposta['msg']
       params = f"timestamp={int(time.time() * 1000)}"
       assinatura = hmac.new(SECRET_KEY.encode(), params.encode(), sha256).hexdigest()
       url = f"https://open-api.bingx.com/openApi/swap/v2/user/positions?{params}&signature={assinatura}"

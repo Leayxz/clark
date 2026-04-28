@@ -1,6 +1,6 @@
 import time, traceback
 from celery import shared_task
-from dominio.services import Operacoes
+from dominio.operacoes import Operacao
 from infra.index import  buscar_saldo, buscar_ordens, abrir_ordem, fechar_ordem, enviar_mensagem, limpar_compra_inf_baixo, log_user, log_sys
 from django.core.cache import cache
 
@@ -8,7 +8,6 @@ from django.core.cache import cache
 def rodar_automacao(username):
 
       # INSTANCIAS
-      op = Operacoes()
       logger_sys = log_sys()
       logger_user = log_user(username)
       enviar_mensagem(username, f"🎯 Automação Rodando.")
@@ -38,6 +37,8 @@ def rodar_automacao(username):
                   # VERIFICA ULTIMA ATH E PRECO ATUAL
                   ultima_ath = cache.get('ultima_ath')
                   preco_atual = cache.get('preco_atual')
+                  op = Operacao(config=config, ordem=ordens_abertas, preco_atual=preco_atual, saldo=saldo)
+
                   if preco_atual == None: logger_sys.warning(f"⚠️ Falha ao ler preço: {preco_atual} | ⏳ Tentando novamente em 3 segundos"); continue
 
                   confirmacao_compra, tamanho_mao, direcao = op.avaliar_compra(preco_atual, saldo, config)

@@ -6,7 +6,7 @@
 - **Python + Django** – Backend estruturado nas camadas domínio, aplicação, infra e web;
 - **HTML/CSS** - Interfaces e formulários simples;
 - **PostgreSQL** – Modelado para persistência de pagamentos válidos;  
-- **Redis** – Cacheando dados de uso frequente e broker para o Celery;
+- **Redis** – Cacheando dados de uso não frequente e broker para o Celery;
 - **Celery** – Tarefas assíncronas contínuas e escaláveis;
 - **WebSockets** – Em thread dedicada para atualização de preço em tempo real;
 - **Locust** - Teste de carga simulando usuários concorrentes.
@@ -15,7 +15,7 @@
 - **CI/CD** - Pipelines CI/CD com testes e deploy automático via GitHub Actions;
 - **AWS EC2** – Servior de produção para execução contínua;
 
-### 🧠 APRENDIZADOS
+### 🧠 CONCEITOS APLICADOS
 - Desenvolvi meu melhor algoritmo até o momento, abrindo compras sem repetir faixas de preço;
 - Prints são pontuais para debug apenas;
 - POO, arquitetura hexagonal, DDD e princípios SOLID, modelando aplicação, domínio, infra e web;

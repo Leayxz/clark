@@ -1,4 +1,4 @@
-from dominio.services import Operacoes
+from Clark.dominio.operacoes import Operacoes
 
 op = Operacoes()
 

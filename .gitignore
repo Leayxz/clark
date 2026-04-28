@@ -1,6 +1,15 @@
+# Python
+**/__pycache__/
+
+# Django
+**staticfiles/
+*.sqlite3
+
+# Env
 .env
 .env.docker
-venv
+
+# Certs & Logs & Venv
+certs
 logs
-**/__pycache__/
-*.sqlite3
+venv

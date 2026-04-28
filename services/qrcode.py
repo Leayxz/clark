@@ -1,4 +1,4 @@
-from aplicacao.DTOs import AuthServiceResponse
+from services.DTOs import AuthServiceResponse
 from infra.index import log_user
 from infra.pagamentos import gerar_invoice
 

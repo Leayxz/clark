@@ -36,7 +36,7 @@ def preco_socket():
             logger_sys.info(f"Conexão Fechada | Reconectando Em 3 Segundos"); time.sleep(3)
             preco_socket() # POSSIBILIDADE DE CRIAR VARIAS THREADS
 
-      # INICIALIZA WEBSOCKET PRECO EM THREAD
+      # INICIALIZA WEBSOCKET PRECO EM OUTRA THREAD
       URL_PRECO = "wss://open-api-swap.bingx.com/swap-market"
       ws_app = websocket.WebSocketApp(URL_PRECO, on_open=on_open, on_message=on_message, on_error=on_error, on_close=on_close)
       ws_thread = threading.Thread(target = ws_app.run_forever, daemon = True)

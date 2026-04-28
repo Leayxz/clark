@@ -1,120 +1,116 @@
 from dataclasses import asdict
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.cache import cache
-from infra.pagamentos import validar_pagamento
+
+from services.task import rodar_automacao
+from services.telegram import Telegram
+from services.dashboard import Dashboard
+from services.qrcode import GerarQrCode
+from services.usuarios import Usuario
+from services.configuracoes import ConfigAutomacao
+
+from web.forms import AutomacaoForm, CadastroForm, TelegramForm
+
+from infra.pagamentos import Pagamento
 from infra.index import log_user, log_sys
-from aplicacao.task import rodar_automacao
-from aplicacao.services.auth import AuthService
-from aplicacao.services.usuarios_service import Usuarios
-from aplicacao.services.dashboard import DashboardService
-from aplicacao.services.qrcode import GerarQrCode
 
-def login_user(request):
-
+async def login_user(request):
+      "Renderiza página de login e abre sessão para usuários cadastrados em DB."
 
       if request.method == "GET":
             return render(request, "login.html")
 
       if request.method == "POST":
 
-            email = request.POST.get("email"); senha = request.POST.get("senha")
+            # 1. Recebe email e senha do client
+            dados = CadastroForm(request.POST)
 
-            # VALIDA USUARIO
-            resposta = AuthService().autenticar_usuario(email, senha)
-            if resposta.msg: return render(request, "login.html", asdict(resposta))
+            # 2. Confirma se o usuário está cadastrado
+            resposta = await Usuario(dados=dados, user=request.user).autenticar_usuario()
+            if resposta.sucesso: return render(request, "login.html", asdict(resposta))
 
-            # ABRE SESSAO E GRAVA LOGS
+            # 3. Abre sessão e grava log individual por usuário
             login(request, resposta.data)
             log_user(request.user.username).info(f"✅ Usuário Autenticado/Logado")
             return redirect("/pagina_inicial/")
 
-      return redirect("/login_user/")
-
-def cadastro_user(request):
+async def cadastro_user(request):
+      "Renderiza página de cadastro e cadastra novo usuário."
 
       if request.method == "GET":
             return render(request, "cadastro.html")
 
       if request.method == "POST":
 
-            # VALIDACAO INPUT
-            email = request.POST.get('email'); senha = request.POST.get('senha')
-            if not email or not senha: return render(request, "cadastro.html", {"erro": "Email e senha são obrigatórios."})
+            # 1. Recebe email, senha e faz validação básica
+            dados = CadastroForm(request.POST)
+            dados_automacao = AutomacaoForm(request.POST)
+            if not dados.is_valid(): return render(request, "cadastro.html", {"erro": "Email e senha são obrigatórios."})
 
-            # SERVICE PARA CADASTRAR NOVO USUARIO
-            Usuarios().cadastrar_novo_usuario(email, senha) # TRATAR EXCEPTIONS NO MIDDLEWARE COM CONTEXTO
-            log_sys().info(f"✨ Novo Usuário Cadastrado")
+            # 2. Cadastra novo usuário e configurações padrão para automação do usuário
+            await Usuario(dados=dados, user=request.user).cadastrar_novo_usuario() # TRATAR EXCEPTIONS NO MIDDLEWARE COM CONTEXTO?
+            # Montar função para configurações padrão para automação do usuário - Aonde? Quem é responsável pelas configurações da automação? Exatamente!
+            ConfigAutomacao(username=request.user.username, dados_automacao=dados_automacao)
+            log_sys().info(f"✨ Novo Usuário Cadastrado e configurações padrão salvas.")
+
             return redirect("login_user")
 
       return redirect("/cadastro_user/")
 
 @login_required()
 def logout_user(request):
-
-      email = request.user.username
+      dados = CadastroForm(request.POST)
       logout(request)
-      log_user(email).info(f"🔒 Log Out.")
+      log_user(dados.email).info(f"🔒 Log Out.")
       return redirect('login_user')
 
-@login_required()
-def pagina_inicial(request):
-
-      user = request.user
+@login_required() # resolver essa bomba
+async def pagina_inicial(request):
 
       if request.method == 'GET':
-            resposta = DashboardService(user).inicializar_dashboard()
-            return render(request, "pagina_inicial.html", asdict(resposta)) # asdict() ENVIA O DTO COMPLETO COMO CHAVE:VALOR
+            
+            
+
+            # 1. Informações necessárias para o dashboard do usuário
+            dados_automacao = AutomacaoForm(request.POST)
+            dados_telegram = TelegramForm(request.POST)
+
+            resposta = await Dashboard(dados_automacao=dados_automacao, dados_telegram=dados_telegram, user=request.user).inicializar_dashboard()
+            return render(request, "pagina_inicial.html", asdict(resposta)) # asdict() envia o DTO/OBJ completo com todos os dados
 
       if request.method == 'POST':
-            resposta = GerarQrCode(user).gerar_qrcode()
-            return JsonResponse(asdict(resposta), status = resposta.code)
+            resposta = GerarQrCode(request.user).gerar_qrcode()
+            return JsonResponse(asdict(resposta), status=resposta.code)
 
       return redirect("/pagina_inicial/")
 
-@login_required
-def config_automacao(request):
-
-      username = request.user.username
-      logger_user = log_user(username)
-      logger_sys = log_sys()
-      config = cache.get(f"CONFIGS_USER_{username}")
+@login_required() # Arrumar um jeito de corrigir isso.
+async def config_automacao(request):
 
       if request.method == "GET":
 
-            # PROTECAO ROTA PARA USUARIOS SEM PAGAMENTO
-            pagamento_confirmado = validar_pagamento(request.user)
-            if pagamento_confirmado: return render(request, "config_automacao.html", {"config": config, 'id_task': config['id_task']})
+            # 1. Validação de pagamento antes de liberar a página de configuração
+            pagamento = await Pagamento(request.user).validar_invoice()
+            if not pagamento.sucesso: return redirect("/pagina_inicial/")
 
-            return redirect("/pagina_inicial/")
+            # 2. Compartilhando configurações da automação salvas para o HTML
+            configuracoes = ConfigAutomacao(username=request.user.username).buscar_configuracoes()
+
+            return render(request, "config_automacao.html", {"config": configuracoes})
 
       if request.method == "POST":
 
-            # SALVA AS CONFIGURAÇOES EM CACHE
-            try:
-                  config['quantity1'] = int(request.POST.get("quantity1"))
-                  config['quantity2'] = int(request.POST.get("quantity2"))
-                  config['quantity3'] = int(request.POST.get("quantity3"))
-                  config['quantity4'] = int(request.POST.get("quantity4"))
+            # 1. 
+            dados = AutomacaoForm(request.POST) # Validação dos dados através do Django Forms? Valida o que exatamente? - Ainda não sei direito.
+            if not dados.is_valid(): return render(request, "config_automacao.html", {"erro": "Erro ao processar dados para novas configurações."})
 
-                  config['preco_referencia'] = float(request.POST.get("preco_referencia"))
-                  config['comprar_abaixo'] = float(request.POST.get('comprar_abaixo'))
-
-                  config['percentual_lucro'] = float(request.POST.get("percentual_lucro"))
-                  config['variacao_compra'] = int(request.POST.get("variacao_compra"))
-
-                  config['limite_margem'] = int(request.POST.get("limite_margem"))
-                  config['percentual_seguranca_liquidacao'] = float(request.POST.get("percentual_seguranca_liquidacao"))
-
-                  cache.set(f"CONFIGS_USER_{username}", config, timeout = 30*24*60*60)
-                  logger_user.info(f"✅ Novas configurações salvas para automação.")
-                  return redirect("/config_automacao/")
-
-            except Exception as error:
-                  logger_sys.error(f"❌ Erro ao salvar novas configurações:", exc_info = True)
-                  return redirect("/config_automacao/")
+            # 2. Salva novas configurações para automação em cache
+            ConfigAutomacao(dados_automacao=dados, username=request.user.username).salvar_configuracoes()
+            return render(request, "/config_automacao/", {"sucesso": "Configurações salvas com sucesso."})
 
       return redirect("/pagina_inicial/")
 
@@ -149,22 +145,15 @@ def ligar_desligar_automacao(request):
 
 @login_required
 def salvar_telegram(request):
-
-      username = request.user.username
-      logger_user = log_user(username)
+      "Exibe HTML do telegram e permite salvamento do número em cache."
 
       if request.method == 'GET':
             return render(request, "telegram.html")
 
       if request.method == 'POST':
 
-            TOKEN_TELEGRAM = request.POST.get('TOKEN_TELEGRAM')
-            ID_TELEGRAM = request.POST.get('ID_TELEGRAM')
-
-            user_telegram = {'TOKEN_TELEGRAM': TOKEN_TELEGRAM, 'ID_TELEGRAM': ID_TELEGRAM }
-            cache.set(f"USER_TELEGRAM_{username}", user_telegram, timeout = 30 * 24 * 60 * 60)
-
-            logger_user.info(f"✅ Telegram Salvo.")
+            dados = TelegramForm(request.POST)
+            Telegram(username=request.user.username, dados=dados).salvar_telegram()
             return redirect('pagina_inicial')
 
       return redirect("pagina_inicial")

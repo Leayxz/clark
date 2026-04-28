@@ -9,7 +9,7 @@
       <div class="lado_esquerdo_pagina_inicial">
             <div class="status_container">
                   <div class="status"> 💵 Última Cotação: ${{ preco_atual }} </div>
-                  {% if id_task %} <div class="status"> 🟢 Sessão Rodando </div> {% else %} <div class = "status"> 🔴 Sessão Parada </div> {% endif %}
+                  {% if config.id_task %} <div class="status"> 🟢 Sessão Rodando </div> {% else %} <div class = "status"> 🔴 Sessão Parada </div> {% endif %}
                   {% if telegram %} <div class = "status"> 📱 Telegram Salvo e Ativo </div> {% else %} <div class = "status"> 📵 Telegram Não Salvo </div> {% endif %}
                   {% if pagamento_confirmado %} <div class = "status"> 📅 Seu Plano Está Ativo Até {{ data_expiracao|date:"d/m/y "}} </div> {% else %} <div class = "status"> ❌ Seu Plano Não Está Ativo </div>  {% endif %}
                   <p class="tutorial"> Tutorial: https://youtu.be/B0hWxMv_b0E </p>

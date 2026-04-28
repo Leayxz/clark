@@ -10,6 +10,6 @@
 .env.docker
 
 # Certs & Logs & Venv
-certs
+certs/
 logs
 venv

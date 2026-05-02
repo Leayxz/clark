@@ -53,8 +53,7 @@ async def cadastro_user(request):
 
             # 2. Cadastra novo usuário e configurações padrão para automação do usuário
             await Usuario(dados=dados, user=request.user).cadastrar_novo_usuario() # TRATAR EXCEPTIONS NO MIDDLEWARE COM CONTEXTO?
-            # Montar função para configurações padrão para automação do usuário - Aonde? Quem é responsável pelas configurações da automação? Exatamente!
-            ConfigAutomacao(username=request.user.username, dados_automacao=dados_automacao)
+            ConfigAutomacao(cache=cache, log_user=log_user).buscar_configuracoes(username=request.user.username)
             log_sys().info(f"✨ Novo Usuário Cadastrado e configurações padrão salvas.")
 
             return redirect("login_user")
@@ -96,18 +95,18 @@ async def config_automacao(request):
             if not pagamento.sucesso: return redirect("/pagina_inicial/")
 
             # 2. Compartilhando configurações da automação salvas para o HTML
-            configuracoes = ConfigAutomacao(username=request.user.username).buscar_configuracoes()
+            configuracoes = ConfigAutomacao(cache=cache, log_user=log_user).buscar_configuracoes(request.user.username)
 
             return render(request, "config_automacao.html", {"config": configuracoes})
 
       if request.method == "POST":
 
-            # 1. 
-            dados = AutomacaoForm(request.POST) # Validação dos dados através do Django Forms? Valida o que exatamente? - Ainda não sei direito.
-            if not dados.is_valid(): return render(request, "config_automacao.html", {"erro": "Erro ao processar dados para novas configurações."})
+            # 1. Validação dos dados através do Django Forms
+            dados_automacao = AutomacaoForm(request.POST)
+            if not dados_automacao.is_valid(): return render(request, "config_automacao.html", {"erro": "Erro ao processar dados para novas configurações."})
 
             # 2. Salva novas configurações para automação em cache
-            ConfigAutomacao(dados_automacao=dados, username=request.user.username).salvar_configuracoes()
+            ConfigAutomacao(cache=cache, log_user=log_user).salvar_configuracoes(username=request.user.username, dados_automacao=dados_automacao)
             return render(request, "/config_automacao/", {"sucesso": "Configurações salvas com sucesso."})
 
       return redirect("/pagina_inicial/")
@@ -150,8 +149,8 @@ def salvar_telegram(request):
 
       if request.method == 'POST':
 
-            dados = TelegramForm(request.POST)
-            Telegram(username=request.user.username, dados=dados).salvar_telegram()
+            dados_telegram = TelegramForm(request.POST)
+            Telegram(cache=cache, log_user=log_user).salvar_telegram(username=request.user.username, dados=dados_telegram)
             return redirect('pagina_inicial')
 
       return redirect("pagina_inicial")

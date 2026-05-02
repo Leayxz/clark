@@ -72,12 +72,10 @@ def logout_user(request):
 async def pagina_inicial(request):
 
       if request.method == 'GET':
-            
-            
 
             # 1. Informações necessárias para o dashboard do usuário
-            dados_automacao = AutomacaoForm(request.POST)
-            dados_telegram = TelegramForm(request.POST)
+            dados_automacao = ConfigAutomacao(cache, log_user).buscar_configuracoes(username=request.user.username)
+            dados_telegram = Telegram(cache, log_user).buscar_telegram(username=request.user.username)
 
             resposta = await Dashboard(dados_automacao=dados_automacao, dados_telegram=dados_telegram, user=request.user).inicializar_dashboard()
             return render(request, "pagina_inicial.html", asdict(resposta)) # asdict() envia o DTO/OBJ completo com todos os dados

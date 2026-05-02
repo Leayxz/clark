@@ -1,16 +1,20 @@
+from dataclasses import dataclass
 from web.forms import TelegramForm
-from django.core.cache import cache
-from infra.index import log_user
+
+@dataclass
+class TelegramResult:
+      dados_telegram: dict
 
 class Telegram:
+      "Classe responsável por gerenciar as informações do Telegram do usuário."
 
-      def __init__(self, username, dados: TelegramForm) -> None:
-            self._username = username
-            self._dados = dados
+      def __init__(self, cache, log_user) -> None:
+            self._cache = cache
+            self._log_user = log_user
 
-      def salvar_telegram(self):
-            cache.set(f"USER_TELEGRAM_{self._username}", self._dados, timeout=30*24*60*60)
-            log_user(self._username).info(f"✅ Telegram Salvo.")
+      def salvar_telegram(self, username, dados: TelegramForm):
+            self._cache.set(f"USER_TELEGRAM_{username}", dados, timeout=30*24*60*60)
+            self._log_user(username).info(f"✅ Telegram Salvo.")
 
-      def buscar_telegram(self):
-            return cache.get(f"USER_TELEGRAM_{self._username}")
+      def buscar_telegram(self, username):
+            return TelegramResult(dados_telegram=self._cache.get(f"USER_TELEGRAM_{username}"))

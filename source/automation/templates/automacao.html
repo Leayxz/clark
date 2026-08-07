@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'config_automacao.css' %}">
+
+      <div class="container_automacao">
+            <p id="status_automation" class="rodando"> ... </p>
+
+            <form id="configuration-form" class="form_esquerdo"> {% csrf_token %}
+
+                <h1> Configure Sua Automação </h1>
+                <div class="div_funcoes">
+
+
+                    <div class="funcoes_esquerda">
+                        <label> Lucro Esperado (%): <input id="percentage_profit" type="number" name="percentage_profit" min="0" step = "0.1"  value="0" required></label>
+                        <label> Variação De Compra ($): <input id="buy_variation" type="number" name="buy_variation" min="0" value="0" required></label>
+                    </div>
+
+
+                    <div class="quantity">
+                        <label> Margem USD: <input id="marginUSD" type="number" name="marginUSD" min="1" value="0" required></label>
+                        <label> Alavancagem: <input id="leverage" type="number" name="leverage" min="1" value="0" required></label>
+                    </div>
+
+
+                <p id="message" hidden> Hidden Message </p>
+                <button class="botao" type="submit"> Salvar Configurações </button>
+            </form>
+
+
+            <form id="form-api" class="form_direito"> {% csrf_token %}
+                <h1> Conexão API </h1>
+                <label> API Key: <input id="api-key" max="50" type = "text" name="API_KEY" placeholder="Cole Sua API KEY"></label>
+                <label> Secret Key:  <input id="api-secret" max="90" type = "text" name = "SECRET_KEY" placeholder="Cole Sua SECRET KEY"></label>
+                <label> Passphrase Key:  <input id="api-passphrase" type="text" name="passphrase" placeholder="Sua passphrase"></label>
+
+                <p id="api-message" ></p>
+                <button id="save-api" class="botao" type="submit"> Salvar API </button>
+            </form>
+
+
+            <button id="enable_automation" class="botao" type="button"> ... </button>
+            <a class="botao" href="{% url 'pagina_dashboard' %}"> Dashboard </a> <br>
+      </div>
+
+
+      <script type="module" src="{% static 'javascript/automacao.js' %}"></script>
+
+{% endblock %}

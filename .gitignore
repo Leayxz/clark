@@ -1,9 +1,10 @@
 # Python
 **/__pycache__/
+**.pytest_cache
 
 # Django
 **staticfiles/
-*.sqlite3
+**sqlite.db
 
 # Env
 .env
@@ -12,4 +13,8 @@
 # Certs & Logs & Venv
 certs/
 logs
-venv
+**venv
+**list
+
+# Node
+**node_modules

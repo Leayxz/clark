@@ -15,7 +15,3 @@ class LNMarketsPaymentProvider(ProviderProtocol):
             intention = DepositLightningParams(amount=automation_price, comment=f"Payment for {email}")
             invoice = await client.account.deposit_lightning(intention)
             return LNMarketsDTO(deposit_id=invoice.deposit_id, payment_request=invoice.payment_request)
-
-
-    def create_deposit_in_pix(self, email: str):
-        pass

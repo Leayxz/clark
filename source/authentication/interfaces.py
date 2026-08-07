@@ -1,5 +1,5 @@
 from typing import Protocol
-from .dtos import AuthResult
+from ..dtos import AuthResult
 
 class AuthenticationProtocol(Protocol):
     def get_user(self, email: str): ...

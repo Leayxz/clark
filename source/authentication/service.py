@@ -2,7 +2,7 @@ import bcrypt
 from jose import jwt, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from .interfaces import AuthenticationProtocol
-from .dtos import AuthResult
+from ..dtos import AuthResult
 from ..errors import Error
 from ..configurations import Authentication
 

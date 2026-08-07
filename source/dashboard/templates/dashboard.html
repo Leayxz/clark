@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'pagina_inicial.css' %}"> {% csrf_token %}
+
+    <div id="total_profit_today" class="status"> Total Profit Today: </div>
+
+    <div id="lado-esquerdo" class="lado_esquerdo_pagina_inicial">
+        <div class="status_container">
+                <div id="cotacao" class="status"> Verificando... $</div>
+                <div id="automation" class="status"> Verificando... </div>
+                <div id="telegram" class="status"> Verificando... </div>
+                <div id="payment" class="status"> Verificando... </div>
+                <p id="tutorial" class="tutorial"> Tutorial: https://youtu.be/B0hWxMv_b0E </p>
+        </div>
+    </div>
+
+
+    <div class="lado_direito_pagina_inicial">
+        <div class="botao_container">
+                <a class="botao" href="{% url 'pagina_automacao' %}"> Configurar Sessão </a>
+                <a id="gerar_invoice" class="botao" onclick="this.disabled=true; this.textContent='Processando...'"> Gerar Invoice </a>
+                <a class="botao" href="{% url 'pagina_telegram' %}"> Telegram </a>
+                <button id="button_logout" class="botao" type="button"> Sair </button>
+        </div>
+    </div>
+
+
+    <!-- ------------------- INVOICE ------------------- -->
+
+    <div id="modal-invoice" class="modal_invoice">
+        <div class="conteudo_invoice">
+                <h3 class="titulo">Confirme Seu Pagamento</h3>
+
+                <p class="texto_explicacao">
+                    Se o pagamento foi feito e não foi confirmado, <br>
+                    aguarde alguns minutos e atualize a página. Se mesmo <br>
+                    assim não for, entre em contato enviando comprovante, <br>
+                    email, e o id abaixo.
+                </p>
+
+                <img id="qrcode_img" src="" alt="qr_code">
+                <p class="texto_lightning">⚡ Lightning: R$25</p>
+                <p id="deposit-id" class="id_invoice"></p>
+                <p id="payment-request" class="payment_hash"></p>      
+                <p class="texto_compra_venda">✅ Compra Automática <br> ✅ Venda Automática</p>
+                <p class="expiracao">Expira em 2 minutos</p>
+
+                <button id="btn-pagamento">Já Paguei</button>
+        </div>
+    </div>
+
+    <script type="module" src="{% static 'javascript/dashboard.js' %}"></script>
+    <script type="module" src="{% static 'javascript/qrcode.js' %}"></script>
+{% endblock %}

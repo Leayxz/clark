@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} Clark {% endblock %}
+
+{% block main %}
+<link rel = "stylesheet" href = "{% static 'layout.css' %}">
+
+    <div class="lado_esquerdo">
+        <!-- IMAGEM CLARK -->
+        <img src="{% static 'PERPM.png' %}" alt="img" class="img">
+        <h2 class="perp" > PERP USDⓈ-M</h2>
+    </div>
+
+
+    <div class="lado_direito">
+        <h2> Clark 丰 </h2>
+        <p class="p"> Log in </p>
+
+        <!-- formulário renderizado na página de login, botão envia a requisição para a API de autenticação -->
+        <form id="AuthForm" class="form"> {% csrf_token %}
+            <label> Email: <input id="email" type="email" name="email" placeholder="Digite seu email" required> </label>
+            <label> Senha: <input id="password" type="password" name="password" placeholder="Digite sua senha" required> </label>
+            <p id="error" class="error" style="display: none;"></p>
+            <button type="submit"> Entrar </button>
+            <a href="{% url 'page_register' %}"> Registrar </a>
+        </form>
+    </div>
+
+
+    <!-- script para realizar autenticação do usuário e guardar acess e refresh token -->
+    <script type="module" src="{% static 'javascript/login.js' %}"></script>
+{% endblock %}

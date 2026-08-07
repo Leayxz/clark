@@ -1,0 +1,6 @@
+from typing import Protocol
+from .dtos import AuthResult
+
+class AuthenticationProtocol(Protocol):
+    def get_user(self, email: str): ...
+    def save_user(self, email: str, hashed_password: bytes) -> AuthResult: ...

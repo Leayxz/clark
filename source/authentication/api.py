@@ -11,7 +11,7 @@ from ..container import authentication_service
 
 
 @api_view(["POST"])
-def cadastrar_usuario(request):
+def register(request):
 
     serializer = AuthSerializer(data=request.data)
     if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
@@ -26,8 +26,8 @@ def cadastrar_usuario(request):
 
 
 @api_view(["POST"])
-def autenticar_usuario(request):
-    
+def authenticate(request):
+
     serializer = AuthSerializer(data=request.data)
     if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
     

@@ -1,0 +1,45 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+
+
+exporters:
+
+  prometheus_remote_write:
+    endpoint: http://prometheus:9090/api/v1/write
+
+
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+
+
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+
+
+  debug:
+    verbosity: detailed
+
+
+
+service:
+  pipelines:
+
+    traces:
+      receivers: [otlp]
+      exporters: [otlp/tempo, debug]
+
+
+    logs:
+      receivers: [otlp]
+      exporters: [otlp_http/loki, debug]
+
+
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus_remote_write, debug]

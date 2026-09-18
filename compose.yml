@@ -1,15 +1,17 @@
 services:
+
   web:
     image: ghcr.io/leayxz/clark:latest
     container_name: clark_web
-    command: gunicorn _projeto.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env.docker
     depends_on:
-      - db
+      - postgresql
       - redis
     volumes:
     - static_data:/app/staticfiles
+
 
   nginx:
     image: nginx:alpine
@@ -24,9 +26,11 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./certs:/certs:ro
 
-  db:
+
+  postgresql:
     image: postgres:15
-    container_name: clark_db_postgresql
+    ports:
+      - "5432:5432"
     env_file:
       - .env.docker
     environment:
@@ -36,23 +40,59 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+
   redis:
-    image: redis:7
-    container_name: clark_redis
+    image: redis:8
+    ports:
+      - "6379:6379"
     env_file:
       - .env.docker
 
-  celery:
-    image: ghcr.io/leayxz/clark:latest
-    container_name: clark_celery
-    command: celery -A _projeto worker -l info
-    env_file:
-      - .env.docker
-    depends_on:
-      - redis
+
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
+    volumes:
+      - ./telemetry/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+
+  tempo:
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./telemetry/tempo.yaml:/etc/tempo.yaml:ro
+    ports:
+      - "3200:3200"
+
+
+  collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command:
+      - "--config=/etc/otelcol/config.yaml"
+    volumes:
+      - ./telemetry/collector.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "4317:4317"
+
 
 volumes:
   postgres_data:
   static_data:
-
-# SEMPRE QUE ALGO FOR EDITADO, PRECISA SER REPASSADO MANUALMENTE PARA EC2

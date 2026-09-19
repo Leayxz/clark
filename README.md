@@ -140,19 +140,6 @@ Local: `source/websockets/test_repository.py`
 
 Quando o CI termina com sucesso, o CD entra em ação: faz build da imagem Docker, sobe para o GitHub Container Registry, acessa a EC2 via SSH, e reinicia os containers com a nova imagem.
 
-## Como Executar
-
-```bash
-git clone https://github.com/Leayxz/clark.git
-cd clark
-docker compose up -d
-```
-
-| Serviço | URL |
-|---------|-----|
-| Web | http://localhost |
-| Grafana | http://localhost:3000 |
-
 ## Estrutura
 
 ```

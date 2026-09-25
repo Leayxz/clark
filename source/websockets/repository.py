@@ -1,15 +1,19 @@
 import json, redis.asyncio as async_redis
 from typing import cast
+from datetime import datetime
 from decimal import Decimal
+from uuid import UUID
 from collections.abc import AsyncIterator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+
 from .models import ClosedOrder
-from .interfaces import ExchangeProtocol
+from .gateway import ExchangeGateway
 
 from ..constants import CacheKeys
-from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrders, BuyOrderDTO
-from ..constants import CacheKeys
+from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderDTO, SellOrderDTO
+from ..telemetry.tracing import tracer
+from ..telemetry.logging import logger
 
 
 class AutomationExecutorRepository:
@@ -17,151 +21,173 @@ class AutomationExecutorRepository:
     def __init__(self,
                  cache_client: async_redis.Redis,
                  database_client: async_sessionmaker[AsyncSession],
-                 exchange_client: ExchangeProtocol) -> None:
-
+                 exchange_gateway: ExchangeGateway) -> None:
                 self._database_client = database_client
                 self._cache_client = cache_client
-                self._exchange_client = exchange_client
-                self._all_running_open_orders: dict[str, list[AllOpenOrders | BuyOrderDTO]] = {}
-                self._synchronized_references: dict[str, bool] = {}
-                self._all_running_credentials: dict[str, CredentialsDTO] = {}
-                self._all_running_configuration: dict[str, ConfigurationDTO] = {}
+                self._exchange_gateway = exchange_gateway
+                self._all_running_open_orders: dict[UUID, list[AllOpenOrdersDTO | BuyOrderDTO]] = {}
+                self._synchronized_references: dict[UUID, bool] = {}
+                self._all_running_credentials: dict[UUID, CredentialsDTO] = {}
+                self._all_running_configuration: dict[UUID, ConfigurationDTO] = {}
 
 
-    def add_buy_order(self, email: str, new_order: BuyOrderDTO):
-        self._all_running_open_orders.get(email, []).append(new_order)
-        print(f"Adicionando nova ordem na lista.")
+    def add_buy_order(self, user_id: UUID, new_order: BuyOrderDTO):
+        self._all_running_open_orders.get(user_id, []).append(new_order)
 
 
-    async def get_credentials(self, email) -> CredentialsDTO:
-        credentials = self._all_running_credentials.get(email, None)
-        if not credentials:
-            credentials = cast(bytes, await self._cache_client.get(f"{CacheKeys.LNMCREDENTIALS}:{email}"))
-            credentials = CredentialsDTO(**json.loads(credentials))
-            self._all_running_credentials[email] = credentials
+    async def get_requirements(self, user_id: UUID, exchange: str) -> tuple[CredentialsDTO, ConfigurationDTO]:
 
-        return credentials
+        credentials = self._all_running_credentials.get(user_id, None)
+        configuration = self._all_running_configuration.get(user_id, None)
+
+        if not credentials or not configuration:
+            credentials_raw: dict = await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CREDENTIALS}:{exchange}:{user_id}")
+            assert credentials_raw, f"Credenciais de API não encontradas | exchange={exchange} | Usuário: {user_id}."
+            credentials = CredentialsDTO(**credentials_raw)
+            assert credentials.EXCHANGE == exchange, (
+                f"Exchange inválida: esperada={exchange}, "
+                f"recebida={credentials.EXCHANGE}"
+            )
+            self._all_running_credentials[user_id] = credentials
+
+            configuration_raw: dict = await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}")
+            configuration = self._parse_configuration(configuration_raw, credentials)
+            self._all_running_configuration[user_id] = configuration
+
+        return credentials, configuration
 
 
-    async def get_configuration(self, email: str, credentials: CredentialsDTO) -> ConfigurationDTO:
-        configuration = self._all_running_configuration.get(email, None)
+    def _parse_configuration(self, configuration: dict[str, str], credentials: CredentialsDTO) -> ConfigurationDTO:
+
+        payload = {
+            "wallet_balance": Decimal(configuration.get('wallet_balance', "0")),
+            "marginUSD": int(configuration.get('marginUSD', 0)),
+            "leverage": int(configuration.get('leverage', 0)),
+            "percentage_profit": Decimal(configuration.get('percentage_profit', "0")) / Decimal("100"),
+            "buy_variation": Decimal(configuration.get('buy_variation', "0")),
+            "last_buy_up": Decimal(configuration.get('last_buy_up', "0")),
+            "last_buy_down": Decimal(configuration.get('last_buy_down', "0")),
+            "exchange": credentials.EXCHANGE,
+        }
+
+        return ConfigurationDTO(**payload)
+
+
+    async def get_all_open_orders(self, user_id: UUID, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], float]:
         
-        if not configuration:
-            bytes_config = cast(bytes | None, await self._cache_client.get(f"{CacheKeys.LNMCONFIGURATION}:{email}"))
-            if not bytes_config: return ConfigurationDTO()
-            dict_config = json.loads(bytes_config)
-            
-            payload = {
-                "wallet_balance": Decimal(dict_config['wallet_balance']),
-                "marginUSD": dict_config['marginUSD'],
-                "leverage": dict_config['leverage'],
-                "percentage_profit": Decimal(dict_config['percentage_profit']) / Decimal("100"), # divisão para 0.005%
-                "buy_variation": Decimal(dict_config['buy_variation']),
-                "last_buy_up": Decimal(dict_config['last_buy_up']),
-                "last_buy_down": Decimal(dict_config['last_buy_down'])
-            }        
-
-            configuration = ConfigurationDTO(**payload)
-            self._all_running_configuration[email] = configuration
-
-        if not configuration.wallet_balance:
-            wallet_balance = await self._exchange_client.get_current_wallet_balance(credentials)
-            self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance = wallet_balance
-
-        return configuration
-
-
-    async def get_all_open_orders(self, email: str, credentials: CredentialsDTO) -> list[AllOpenOrders | BuyOrderDTO]:
-        all_open_orders = self._all_running_open_orders.get(email, None)
+        all_open_orders = self._all_running_open_orders.get(user_id, None)
+        total_margin_used = None
 
         if not all_open_orders:
-            all_open_orders = await self._exchange_client.get_all_open_orders(credentials)
+            all_open_orders, total_margin_used = await self._exchange_gateway.get_all_open_orders(credentials)
+            await self._cache_client.hset(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", mapping={"total_margin_used": total_margin_used, "open_orders_count": len(all_open_orders)})
+            self._all_running_open_orders[user_id] = all_open_orders
+            print(f"TODAS AS ORDENS ABERTAS E TOTAL MARGEM USADA BUSCADOS COM SUCESSO: {len(all_open_orders)} | {total_margin_used}")
 
-        if not self._synchronized_references.get(email):
-            self._all_running_open_orders[email] = all_open_orders
-            self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_up = max(order.entry_price for order in all_open_orders)
-            self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_down = min(order.entry_price for order in all_open_orders)
-            self._synchronized_references[email] = True
-            print(f"Refs sincronizadas com sucesso | Ref Subindo: {self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_up} | Ref Descendo: {self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_down}")
+        if not self._synchronized_references.get(user_id) or False:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = max(order.entry_price for order in all_open_orders)
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = min(order.entry_price for order in all_open_orders)
+            self._synchronized_references[user_id] = True
+            print(f"REFS SINCRONIZADAS COM SUCESSO: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up} | {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
 
-        return all_open_orders
-
-
-    async def save_closed_order(self, order_id: str, profit: Decimal) -> None:
-        async with self._database_client.begin() as session:
-            session.add(ClosedOrder(order_id=order_id, profit=profit))
-        print("Nova venda salva em DB com sucesso.")
+        return all_open_orders, total_margin_used if total_margin_used else 0
 
 
-    def update_last_buy_up(self, email: str, entry_price: Decimal):
-        self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_up = entry_price
-        print(f"Atualizando Ref Subindo: {self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_up}")
+    async def save_closed_order(self, user_id: str, sold_order: SellOrderDTO) -> None:
+
+        with tracer.start_as_current_span("repository.save_closed_order"):
+
+            try:
+                async with self._database_client.begin() as session:
+                    session.add(ClosedOrder(user_id=str(user_id), order_id=sold_order.order_id, profit=sold_order.profit, total_fees=sold_order.total_fees, closed_at=sold_order.closed_at))
+
+                logger.info("ClosedOrder persistido com sucesso",
+                            extra={"user_id": user_id,
+                                   "order_id": sold_order.order_id,
+                                   "profit": str(sold_order.profit),
+                                   "total_fees": str(sold_order.total_fees),
+                                   "closed_at": sold_order.closed_at})
+
+            except Exception as exc:
+                logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)
 
 
-    def update_last_buy_down(self, email: str, entry_price: Decimal):
-        self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_down = entry_price
-        print(f"Atualizando Ref Descendo: {self._all_running_configuration.get(email, ConfigurationDTO()).last_buy_down}")
+    def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):
+        if BUY_UP:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = entry_price
+            print(f"ATUALIZANDO REF BUY UP: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up}")
+        else:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = entry_price
+            print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
 
 
-    def update_wallet_balance_buy(self, email: str, margin_used: Decimal):
-        print(f"Atualizando SaldoWallet: {self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance}")
-        print(f"Removendo: {margin_used}")
-        self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance -= margin_used
-        print(f"Saldo Atual: {self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance}")
+    def update_wallet_balance(self, user_id: UUID, margin_used: Decimal, net_profit: Decimal = Decimal("0"), BUY: bool = False):
+
+        if BUY:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance -= margin_used
+        else:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance += margin_used
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance += net_profit
+            print(f"NOVA VENDA EXECUTADA!!")
+            print(f"ADICIONANDO A CARTEIRA | MARGEM: {margin_used} | PROFIT: {net_profit}")
 
 
-    def update_wallet_balance_sale(self, email: str, margin_used: Decimal, net_profit: Decimal):
-        self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance += margin_used
-        self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance += net_profit
-        print(f"Atualizando SaldoWallet | Adicionando: {margin_used} | WalletAtual: {self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance}")
-        print(f"Atualizando SaldoWallet | Adicionando: {net_profit} | WalletAtual: {self._all_running_configuration.get(email, ConfigurationDTO()).wallet_balance}")
+    async def update_dashboard_overview(self, user_id: UUID, margin_used: Decimal, BUY: bool):
+        if BUY:
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_TOTAL_MARGIN_USED, int(margin_used))
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, 1)
+        else:
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_TOTAL_MARGIN_USED, int(-margin_used))
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
 
 
-    def remove_sold_order(self, email: str, order_id: str):
-        orders = self._all_running_open_orders.get(email, [])
+    async def update_total_patrimony(self, user_id: UUID, total_patrimony: Decimal) -> None:
+        await self._cache_client.hset(f"{CacheKeys.TOTAL_PATRIMONY}:{user_id}", mapping={"total_patrimony": str(total_patrimony)})
+
+
+    def remove_sold_order(self, user_id: UUID, order_id: str):
+        
+        orders = self._all_running_open_orders.get(user_id, [])
 
         for order in orders:
             if order_id == order.order_id:
                 orders.remove(order)
-                print(f"Removido ordem vendida da lista usando ID | Ordem vendida: {order_id} | Ordem removida: {order.order_id}")
                 return
 
 
-    def clear_user_memory_state(self, email: str):
-        self._all_running_credentials.pop(email, None)
-        self._all_running_configuration.pop(email, None)
-        self._all_running_open_orders.pop(email, None)
-        self._synchronized_references.pop(email)
-        print(f"Removendo credenciais: {self._all_running_credentials}")
-        print(f"Removendo configuração: {self._all_running_configuration}")
-        print(f"Removendo ordens abertas: {self._all_running_open_orders}")
-        print(f"Removendo estado de sincronização: {self._synchronized_references}")
+    def clear_user_memory_state(self, user_id: UUID):
+        self._all_running_credentials.pop(user_id, None)
+        self._all_running_configuration.pop(user_id, None)
+        self._all_running_open_orders.pop(user_id, None)
+        self._synchronized_references.pop(user_id)
+        print(f"REMOVENDO CREDENCIAIS")
+        print(f"REMOVENDO CONFIGURATION")
+        print(f"REMOVENDO ORDENS ABERTAS")
+        print(f"REMOVENDO SINCRONIZAÇÂO")
+        print(f"REMOÇÃO COMPLETA USER: {user_id}")
 
 
-class WSLNMarketsRepository:
 
-    def __init__(self,
-                 cache_client: async_redis.Redis) -> None:
+class WSUserStateRepository:
+    """Repositório de estado em memória para automações websocket, generalizado por exchange."""
 
-                self._cache_client = cache_client
-                self._all_activated_automations: list[str] = []
+    def __init__(self, cache_client: async_redis.Redis) -> None:
+        self._cache_client = cache_client
+        self._all_activated_automations: list[tuple[UUID, str]] = []  # (user_id, exchange)
 
+    def add_activated_automation(self, user_id: UUID, exchange: str) -> None:
+        self._all_activated_automations.append((user_id, exchange))
 
-    def add_activated_automation(self, email: str) -> None:
-        self._all_activated_automations.append(email)
-        print(f"Adicionando usuário para rodar na automação: {email}")
-
-
-    def get_all_activated_automations(self) -> list[str]:
+    def get_all_activated_automations(self) -> list[tuple[UUID, str]]:
         return self._all_activated_automations
 
-
-    async def synchronize_websocket(self,) -> None:
-        automations = cast(str, await self._cache_client.smembers(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}"))
-        all_activated_automations = [json.loads(automation)['email'] for automation in automations]
-        self._all_activated_automations = all_activated_automations
-        print(f"TODAS AS AUTOMAÇÔES ATIVAS: {all_activated_automations}")
-
+    async def synchronize_websocket(self, exchange: str) -> None:
+        automations = await self._cache_client.smembers(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}")
+        self._all_activated_automations = [
+            (UUID(json.loads(automation)['user_id']), json.loads(automation)['exchange'])
+            for automation in automations
+            if json.loads(automation).get('exchange') == exchange
+        ]
 
     async def subscribe_channel(self, channel: str) -> AsyncIterator[dict]:
         pubsub = self._cache_client.pubsub()
@@ -170,7 +196,11 @@ class WSLNMarketsRepository:
             if message["type"] == "message":
                 yield json.loads(message["data"])
 
+    def remove_activated_automation(self, user_id: UUID):
+        self._all_activated_automations = [
+            (uid, ex) for uid, ex in self._all_activated_automations if uid != user_id
+        ]
 
-    def remove_activated_automation(self, email: str):
-        self._all_activated_automations.remove(email)
-        print(f"Removendo Automação | User: {email}")
+    async def save_btc_price(self, btc_usd_price: int):
+        await self._cache_client.set("BTC_USD_PRICE", int(btc_usd_price))
+        print(f"SALVANDO PREÇO BTC USD")

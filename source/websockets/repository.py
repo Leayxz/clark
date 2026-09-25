@@ -101,12 +101,11 @@ class AutomationExecutorRepository:
                 async with self._database_client.begin() as session:
                     session.add(ClosedOrder(user_id=str(user_id), order_id=sold_order.order_id, profit=sold_order.profit, total_fees=sold_order.total_fees, closed_at=sold_order.closed_at))
 
-                logger.info("ClosedOrder persistido com sucesso",
-                            extra={"user_id": user_id,
-                                   "order_id": sold_order.order_id,
-                                   "profit": str(sold_order.profit),
-                                   "total_fees": str(sold_order.total_fees),
-                                   "closed_at": sold_order.closed_at})
+                logger.info("💾 Ordem vendida com sucesso", extra={"user_id": user_id,
+                                                                   "order_id": sold_order.order_id,
+                                                                   "profit": str(sold_order.profit),
+                                                                   "total_fees": str(sold_order.total_fees),
+                                                                   "closed_at": sold_order.closed_at})
 
             except Exception as exc:
                 logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)

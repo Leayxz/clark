@@ -62,7 +62,7 @@ class LNMarketsClient(ExchangeProtocol):
                             profit=Decimal(str(fechamento.pl - (fechamento.opening_fee + fechamento.closing_fee + fechamento.sum_funding_fees))),
                             total_fees=Decimal(str(fechamento.opening_fee + fechamento.closing_fee + fechamento.sum_funding_fees)),
                             exit_price=Decimal(str(fechamento.exit_price)),
-                            closed_at=datetime.fromisoformat(fechamento.created_at.replace('Z', '+00:00')))
+                            closed_at=datetime.fromisoformat(fechamento.closed_at.replace('Z', '+00:00')))
 
 
     async def get_current_wallet_balance(self, credentials: CredentialsDTO) -> Decimal:

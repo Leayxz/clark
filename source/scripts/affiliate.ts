@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (result.ok) {
-                window.location.href = '/affiliate/overview/';
+                window.location.href = '/affiliate/dashboard/';
                 return;
             }
 

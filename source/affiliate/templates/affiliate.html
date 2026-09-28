@@ -1,0 +1,435 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Clark — Parcerias</title>
+    <meta name="description" content="Transforme sua audiência em parceria com o Clark. Receba até 25% sobre cada pagamento confirmado. Sobre R$135 líquidos por pagamento, você recebe entre 10% e 25%.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'affiliate.css' %}">
+</head>
+
+<body>
+    <div class="clark-app">
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+
+        <!-- Main Content -->
+        <main class="clark-main">
+
+            <!-- 01 BRAND STRIP -->
+            <div class="clark-brand-strip">
+                <div class="clark-brand">Clark <span class="clark-brand__mark">丰</span></div>
+            </div>
+
+            <!-- 02 HERO -->
+                        <header class="clark-page-header">
+                            <span class="clark-eyebrow">PROGRAMA DE PARCERIAS CLARK</span>
+                            <h1 class="clark-hero-title">Transforme sua audiência em parceria com o Clark.</h1>
+                            <p class="clark-hero-sub">Receba até 25% sobre cada pagamento. A cada R$135 líquidos por pagamento, você recebe entre 10% e 25%. Sem cupom, sem comissão.</p>
+                            <div class="clark-error" id="affiliate-error" hidden>
+                                <svg class="clark-error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                <span class="clark-error-text">Você ainda não está registrado como parceiro. Faça o seu cadastro abaixo.</span>
+                            </div>
+                            <div class="clark-hero-cta">
+                                <a href="{% url 'page_overview' %}" id="open-panel-btn" class="clark-btn-primary">
+                                <span class="clark-btn-label">Abrir painel</span>
+                                </a>
+                            </div>
+                        </header>
+
+            <!-- 03 TRUST STRIP -->
+            <section class="clark-trust-strip">
+                <div class="clark-trust-items">
+                    <span class="clark-exchange-logo"><span class="clark-exchange-dot"></span> Hyperliquid</span>
+                    <span class="clark-exchange-logo"><span class="clark-exchange-dot"></span> LN Markets</span>
+                </div>
+            </section>
+
+            <!-- 04 COMO FUNCIONA -->
+            <section class="clark-how" aria-labelledby="how-title">
+                <div class="clark-how-intro">
+                    <span class="clark-eyebrow">COMO FUNCIONA</span>
+                    <h2 id="how-title" class="clark-how-title">Em três passos</h2>
+                </div>
+                <ul class="clark-how-steps">
+                    <li class="clark-how-step">
+                        <span class="clark-how-num">01</span>
+                        <h3 class="clark-how-step-title">Compartilhe seu cupom</h3>
+                        <p class="clark-how-step-desc">Seu cupom é a única forma de atribuição. Sem link de afiliado.</p>
+                    </li>
+                    <li class="clark-how-step">
+                        <span class="clark-how-num">02</span>
+                        <h3 class="clark-how-step-title">Seu cliente paga</h3>
+                        <p class="clark-how-step-desc">Quem usa seu cupom recebe 10% OFF no pagamento de R$150. A comissão só existe quando o pagamento é recebido.</p>
+                    </li>
+                    <li class="clark-how-step">
+                        <span class="clark-how-num">03</span>
+                        <h3 class="clark-how-step-title">Você recebe</h3>
+                        <p class="clark-how-step-desc">Cada pagamento confirmado com seu cupom gera sua comissão. R$13,50 no tier de início, até R$33,75 no tier estratégico.</p>
+                    </li>
+                </ul>
+
+                <p class="clark-how-subtitle">Compartilhe seu cupom. Seu cliente recebe desconto e paga. Você recebe enquanto o Clark continua automatizando.</p>
+
+            </section>
+
+            <!-- 05 SOCIAL PROOF -->
+            <section class="clark-social-proof" aria-labelledby="proof-title">
+                <div class="clark-section-heading">
+                    <span class="clark-eyebrow">RESULTADOS</span>
+                    <h2 id="proof-title" class="clark-section-title">Como você ganha</h2>
+                </div>
+                <div class="clark-proof-cards">
+                    <div class="clark-proof-card">
+                        <svg class="clark-proof-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 6 9 17 4 12" />
+                        </svg>
+                        <div class="clark-proof-text">
+                            <h3 class="clark-proof-title">Pago por performance</h3>
+                            <p class="clark-proof-desc">Receba R$13,50 a R$33,75 por cada pagamento confirmado. Sem comissão sobre assinatura criada.</p>
+                        </div>
+                    </div>
+                    <div class="clark-proof-card">
+                        <svg class="clark-proof-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <circle cx="12" cy="17" r="1.5" />
+                        </svg>
+                        <div class="clark-proof-text">
+                            <h3 class="clark-proof-title">Non-custodial</h3>
+                            <p class="clark-proof-desc">O capital do cliente permanece na exchange. O Clark automatiza, mas não toca o dinheiro.</p>
+                        </div>
+                    </div>
+                    <div class="clark-proof-card">
+                        <svg class="clark-proof-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M13 2L3 14h6v6l10-10V6l-6-4z" />
+                        </svg>
+                        <div class="clark-proof-text">
+                            <h3 class="clark-proof-title">DEPIX via Lightning</h3>
+                            <p class="clark-proof-desc">Comissão paga em BTC via Liquid Network (lq1), convertido para DEPIX automaticamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 06 COMISSÃO -->
+            <section class="clark-commission" aria-labelledby="commission-title">
+
+                <div class="clark-section-heading">
+                    <span class="clark-eyebrow">TABELA DE TIERS</span>
+                    <h2 id="commission-title" class="clark-section-title">Quanto mais usuários, maior é o seu ganho</h2>
+                </div>
+
+
+                <div class="clark-commission-hero">
+                    <div class="clark-commission-value">
+                        <span>10%</span>
+                        <span class="clark-commission-unit">/padrão</span>
+                    </div>
+                    <p class="clark-commission-label">Cada pagamento confirmado gera entre 10% e 25% do valor para o afiliado</p>
+                    <p class="clark-commission-note">As comissões são enviadas 7 dias após o pagamento confirmado, cobrindo o período de arrependimento do consumidor.</p>
+                </div>
+
+
+
+
+
+
+
+                <div class="clark-tier-table-wrapper">
+                    <table class="clark-tier-table">
+                        <thead>
+                            <tr>
+                                <th>Clientes pagantes</th>
+                                <th>Comissão</th>
+                                <th>Receita por pagamento</th>
+                                <th>Rótulo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0–14</td>
+                                <td>10%</td>
+                                <td>R$ 13,50</td>
+                                <td>Padrão</td>
+                            </tr>
+                            <tr class="clark-tier-highlight">
+                                <td>15–24</td>
+                                <td>15%</td>
+                                <td>R$ 20,25</td>
+                                <td>Prata</td>
+                            </tr>
+                            <tr>
+                                <td>25+</td>
+                                <td>25%</td>
+                                <td>R$ 33,75</td>
+                                <td>Ouro</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 07 PRODUTO -->
+            <section class="clark-product" aria-labelledby="product-title">
+                <div class="clark-section-heading">
+                    <span class="clark-eyebrow">O QUE VOCÊ ESTÁ INDICANDO</span>
+                    <h2 id="product-title" class="clark-section-title">Automação de Bitcoin sem abrir mão do controle</h2>
+                </div>
+                <p class="clark-product-desc">
+                    O Clark automatiza a estratégia de compra e venda de Bitcoin do seu cliente enquanto mantém o capital
+                    na exchange dele — non-custodial, auditável e sempre sob controle.
+                </p>
+                <div class="clark-product-showcase">
+                    <img src="{% static 'affiliate/ClarkDashboard.png' %}"
+                         alt="Interface do dashboard do Clark mostrando automação de Bitcoin"
+                         class="clark-product-image"
+                         width="880" height="386"
+                         loading="lazy" decoding="async">
+                </div>
+                <ul class="clark-product-features">
+                    <li class="clark-product-feature">
+                        <svg class="clark-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                            <path d="M9 9h6v6H9z" />
+                        </svg>
+                        <div class="clark-feature-text">
+                            <h3 class="clark-feature-title">Non-custodial</h3>
+                            <p class="clark-feature-desc">O Clark não fica com o capital. Ele automatiza, mas o dinheiro
+                                dele nunca sai da exchange.</p>
+                        </div>
+                    </li>
+                    <li class="clark-product-feature">
+                        <svg class="clark-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 10 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        <div class="clark-feature-text">
+                            <h3 class="clark-feature-title">Visibilidade</h3>
+                            <p class="clark-feature-desc">Toda operação pode ser acompanhada e auditada. Nada acontece no
+                                escuro.</p>
+                        </div>
+                    </li>
+                
+                    <li class="clark-product-feature">
+                        <svg class="clark-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        <div class="clark-feature-text">
+                            <h3 class="clark-feature-title">Controle</h3>
+                            <p class="clark-feature-desc">Seu cliente define a estratégia. O Clark só executa o que foi
+                                autorizado.</p>
+                        </div>
+                    </li>
+                    <li class="clark-product-feature">
+                        <svg class="clark-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="8" y1="13" x2="16" y2="13" />
+                            <line x1="8" y1="17" x2="16" y2="17" />
+                        </svg>
+                        <div class="clark-feature-text">
+                            <h3 class="clark-feature-title">Bitcoin</h3>
+                            <p class="clark-feature-desc">Foco exclusivo em BTC via Hyperliquid e LN Markets. Sem
+                                sobrecarga de exchanges ou pares.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 08 REGRAS -->
+            <section class="clark-rules" aria-labelledby="rules-title">
+                <div class="clark-section-heading">
+                    <span class="clark-eyebrow">REGRAS</span>
+                    <h2 id="rules-title" class="clark-section-title">Do programa de parceria</h2>
+                </div>
+
+                <div class="clark-rules-group">
+                    <h3 class="clark-rules-group-title">Como você ganha</h3>
+                    <ul class="clark-rules-list">
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <span>Comissão por pagamento confirmado com seu cupom. Sem cupom, sem comissão.</span>
+                        </li>
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                            <span>Refund cancela a comissão correspondente. Chargeback anula a comissão.</span>
+                        </li>
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M18 6 6 18M6 6l12 12" />
+                            </svg>
+                            <span>Sem comissão fictícia. Sem comissão sobre assinatura criada. Sem comissão sem pagamento. Você ganha quando o Clark recebe.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="clark-rules-group">
+                    <h3 class="clark-rules-group-title">Atribuição e pagamento</h3>
+                    <ul class="clark-rules-list">
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M9 14l1-1 2 1M9 10l1-1 2 1M12 2v4m-8 8v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+                            </svg>
+                            <span>Usuários pagantes determinam o tier de comissão. O tier é recalculado continuamente.</span>
+                        </li>
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            <span>A comissão é paga via Liquid Network em DEPIX para o endereço lq1 cadastrado.</span>
+                        </li>
+                        <li class="clark-rule-item">
+                            <svg class="clark-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Cancelamento da assinatura encerra as comissões futuras, não retroativas.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="clark-rules-note">
+                    Sem comissão fictícia. Sem comissão sobre assinatura criada. Sem comissão sem pagamento. Você ganha quando o Clark recebe.
+                </p>
+            </section>
+
+            <!-- 09 CADASTRO / FORMULÁRIO -->
+            <section class="clark-form-section" id="afiliados-cadastro" aria-labelledby="signup-title">
+                <div class="clark-section-heading">
+                    <h2 id="signup-title">Solicitação de parceria</h2>
+                </div>
+                <form id="formulario_afiliados" class="form_afiliados" method="post">
+                    {% csrf_token %}
+
+                    <div class="clark-form-group">
+                        <label class="clark-form-label" for="afiliado_liquid">Endereço Liquid Network</label>
+                        <input id="afiliado_liquid" class="clark-form-input" type="text" name="liquid_address"
+                                                       placeholder="lq1q9…"
+                                                       maxlength="100"
+                                                       required>
+                        <span class="clark-form-hint">Endereço lq1 para receber comissões em DEPIX</span>
+                    </div>
+
+                    <div class="clark-form-group">
+                        <label class="clark-form-label" for="afiliado_cupom">Seu cupom</label>
+                        <input id="afiliado_cupom" class="clark-form-input" type="text" name="coupon-code"
+                                                       placeholder="JOÃO2025"
+                                                       maxlength="10"
+                                                       autocapitalize="characters"
+                                                       required>
+                        <span class="clark-form-hint">Identificador único de até 10 caracteres. Apenas letras e números.</span>
+                    </div>
+
+                    <div class="clark-form-group">
+                        <label class="clark-form-label" for="afiliado_descricao">Como você pretende divulgar?</label>
+                        <textarea id="afiliado_descricao" class="clark-form-input clark-form-textarea" name="promotion-description"
+                                  placeholder="Ex: Divulgo no Twitter/X para traders brasileiros..."
+                                  rows="3"
+                                  maxlength="300"
+                                  required></textarea>
+                        <div class="clark-char-counter" id="char-counter-descricao">
+                            <span id="char-counter-count">0</span> / 300
+                        </div>
+                    </div>
+
+                    <div class="clark-form-group clark-form-group--checkbox">
+                        <input type="checkbox" id="afiliado_termos" name="termos-afiliado" required>
+                        <label class="clark-form-label clark-form-label--checkbox" for="afiliado_termos">
+                            Li e aceito os <a href="{% url 'page_affiliate_terms' %}" class="clark-form-link-inline" target="_blank">Termos de Afiliados</a>
+                        </label>
+                        <div class="clark-field-error" hidden>
+                            <svg class="clark-error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span class="clark-error-text">Você precisa aceitar os termos</span>
+                        </div>
+                    </div>
+
+                    <!-- Error feedback -->
+                    <div class="clark-error" id="erro-afiliado" hidden>
+                        <svg class="clark-error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <span id="erro-afiliado-text">Mensagem de erro</span>
+                    </div>
+
+                    <div class="clark-form-actions">
+                        <div class="clark-error" id="backend-error" hidden>
+                            <svg class="clark-error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span id="backend-error-text">Erro no servidor.</span>
+                        </div>
+                        <button class="clark-btn-primary" type="submit" id="btn-submit">
+                            <svg class="clark-btn-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <polyline points="19 12 12 19 5 12" />
+                            </svg>
+                            <span class="clark-btn-label">Me tornar afiliado</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="{% static 'javascript/sidebar.js' %}"></script>
+
+    <!-- Modal de Confirmação -->
+    <div class="clark-modal-overlay" id="clark-modal-overlay" hidden>
+        <div class="clark-modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-msg">
+            <div class="clark-modal-icon">
+                <svg class="clark-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+            </div>
+            <h3 id="modal-titulo" class="clark-modal-titulo">Solicitação enviada</h3>
+            <p id="modal-msg" class="clark-modal-msg">Sua candidatura foi recebida. Em até 48h, será avaliada e confirmada por email e Telegram caso esteja cadastrado.</p>
+            <button class="clark-btn-primary clark-modal-btn" id="modal-sucesso-fechar" type="button">Entendi</button>
+        </div>
+    </div>
+
+    <script src="{% static 'javascript/affiliate.js' %}"></script>
+</body>
+
+</html>

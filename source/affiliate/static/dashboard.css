@@ -1,0 +1,1095 @@
+/* ============================================================
+   CLARK — AFFILIATE OVERVIEW (2026-09-26)
+   Design system do Clark: --math p/ UI, --mono p/ valores,
+   raio intencional 8/12/16px, hairlines, elevação no dark,
+   hover dimensional, tema claro.
+
+   Segue:
+   - Design.md §1.12 (AI tells / anti-slop)
+   - Design.md §1.18-1.24 (premium typography, whitespace, profundidade)
+   - Design.md §1.22 (antipadrões que barateiam)
+   - REGRAS PÁGINAS HTML.md §3 (standalone HTML, copy sem promessa de retorno)
+   - REGRAS PÁGINAS HTML.md §10 (sidebar include)
+   - ClarkAfiliados.md §1-4 (comissão 10/15/25%, cupom)
+   ============================================================ */
+
+:root {
+    --bg:            #050505;
+    --surface:       #0c0c0c;
+    --surface-2:     #141414;
+    --border:        #1f1f1f;
+    --text:          #e8eaed;
+    --muted:         #9aa0a8;
+    --dim:           #828a94;
+    --up:            #34c07c;           /* verde = estado positivo / confiança / 丰 */
+    --down:          #e05252;           /* vermelho = erro / risco */
+    --sidebar:       #0a0a0a;
+    --sidebar-hover: #111111;
+    /* Hairlines p/ dark */
+    --hairline:      rgba(255, 255, 255, .07);
+    --hairline-strong: rgba(255, 255, 255, .14);
+    /* Fonts */
+    --math: math, "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+
+* {box-sizing: border-box;}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    font-family: var(--math);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ----------------------------------------------------------------
+   APP SHELL — sidebar fixa (25%), conteúdo compensa com margin-left
+   ---------------------------------------------------------------- */
+.clark-app {
+    display: flex;
+    font-family: var(--math);
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Focus visible — consistente em todo app */
+.clark-app a:focus-visible,
+.clark-app button:focus-visible,
+.clark-app .clark-nav-item:focus-visible,
+.clark-app .clark-footer-link:focus-visible,
+.clark-app .clark-form-input:focus-visible,
+.clark-app .clark-form-label:focus-visible,
+.clark-app .clark-btn-primary:focus-visible,
+.clark-app .clark-form-link:focus-visible,
+.clark-app .clark-form-link-inline:focus-visible,
+.clark-app .clark-error-icon:focus-visible,
+.clark-app .clark-tab:focus-visible,
+.clark-app .clark-goal-change:focus-visible {
+    outline: 2px solid var(--up);
+    outline-offset: 2px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 3px rgba(52, 192, 124, .15);
+}
+
+/* ----------------------------------------------------------------
+   MAIN CONTENT — widened para respiro editorial
+   ---------------------------------------------------------------- */
+.clark-main {
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 960px;
+    margin-left: 25%;
+    margin-right: auto;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .clark-main { max-width: 960px; }
+}
+
+/* Atmosfera sutil (glow green claro no topo) — editorial */
+.clark-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(620px 320px at 18% -8%, rgba(52, 192, 124, .05), transparent 70%);
+}
+
+.clark-main::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+    opacity: 0.03;
+}
+
+.clark-main > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ----------------------------------------------------------------
+   BRAND STRIP — topo
+   ---------------------------------------------------------------- */
+.clark-brand-strip {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 48px;
+}
+
+.clark-brand {
+    font-family: var(--math);
+    font-size: 50px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--text);
+}
+
+.clark-brand__mark {
+    color: var(--up);
+}
+
+/* 丰 — tratamento consistente com SVG: fill + stroke acompanham color */
+.clark-brand__mark svg,
+.clark-brand__mark svg text {
+    fill: var(--up);
+    stroke: var(--up);
+}
+
+/* ----------------------------------------------------------------
+   SECTION HEADING (reutilizável)
+   ---------------------------------------------------------------- */
+.clark-eyebrow {
+    font-family: var(--math);
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.clark-section-heading {
+    margin-bottom: 48px;
+}
+
+.clark-section-heading .clark-eyebrow {
+    margin-bottom: 16px;
+}
+
+.clark-section-title {
+    font-family: var(--math);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-align: center;
+}
+
+/* ----------------------------------------------------------------
+   STATS GRID — 4 cards em grid assimétrico
+   ---------------------------------------------------------------- */
+.clark-stats {
+    margin-bottom: 5%;
+}
+
+.clark-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 155.8px;
+    gap: 24px;
+}
+
+.clark-stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+    transition: transform .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
+}
+
+.clark-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.clark-stat-card:active {
+    transform: translateY(-1px);
+}
+
+.clark-stat-icon {
+    width: 52px;
+    height: 52px;
+    color: var(--up);
+    flex-shrink: 0;
+    transition: transform .2s ease-out, filter .2s ease-out;
+}
+
+@media (hover: hover) {
+    .clark-stat-card:hover .clark-stat-icon {
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 8px rgba(52, 192, 124, .4));
+    }
+}
+
+.clark-stat-value {
+    font-family: var(--math);
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+.clark-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clark-stat-placeholder {
+    font-family: var(--math);
+    font-size: 52px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.clark-stat-pct {
+    font-family: var(--math);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--muted);
+    opacity: .6;
+}
+
+.clark-stat-sub {
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 20px;
+}
+
+.clark-stat-tier {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.clark-stat-mono {
+    font-family: var(--math);
+    font-size: 45px;
+}
+
+.clark-stat-label {
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.clark-stat-sep {
+    color: var(--dim);
+    opacity: .4;
+    margin: 0 2px;
+}
+
+/* ----------------------------------------------------------------
+   TIER PROGRESS — status summary
+   ---------------------------------------------------------------- */
+.clark-tier {
+    padding: 40px 0 32px;
+}
+
+.clark-tier-label {
+    font-family: var(--math);
+    font-size: 17px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--dim);
+    display: block;
+    margin-bottom: 20px;
+    justify-self: anchor-center;
+}
+
+.clark-tier-hero {
+    font-family: var(--math);
+    font-size: 100px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    margin: 0% 0% 0% 0%;
+    color: var(--text);
+    text-align: center;
+}
+
+.clark-tier-hero-tier {
+    color: var(--up);
+}
+
+.clark-tier-hero-sep {
+    color: var(--dim);
+    margin: 0 8px;
+    font-weight: 300;
+    font-size: .6em;
+}
+
+.clark-tier-hero-pct {
+    color: var(--text);
+    font-weight: 400;
+    font-size: .65em;
+    vertical-align: middle;
+}
+
+.clark-tier-context {
+    font-family: var(--math);
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--muted);
+    margin: -1% 0% 0% 0%;
+    line-height: 1.7;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+}
+
+.clark-tier-stat {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.clark-tier-sep {
+    color: var(--dim);
+    opacity: .4;
+}
+
+.clark-tier-cta {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.clark-tier-reward {
+    font-family: var(--math);
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #FFD700;
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: clark-gold-shimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes clark-gold-shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+.clark-tier-roadmap {
+    font-family: var(--math);
+    font-size: 50px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--dim);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.clark-tier-roadmap-item {
+    font-weight: 400;
+    transition: color .2s ease-out;
+}
+
+.clark-tier-roadmap-item--done {
+    color: var(--dim);
+    text-decoration: line-through;
+    opacity: .5;
+}
+
+.clark-tier-roadmap-item--current {
+    color: var(--up);
+    font-weight: 700;
+}
+
+.clark-tier-roadmap-item--up {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.clark-tier-roadmap-div {
+    color: var(--dim);
+    opacity: .3;
+    font-size: .8em;
+    user-select: none;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 767px) {
+    .clark-tier {
+        padding: 28px 0 24px;
+    }
+
+    .clark-tier-hero {
+        font-size: 20px;
+    }
+
+    .clark-tier-context {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .clark-tier-roadmap {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* ---- Reduce motion ---- */
+@media (prefers-reduced-motion: reduce) {
+    .clark-tier-roadmap-item {
+        transition: none;
+    }
+}
+
+/* ---- Tema claro ---- */
+@media (prefers-color-scheme: light) {
+    .clark-tier-hero-tier {
+        color: #1f9e63;
+    }
+
+    .clark-tier-roadmap-item--current {
+        color: #1f9e63;
+    }
+}
+
+/* ----------------------------------------------------------------
+   TABELA DE PAGAMENTOS
+   ---------------------------------------------------------------- */
+.clark-payments {
+    margin-bottom: 5%;
+}
+
+.clark-table-wrapper {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(52, 192, 124, .3) transparent;
+    margin: 0 -16px;
+    padding: 0 16px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+}
+
+.clark-table-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.clark-table-wrapper::-webkit-scrollbar-track {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.clark-table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(52, 192, 124, .3);
+    border-radius: 3px;
+}
+
+.clark-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--math);
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    color: var(--text);
+    margin: 0 auto;
+}
+
+.clark-table th,
+.clark-table td {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.clark-table thead th {
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .08em;
+}
+
+.clark-table tbody tr:last-of-type td {
+    border-bottom: none;
+}
+
+.clark-table tbody tr:hover {
+    background: rgba(52, 192, 124, .06);
+}
+
+.clark-table-date {
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.clark-table-mono {
+    font-family: var(--mono);
+    letter-spacing: .04em;
+}
+
+.clark-table-up {
+    color: var(--up);
+    font-weight: 500;
+}
+
+/* Status badges */
+.clark-status {
+    font-family: var(--math);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.clark-status--ok {
+    color: var(--up);
+    background: rgba(52, 192, 124, .08);
+    border: 1px solid rgba(52, 192, 124, .15);
+}
+
+.clark-status--pending {
+    color: #e8b84a;
+    background: rgba(232, 184, 74, .08);
+    border: 1px solid rgba(232, 184, 74, .15);
+}
+
+.clark-status--refund {
+    color: var(--down);
+    background: rgba(224, 82, 82, .08);
+    border: 1px solid rgba(224, 82, 82, .15);
+}
+
+/* ----------------------------------------------------------------
+   MÉTRICAS DETALHADAS
+   ---------------------------------------------------------------- */
+.clark-metrics {
+    margin-bottom: 5%;
+}
+
+.clark-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.clark-metric-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 32px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+    transition: transform .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
+}
+
+.clark-metric-label {
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.clark-metric-value {
+    font-family: var(--math);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+.clark-metric-delta {
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.clark-metric-delta--up {
+    color: var(--up);
+}
+
+.clark-metric-delta--down {
+    color: var(--down);
+}
+
+.clark-metrics-note {
+    font-family: var(--math);
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--dim);
+    margin: 24px 0 0 0;
+    text-wrap: balance;
+}
+
+/* ----------------------------------------------------------------
+   CUPOM + ATRIBUIÇÃO
+   ---------------------------------------------------------------- */
+.clark-coupon {
+    margin-bottom: 5%;
+    text-align: center;
+}
+
+.clark-coupon-box {
+    padding: 40px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    transition: border-color .2s ease-out, box-shadow .2s ease-out, transform .2s ease-out;
+}
+
+.clark-coupon-code {
+    font-family: var(--mono);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    color: var(--up);
+    padding: 16px 32px;
+    border: 2px solid rgba(52, 192, 124, .2);
+    border-radius: 8px;
+    transition: border-color .2s ease-out, box-shadow .2s ease-out, transform .2s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.clark-coupon-code::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(52, 192, 124, .08), transparent);
+    background-size: 200% 100%;
+    animation: clark-shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@media (hover: hover) {
+    .clark-coupon-code:hover {
+        border-color: rgba(52, 192, 124, .5);
+        box-shadow: 0 0 20px rgba(52, 192, 124, .2);
+        transform: scale(1.03);
+    }
+    .clark-coupon-box:hover {
+        border-color: rgba(52, 192, 124, .25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
+    }
+
+    .clark-coupon-box:active {
+        transform: translateY(0);
+    }
+}
+
+.clark-coupon-desc {
+    font-family: var(--math);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 50ch;
+    text-wrap: balance;
+    margin: 0;
+}
+
+/* Shimmer keyframe */
+@keyframes clark-shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+/* ----------------------------------------------------------------
+   REGRAS — icon-based, grouped
+   ---------------------------------------------------------------- */
+.clark-rules {
+    margin-bottom: 5%;
+}
+
+.clark-rules-group {
+    margin-bottom: 48px;
+}
+
+.clark-rules-group:last-of-type {
+    margin-bottom: 0;
+}
+
+.clark-rules-group-title {
+    font-family: var(--math);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0 0 24px 0;
+}
+
+.clark-rules-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.clark-rule-item {
+    font-family: var(--math);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0;
+}
+
+.clark-rule-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    stroke: var(--up);
+}
+
+/* ----------------------------------------------------------------
+   CONTATO + CTA
+   ---------------------------------------------------------------- */
+.clark-contact {
+    margin-bottom: 80px;
+    text-align: center;
+}
+
+.clark-contact-message {
+    margin-bottom: 24px;
+}
+
+.clark-contact-link {
+    color: var(--up);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.clark-contact-link:hover {
+    opacity: .8;
+}
+
+.clark-contact-cta {
+    margin-top: 16px;
+}
+
+.clark-btn-primary {
+    background: linear-gradient(180deg, var(--up) 0%, #2ba86a 100%);
+    color: var(--bg);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--math);
+    letter-spacing: .02em;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 48px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2),
+                0 2px 8px rgba(52, 192, 124, .2);
+    transition: transform .2s ease-out, box-shadow .2s ease-out;
+    text-align: center;
+    display: inline-block;
+}
+
+.clark-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2),
+                0 6px 20px rgba(52, 192, 124, .35);
+}
+
+.clark-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1),
+                0 2px 4px rgba(52, 192, 124, .2);
+}
+
+/* ----------------------------------------------------------------
+   MODAL — off-black, tinted shadow
+   ---------------------------------------------------------------- */
+.clark-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 5, .72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity .2s ease-out;
+}
+
+#clark-modal-overlay:not([hidden]) {
+    display: flex;
+    opacity: 1;
+}
+
+.clark-modal {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 48px 32px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03),
+                0 16px 48px rgba(5, 5, 5, .35),
+                0 0 0 1px rgba(52, 192, 124, .08);
+    transform: scale(.95);
+    transition: transform .2s ease-out;
+}
+
+.clark-modal-overlay:not([hidden]) .clark-modal {
+    transform: scale(1);
+}
+
+.clark-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(52, 192, 124, .08);
+    border: 1px solid rgba(52, 192, 124, .15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.clark-modal-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--up);
+}
+
+.clark-modal-titulo {
+    font-family: var(--math);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px 0;
+    text-wrap: balance;
+}
+
+.clark-modal-msg {
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    text-wrap: balance;
+}
+
+.clark-modal-btn {
+    width: auto;
+    padding: 14px 48px;
+}
+
+/* ----------------------------------------------------------------
+   RESPONSIVE + MOTION + TEMA CLARO
+   ---------------------------------------------------------------- */
+
+/* Mobile-first */
+@media (max-width: 767px) {
+    .clark-main {
+        padding: 24px;
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    .clark-stats-grid,
+    .clark-metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .clark-coupon-box {
+        padding: 24px;
+    }
+
+    .clark-coupon-code {
+        font-size: 32px;
+        padding: 12px 24px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 480px) {
+    .clark-stats-grid,
+    .clark-metrics-grid {
+        gap: 15px;
+        margin: -2% 0% -2% 0%;
+    }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .clark-main {max-width: 75%;}
+}
+
+/* ----------------------------------------------------------------
+   ANIMATIONS — scroll reveal
+   ---------------------------------------------------------------- */
+@keyframes clark-fade-up {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.clark-section {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.6s ease-out backwards;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+}
+
+.clark-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.clark-section--delay-1 { animation-delay: .08s; }
+.clark-section--delay-2 { animation-delay: .16s; }
+.clark-section--delay-3 { animation-delay: .24s; }
+.clark-section--delay-4 { animation-delay: .32s; }
+.clark-section--delay-5 { animation-delay: .40s; }
+
+/* Stats stagger */
+.clark-stat-card {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.5s ease-out backwards;
+    transition: transform .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
+}
+
+.clark-stats-grid .clark-stat-card:nth-child(1) { animation-delay: .08s; }
+.clark-stats-grid .clark-stat-card:nth-child(2) { animation-delay: .16s; }
+.clark-stats-grid .clark-stat-card:nth-child(3) { animation-delay: .24s; }
+.clark-stats-grid .clark-stat-card:nth-child(4) { animation-delay: .32s; }
+
+/* ----------------------------------------------------------------
+   Hover dimensional */
+@media (hover: hover) {
+    .clark-btn-primary:hover {
+        transform: translateY(-2px);
+    }
+
+    .clark-metric-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.clark-metric-card:active {
+    transform: translateY(-1px);
+}
+
+    .clark-table tbody tr:hover {
+        background: rgba(52, 192, 124, .06);
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .clark-section,
+    .clark-stat-card {
+        opacity: 1 !important;
+    }
+}
+
+/* Tema claro */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg:            #f6f7f9;
+        --surface:       #ffffff;
+        --surface-2:     #eef0f3;
+        --border:        #d8dce1;
+        --text:          #16181c;
+        --muted:         #545b63;
+        --dim:           #6b737d;
+        --up:            #1f9e63;
+        --down:          #c23b3b;
+        --sidebar:       #eceef1;
+        --sidebar-hover: #e1e4e8;
+        --hairline:      #d8dce1;
+        --hairline-strong: #b9bfc6;
+    }
+
+    .clark-main::before {
+        background: radial-gradient(620px 320px at 18% -8%, rgba(31, 158, 99, .05), transparent 70%);
+    }
+
+    .clark-main::after {
+        opacity: 0.02;
+    }
+
+    .clark-modal-overlay {
+        background: rgba(22, 24, 28, .72);
+    }
+
+    .clark-modal {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12),
+                    0 16px 48px rgba(22, 24, 28, .25),
+                    0 0 0 1px rgba(31, 158, 99, .08);
+    }
+
+    .clark-table-wrapper,
+    .clark-stat-card,
+    .clark-metric-card,
+    .clark-coupon-box {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12),
+                    0 4px 24px rgba(22, 24, 28, .12);
+    }
+
+    .clark-btn-primary {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2),
+                    0 2px 8px rgba(31, 158, 99, .2);
+    }
+}
+
+/* ============================================================
+   END OF overview.css
+   ============================================================ */

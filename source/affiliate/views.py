@@ -9,7 +9,7 @@ def page_affiliate(request):
 
 @authenticated
 def page_dashboard(request):
-    return render(request, "dashboard.html")
+    return render(request, "affiliate_dashboard.html")
 
 @authenticated
 def page_affiliate_terms(request):

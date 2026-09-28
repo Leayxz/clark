@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Clark — Termos de Afiliados</title>
+    <meta name="description" content="Termos e condições do Programa de Afiliados Clark. Comissões de 10% a 25%. Pagamento via PIX após carência.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'affiliate_terms.css' %}">
+</head>
+
+<body class="clark-app terms-page">
+
+    <!-- ----------------------------------------------- Topbar ----------------------------------------------- -->
+    <header class="topbar">
+        <span class="brand">Clark <span class="brand__mark">丰</span></span>
+        <a class="topbar__back" href="/affiliate/">
+            <svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Voltar
+        </a>
+    </header>
+
+    <!-- ----------------------------------------------- Content ----------------------------------------------- -->
+    <main>
+
+        <!-- Hero -->
+        <section class="terms-hero">
+            <p class="eyebrow">PROGRAMA DE PARCERIAS</p>
+            <h1 class="terms-hero__title">Termos de Afiliados</h1>
+            <p class="terms-hero__sub">Ao participar do Programa de Afiliados da Clark, você concorda com os termos descritos abaixo. Leia com atenção.</p>
+        </section>
+
+        <!-- 01 INTRODUÇÃO -->
+        <section class="terms-section">
+            <p class="terms-section__number">01 · Introdução</p>
+            <h2 class="terms-section__title">Bem-vindo ao Programa de Afiliados Clark</h2>
+            <p class="terms-section__text">O Programa de Afiliados Clark ("Programa") é uma iniciativa de marketing de afiliados que permite que participantes promovam os serviços de automação de trading da Clark em troca de comissões sobre pagamentos confirmados. Ao se cadastrar e aceitar estes Termos, você declara ter lido e compreendido todas as cláusulas.</p>
+            <div class="terms-highlight">
+                <p class="terms-highlight__label">Última atualização</p>
+                <p class="terms-highlight__text">28 de Setembro de 2026</p>
+            </div>
+        </section>
+
+        <!-- 02 DEFINIÇÕES -->
+        <section class="terms-section">
+            <p class="terms-section__number">02 · Definições</p>
+            <h2 class="terms-section__title">Termos Essenciais</h2>
+            <ul class="terms-list">
+                <li><strong>Afiliado:</strong> Você, a pessoa física ou jurídica que se cadastra no Programa para promover os serviços da Clark.</li>
+                <li><strong>Cliente:</strong> O usuário que clica no seu link de afiliado e realiza uma compra ou contratação dos serviços da Clark.</li>
+                <li><strong>Comissão:</strong> O valor percentual pago ao Afiliado sobre cada pagamento confirmado de um Cliente. <strong>Comissão Líquida:</strong> valor bruto menos taxas do provedor de pagamento.</li>
+                <li><strong>Link de Afiliado:</strong> URL exclusiva gerada para você, usada para rastrear indicações e atribuir comissões.</li>
+                <li><strong>Pagamento Confirmado:</strong> A transação concluída pelo Cliente, cujo valor foi integralmente recebido pela Clark.</li>
+            </ul>
+        </section>
+
+        <!-- 03 COMISSÃO -->
+        <section class="terms-section">
+            <p class="terms-section__number">03 · Comissão</p>
+            <h2 class="terms-section__title">Como as Comissões Funcionam</h2>
+            <p class="terms-section__text">O Programa de Afiliados Clark oferece comissões progressivas baseadas no volume de clientes indicados. Cada pagamento confirmado gera entre 10% e 25% do valor para o Afiliado, conforme o tier alcançado.</p>
+            <div class="terms-highlight">
+                <p class="terms-highlight__label">Tiers de Comissão</p>
+                <p class="terms-highlight__text"><strong>0–14 clientes:</strong> 10% por pagamento · <strong>15–24 clientes:</strong> 15% · <strong>25+ clientes:</strong> 25%</p>
+            </div>
+            <p class="terms-section__text">As comissões são calculadas sobre o valor líquido de cada transação. Não há pagamento sobre auto-referências, transações canceladas ou qualquer forma de fraude.</p>
+        </section>
+
+        <!-- 04 PAGAMENTOS -->
+        <section class="terms-section">
+            <p class="terms-section__number">04 · Pagamentos e Prazo de Carência</p>
+            <h2 class="terms-section__title">Liberação Após 7 Dias</h2>
+            <p class="terms-section__text">As comissões são pagas via PIX na conta cadastrada pelo Afiliado. Cada transação está sujeita ao direito de arrependimento do consumidor (CDC, Art. 49: 7 dias da assinatura/contratação ou do recebimento do produto/serviço). A comissão será liberada na data que ocorrer por último entre: (a) 7 dias corridos após a confirmação do pagamento; e (b) o término do prazo de arrependimento aplicável previsto no art. 49 do CDC.</p>
+            <div class="terms-highlight">
+                <p class="terms-highlight__label">Por que 7 dias de carência?</p>
+                <p class="terms-highlight__text">Período de estabilidade da transação para identificar chargebacks ou estornos antes do repasse ao Afiliado. O direito de arrependimento do CDC (7 dias) é independente e segue a data da contratação ou recebimento.</p>
+            </div>
+            <p class="terms-section__text">Não há valor mínimo para pagamento. As comissões acumuladas são enviadas automaticamente quando ocorrer a data mais tardia entre os dois prazos.</p>
+        </section>
+
+        <!-- 05 ELEGIBILIDADE -->
+        <section class="terms-section">
+            <p class="terms-section__number">05 · Elegibilidade</p>
+            <h2 class="terms-section__title">Quem Pode Participar</h2>
+            <p class="terms-section__text">Podem participar do Programa pessoas maiores de 18 anos, brasileiras ou estrangeiras residentes no Brasil, que possuam conta válida na plataforma Clark. É proibida a participação de menores de idade, pessoas impedidas por lei, ou aqueles que tenham sido excluídos do Programa por violação destes Termos.</p>
+            <p class="terms-section__text">O cadastro é gratuito e não implica qualquer vínculo empregatício, sócio ou parceiro entre o Afiliado e a Clark. O Afiliado é um colaborador independente e é inteiramente responsável por suas atividades de divulgação.</p>
+        </section>
+
+        <!-- 06 CONDUCTA -->
+        <section class="terms-section">
+            <p class="terms-section__number">06 · Código de Conduta</p>
+            <h2 class="terms-section__title">Regras de Conduta</h2>
+            <p class="terms-section__text">O Afiliado compromete-se a respeitar as seguintes regras:</p>
+            <ul class="terms-list">
+                <li><strong>Divulgação honesta:</strong> Não faça promessas de ganhos, garantias de resultados ou representações enganosas sobre o Programa.</li>
+                <li><strong>Sem spam:</strong> Não envie comunicações não solicitadas (spam, mensagens em massa, e-mails em massa).</li>
+                <li><strong>Sem uso indevido de marca:</strong> Não registre domínios ou use a marca Clark em domínios, URLs ou nomes de domínio sem autorização prévia.</li>
+                <li><strong>Sem auto-referência:</strong> Não gere comissões para si mesmo ou para pessoas vinculadas a você.</li>
+                <li><strong>Conformidade legal:</strong> Siga todas as leis aplicáveis, incluindo regras de publicidade e proteção de dados pessoais.</li>
+            </ul>
+        </section>
+
+        <!-- 07 RESCISÃO -->
+        <section class="terms-section">
+            <p class="terms-section__number">07 · Rescisão e Encerramento</p>
+            <h2 class="terms-section__title">Encerramento do Programa</h2>
+            <p class="terms-section__text">A Clark se reserva o direito de suspender ou encerrar a participação do Afiliado no Programa a qualquer momento, unilateralmente, sem necessidade de aviso prévio, caso seja detectada qualquer violação destes Termos, prática fraudulenta, ou uso indevido da marca.</p>
+            <p class="terms-section__text">O Afiliado pode solicitar o encerramento de sua participação a qualquer momento, enviando solicitação para o e-mail de contato indicado na seção final deste documento.</p>
+            <p class="terms-section__text">Em caso de rescisão por violação ou uso indevido: comissões já pagas e comissões já geradas (pendentes de pagamento) são mantidas; novas gerações de comissão e cupom de afiliado são bloqueados a partir da data do cancelamento.</p>
+        </section>
+
+        <!-- 08 DISPOSIÇÕES LEGAIS -->
+        <section class="terms-section">
+            <p class="terms-section__number">08 · Disposições Legais</p>
+            <h2 class="terms-section__title">Aspectos Jurídicos</h2>
+            <p class="terms-section__text">Este Programa é regido pelas leis da República Federativa do Brasil, em especial pelo Código de Defesa do Consumidor (Lei 8.078/1990), pela Lei Geral de Proteção de Dados (Lei 13.709/2018) e pelo Marco Civil da Internet (Lei 12.965/2014).</p>
+            <p class="terms-section__text">O Afiliado reconhece que é responsável por cumprir todas as obrigações fiscais e tributárias referentes às comissões recebidas. A Clark não retém impostos na fonte e o Afiliado deve providenciar seu próprio cumprimento fiscal.</p>
+            <p class="terms-section__text">Qualquer disputa será resolvida nos Foros da Comarca do Rio de Janeiro, Brasil. Sem prejuízo do direito do consumidor ao foro de seu domicílio, nos termos do art. 101, I, do CDC, fica eleito o Foro da Comarca do Rio de Janeiro para as demais relações decorrentes destes Termos.</p>
+            <p class="terms-section__text">A Clark se reserva o direito de modificar estes Termos a qualquer momento. As alterações entrarão em vigor para novas transações a partir da publicação na página do Programa. Transações já realizadas permanecem regidas pelos termos vigentes na data da indicação.</p>
+        </section>
+
+        <!-- 09 CONTATO -->
+        <section class="terms-section">
+            <p class="terms-section__number">09 · Contato</p>
+            <h2 class="terms-section__title">Dúvidas e Solicitações</h2>
+            <div class="terms-contact">
+                <p>Para dúvidas, solicitações de encerramento ou denúncias de violação, entre em contato:</p>
+                <p><strong>E-mail:</strong> <a href="mailto:contatoclark@proton.me">contatoclark@proton.me</a></p>
+                <p><strong>Programa de Afiliados Clark</strong></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="terms-footer">
+            <p>Clark © 2026 — Todos os direitos reservados. Programa de Afiliados — Termos atualizados em 28 de Setembro de 2026.</p>
+        </footer>
+
+    </main>
+</body>
+
+</html>

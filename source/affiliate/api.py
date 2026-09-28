@@ -28,6 +28,8 @@ def register_affiliate(request):
 @api_view(["POST"])
 @authenticated
 def validate_affiliate(request):
+
     if not affiliate_service.get_affiliate(request.subject):
-        return Response({"valid": False}, status=status.HTTP_404_NOT_FOUND)
-    return Response({"valid": True}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    return Response(status=status.HTTP_200_OK)

@@ -8,8 +8,8 @@ def page_affiliate(request):
 
 
 @authenticated
-def page_overview(request):
-    return render(request, "overview.html")
+def page_dashboard(request):
+    return render(request, "dashboard.html")
 
 @authenticated
 def page_affiliate_terms(request):

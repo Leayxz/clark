@@ -1,10 +1,9 @@
 from decimal import Decimal
 from uuid import UUID
 
-from .interfaces import ExchangeProtocol, NotifierProtocol, AutomationExecutorProtocol
+from .interfaces import NotifierProtocol, AutomationExecutorProtocol
 from .gateway import ExchangeGateway
 from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderDTO
-from ..constants import EXCHANGES
 
 
 class Regras:
@@ -82,4 +81,4 @@ class AutomationExecutor:
                 self._repository.update_wallet_balance(user_id, sold_order.margin_used, sold_order.profit)
                 await self._repository.update_dashboard_overview(user_id, sold_order.margin_used, False)
                 await self._repository.save_closed_order(str(user_id), sold_order)
-                await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders))
+                await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders), str(user_id))

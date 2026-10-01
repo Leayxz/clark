@@ -6,6 +6,7 @@ from uuid import UUID
 from collections.abc import AsyncIterator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy import select, func
 
 from .models import ClosedOrder
 from .gateway import ExchangeGateway
@@ -109,6 +110,23 @@ class AutomationExecutorRepository:
 
             except Exception as exc:
                 logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)
+
+
+
+    async def closed_orders_today(self, user_id: str) -> int:
+
+        today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        query = (
+            select(func.count(ClosedOrder.order_id))
+            .where(ClosedOrder.user_id == user_id)
+            .where(ClosedOrder.closed_at >= today_start)
+        )
+
+        async with self._database_client.begin() as session:
+            result = await session.execute(query)
+
+        return result.scalar() or 0
 
 
     def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):

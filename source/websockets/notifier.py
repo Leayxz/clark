@@ -14,11 +14,13 @@ class Telegram:
         self._repository = repository
 
     async def send_buy_message(self, entry_price: Decimal, all_open_orders: int):
+
         message = (
-            f"🟢 Nova Compra Realizada\n"
+            f"🟢 Nova Compra Realizada\n\n"
             f"Entrada: {entry_price}\n"
             f"Ordens Abertas: {all_open_orders}"
         )
+
         await asyncio.to_thread(self._telebot.send_message, self._chat_id, message)
 
     async def send_sell_message(self, profit: Decimal, all_open_orders: int, user_id: str):

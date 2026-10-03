@@ -1,11 +1,43 @@
+from datetime import timedelta, datetime
 from dataclasses import dataclass
 from decimal import Decimal
 from .errors import Error
+
 
 @dataclass
 class AuthDTO:
     email: str
     password: str
+
+
+@dataclass
+class AffiliateDTO:
+    liquid_address: str
+    coupon: str
+    promotion_description: str
+
+
+@dataclass
+class AffiliatePayment:
+    date: str
+    coupon: str
+    amount_brl: Decimal
+    commission_brl: Decimal
+    status: str
+
+
+@dataclass
+class AffiliateDashboardDTO:
+    coupon_code: str
+    tier: str
+    tier_percentual: int
+    total_commissions_brl: Decimal
+    paying_users: int
+    paying_users_threshold: int
+    next_tier: str
+    next_tier_percentual: int
+    remaining_to_next: Decimal
+    payments: list[AffiliatePayment]
 
 
 @dataclass
@@ -19,6 +51,16 @@ class AuthResult:
 
 
 @dataclass
+class DeflowExchangeDTO:
+    payment_id: str
+    qr_code: str
+    amount_brl: Decimal
+    status: str
+    expires_at: datetime | None = None
+    coupon: str = ""
+
+
+@dataclass
 class LNMarketsDTO:
     deposit_id: str
     payment_request: str
@@ -26,9 +68,8 @@ class LNMarketsDTO:
 
 @dataclass
 class PaymentDTO:
-    deposit_id: str
-    payment_request: str
-    qrcode: str
+    coupon_code: str
+    payer_tax_number: str
 
 
 @dataclass
@@ -38,11 +79,38 @@ class NotifierDTO:
 
 
 @dataclass
-class DashboardResult:
-    total_profit_today: Decimal | None
+class SidebarStatus:
+    last_operation: str
     status_automation: bool
     status_telegram: bool
-    status_payment: bool
+
+
+@dataclass
+class Overview:
+    btc_usd_price: int
+    percentage_profit: int
+    leverage: int
+    total_patrimony: int
+    total_margin_exposed: int
+    open_orders: int
+    goal_target: int
+    all_time_profit: Decimal | int
+    last_operations: list[dict]
+
+
+@dataclass
+class OverviewPeriod:
+    btc_usd_price: Decimal
+    total_profit: Decimal | int
+    total_operations: int
+    total_fees: Decimal | int
+
+
+
+@dataclass
+class UltimasOperacoes:
+    profit: Decimal | int
+    closed_at: datetime
 
 
 @dataclass
@@ -51,6 +119,14 @@ class ApiDTO:
     API_SECRET: str | None = None
     API_PASSPHRASE: str | None = None
     exchange: str | None = None
+
+
+@dataclass
+class CredentialsDTO:
+    API_KEY: str | None = None
+    API_SECRET: str | None = None
+    API_PASSPHRASE: str | None = None
+    EXCHANGE: str | None = None
 
 
 @dataclass
@@ -65,16 +141,17 @@ class ConfigurationDTO:
     - last_buy_down: Decimal
     """
     wallet_balance: Decimal = Decimal("0")
-    marginUSD: int = 1
-    leverage: int = 5
-    percentage_profit: Decimal = Decimal("0.005")
-    buy_variation: Decimal = Decimal("500")
+    marginUSD: int = 0
+    leverage: int = 0
+    percentage_profit: Decimal = Decimal("0.000")
+    buy_variation: Decimal = Decimal("0")
     last_buy_up: Decimal = Decimal("0")
     last_buy_down: Decimal = Decimal("0")
+    exchange: str = ""
 
 
 @dataclass
-class AllOpenOrders:
+class AllOpenOrdersDTO:
     """
     - order_id: str
     - entry_price: Decimal
@@ -106,16 +183,5 @@ class SellOrderDTO:
     exit_price: Decimal
     margin_used: Decimal
     profit: Decimal
-
-
-@dataclass
-class CredentialsDTO:
-    """
-    - API_KEY: str
-    - API_SECRET: str
-    - API_PASSPHRASE: str
-    """
-    API_KEY: str
-    API_SECRET: str
-    API_PASSPHRASE: str
-    exchange: str
+    total_fees: Decimal
+    closed_at: datetime

@@ -113,14 +113,6 @@ class Dashboard {
 
 
 
-        // ----------------------------------------- Status Automation ----------------------------------------- //    
-
-        if (!data.status_automation) {
-            document.getElementById("status_automation")!.textContent = "Automação Inativa";
-            document.getElementById("container_status_automation")!.classList.add("inactive");
-            document.getElementById("status_dot")!.classList.add("inactive");
-        }
-
         // ----------------------------------------- Latest Operations ----------------------------------------- //
         const opsContainer = document.getElementById("last_operations")!;
         const opTpl = document.getElementById("op-template") as HTMLTemplateElement;

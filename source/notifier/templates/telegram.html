@@ -1,23 +1,127 @@
-{% extends "layout.html" %}
 {% load static %}
 
-{% block title %} Clark {% endblock %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-{% block main %}
-<link rel = "stylesheet" href = "{% static 'telegram.css' %}"> {% csrf_token %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Clark — Telegram</title>
+    <meta name="description" content="Receba notificações de compra, venda e erros do Clark no seu Telegram. Configure seu token e chat ID.">
+    <link rel="stylesheet" href="{% static 'telegram.css' %}">
+    <link rel="stylesheet" href="{% static 'sidebar.css' %}">
+</head>
 
-      <div class="container_telegram">
-            <form id="formulario_telegram" class="form_telegram">  {% csrf_token %}
-                  
-                  <label> Token Telegram: <input id="telegram_token" type="text" name="token-telegram" placeholder="telegram token"> </label>
-                  <label> ID Telegram: <input id="telegram_id" type="text" name="id-telegram" placeholder="telegram id"> </label>
-                  <p hidden> Mensagem Erro </p>
+<body>
+    <div class="clark-app">
 
-                  <button class="botao" type="submit"> Salvar Telegram </button>
-                  <a class="botao" href="{% url 'pagina_dashboard' %}"> Dashboard </a>
-            </form>
-      </div>
+        <!-- -------------------------------------------- Sidebar -------------------------------------------- -->
+        {% include "sidebar.html" %}
 
-      <script type="module" src="{% static 'javascript/notifier.js' %}"></script>
+        <!-- ------------------------------------------- Main Content ------------------------------------------- -->
+        <main class="clark-main">
 
-{% endblock %}
+            <!-- ----------------------------------------------- Hero editorial ----------------------------------------------- -->
+            <header class="clark-page-header">
+                <div class="container_header">
+                    <div class="clark-brand">Clark <span class="clark-brand__mark">丰</span></div>
+                </div>
+                <h1 class="clark-hero-title">Acompanhe todas as suas operações em tempo real.</h1>
+                <p class="clark-hero-sub">
+                    Compra, venda e erros diretamente no seu Telegram.
+                    Sem spam, sem ruído. Apenas o que exige sua atenção.
+                </p>
+            </header>
+
+
+            <!-- ----------------------------------------------- Formulário (elemento focal) ----------------------------------------------- -->
+
+            <section class="clark-form-section" aria-labelledby="form-title">
+                <h2 id="form-title">Configurar Telegram</h2>
+
+                <form id="formulario_telegram" class="form_telegram" method="post"> {% csrf_token %}
+
+                    <div class="clark-form-group">
+                        <label class="clark-form-label" for="telegram_token">Token</label>
+                        <input id="telegram_token" class="clark-form-input" type="text" name="token-telegram" 
+                               placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
+                                minlength="45" maxlength="50">
+                    </div>
+
+                    <div class="clark-form-group">
+                        <label class="clark-form-label" for="telegram_id">Chat ID</label>
+                        <input id="telegram_id" class="clark-form-input" type="text" name="id-telegram"
+                               placeholder="987654321"
+                                minlength="8" maxlength="15">
+                    </div>
+
+                    <!-- Feedback de erro -->
+                    <div class="clark-error" id="erro-telegram">
+                        <svg class="clark-error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span id="erro-telegram-text">Mensagem de erro</span>
+                    </div>
+
+                    <!-- Botão + sucesso -->
+                    <p class="telegram_salvo" hidden>
+                        <svg class="clark-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Telegram salvo com sucesso.
+                    </p>
+
+                    <div class="clark-form-actions">
+                        <button class="clark-btn-primary" type="submit">Salvar Telegram</button>
+                    </div>
+
+                </form>
+            </section>
+
+
+            <!-- ----------------------------------------------- Benefícios (seção editorial) ----------------------------------------------- -->
+            
+            <section class="clark-benefits" aria-labelledby="benefits-title">
+
+                <div class="clark-section-heading">
+                    <h2 id="benefits-title">Notificações sobre</h2>
+                </div>
+
+                <ul class="clark-benefits-list">
+                    <li class="clark-benefit">
+                        <span class="clark-benefit-num">01</span>
+                        <span class="clark-benefit-title">Ordem executada</span>
+                        <span class="clark-benefit-desc">Saiba quando sua compra ou venda realmente aconteceu.</span>
+                    </li>
+                    <li class="clark-benefit">
+                        <span class="clark-benefit-num">02</span>
+                        <span class="clark-benefit-title">Erros e indisponibilidade</span>
+                        <span class="clark-benefit-desc">Receba um alerta antes que um problema passe despercebido.</span>
+                    </li>
+                    <li class="clark-benefit">
+                        <span class="clark-benefit-num">03</span>
+                        <span class="clark-benefit-title">Resumo diário</span>
+                        <span class="clark-benefit-desc">Veja suas operações e performance no fim do dia.</span>
+                    </li>
+                    <li class="clark-benefit">
+                        <span class="clark-benefit-num">04</span>
+                        <span class="clark-benefit-title">Sem spam</span>
+                        <span class="clark-benefit-desc">Só enviamos eventos que realmente exigem sua atenção.</span>
+                    </li>
+                </ul>
+            </section>
+
+
+        </main>
+    </div>
+
+    <!-- Scripts (integração preservada) -->
+    <script type="module" src="{% static 'javascript/notifier.js' %}"></script>
+    <script type="module" src="{% static 'javascript/sidebar.js' %}"></script>
+</body>
+
+</html>

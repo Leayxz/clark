@@ -1,0 +1,593 @@
+/* ============================================================
+   CLARK — AUTOMATION (regras do Obsidian aplicadas)
+   Tokens do projeto, font inherit + math c/ fallback CJK (丰),
+   sem !important, focus-visible, prefers-reduced-motion, tema claro.
+   ============================================================ */
+
+:root {
+    --bg:            #050505;
+    --surface:       #0c0c0c;
+    --surface-2:     #141414;
+    --border:        #1f1f1f;
+    --text:          #e8eaed;
+    --muted:         #9aa0a8;
+    --dim:           #828a94;
+    --up:            #34c07c;
+    --down:          #e05252;
+    --warn:          #d8b43a;
+    --accent:        #f5f7fa;
+    --sidebar:       #0a0a0a;
+    --sidebar-hover: #111111;
+    --math:          math, "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    --mono:          "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    font-family: inherit;
+}
+
+/* ----------------------------------------------------------------
+   APP SHELL
+   ---------------------------------------------------------------- */
+.clark-app {
+    font-family: var(--math); /* padrão do sistema: math c/ fallback CJK (丰) */
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    padding: 20px 40px 20px 25%;
+    max-width: none;
+}
+
+.clark-app button,
+.clark-app input,
+.clark-app select {
+    border: 1px solid var(--border);
+    font-family: inherit;
+}
+
+
+
+/* ----------------------------------------------------------------
+   HEADER
+   ---------------------------------------------------------------- */
+.clark-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 28px;
+}
+
+.container_header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+    margin: 0;
+    gap: 4px;
+}
+
+.clark-page-subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.clark-brand {
+    font-family: var(--math);
+    font-size: 50px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--text);
+    margin: 0px 0px -5px 0px;
+}
+
+.clark-brand__mark {
+    color: var(--up); /* 丰 em verde = marca do Clark (padrão de payment.html) */
+}
+
+/* ----------------------------------------------------------------
+   STATUS BANNER
+   ---------------------------------------------------------------- */
+.clark-status-banner {
+    background: var(--surface);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    width: 70%;
+    margin: 0 auto 24px auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.clark-status-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dot_animation_sidebar {
+    background: var(--down);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: clark-pulse 2s infinite;
+    flex-shrink: 0;
+}
+
+.dot_animation_sidebar.active {
+    background: var(--up);
+}
+
+.clark-status-label {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.clark-status-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.clark-toggle-btn {
+    background: var(--down);
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 8px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+}
+
+.clark-toggle-btn:hover {
+    opacity: 0.9;
+}
+
+.clark-toggle-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.clark-toggle-btn.active {
+    background: var(--up);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.clark-toggle-btn.active:hover {
+    background: var(--surface-2);
+}
+
+/* ----------------------------------------------------------------
+   RISK WARNING
+   ---------------------------------------------------------------- */
+.clark-risk {
+    background: color-mix(in srgb, var(--warn) 8%, var(--surface));
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 12px;
+    width: 88%;
+    margin: 0 auto 15px auto;
+    border: 1px solid var(--warn);
+}
+
+.clark-risk-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--warn);
+}
+
+.clark-risk-text {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.clark-risk-text strong {
+    color: var(--warn);
+    font-weight: 600;
+}
+
+/* ----------------------------------------------------------------
+   EXCHANGE SELECTOR
+   ---------------------------------------------------------------- */
+.clark-exchange-wrapper {
+    margin-bottom: 24px;
+}
+
+.clark-exchange-selector {
+    display: inline-flex;
+    gap: 12px;
+    padding: 6px;
+    background: rgba(255, 255, 255, .03);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+}
+
+.clark-exchange-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform .15s ease-out, border-color .15s ease-out, color .15s ease-out, background .15s ease-out;
+}
+
+.clark-exchange-card:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, .04);
+}
+
+.clark-exchange-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.clark-exchange-card--active {
+    color: var(--text);
+    background: var(--surface-2);
+    border-color: var(--up);
+    position: relative;
+}
+
+.clark-exchange-card--active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--up);
+}
+
+.clark-exchange-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.clark-exchange-name {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .01em;
+    white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------
+   SECTIONS (lado a lado) */
+   ---------------------------------------------------------------- */
+.clark_sections_row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.clark_sections_row .clark-section {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.clark-section {
+    margin-bottom: 24px;
+}
+
+.clark-section-title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    margin-bottom: 12px;
+}
+
+.clark-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.clark-card > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.clark-card > form .clark-btn-primary {
+    margin-top: auto;
+}
+
+/* ----------------------------------------------------------------
+   FORM FIELDS
+   ---------------------------------------------------------------- */
+.clark-field {
+    margin-bottom: 16px;
+}
+
+.clark-field:last-child {
+    margin-bottom: 0;
+}
+
+.clark-field-label {
+    color: var(--text);
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.clark-field-hint {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.clark-input {
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.clark-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+    outline: none;
+}
+
+.clark-input::placeholder {
+    color: var(--muted);
+}
+
+.clark-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ----------------------------------------------------------------
+   API STATUS
+   ---------------------------------------------------------------- */
+.clark-api-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--up) 8%, transparent);
+    margin-bottom: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--up);
+}
+
+.clark-api-status.disconnected {
+    background: color-mix(in srgb, var(--muted) 8%, transparent);
+    color: var(--muted);
+}
+
+/* ----------------------------------------------------------------
+   STRATEGY PREVIEW
+   ---------------------------------------------------------------- */
+.clark-strategy-preview {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.clark-strategy-preview-title {
+    color: var(--text);
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.clark-strategy-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.clark-strategy-row:last-child {
+    border-bottom: none;
+}
+
+.clark-strategy-row-label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.clark-strategy-row-value {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* ----------------------------------------------------------------
+   BUTTONS
+   ---------------------------------------------------------------- */
+.clark-btn {
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    margin-top: 8px;
+    font-family: inherit;
+}
+
+.clark-btn:hover {
+    background: var(--surface-2);
+}
+
+.clark-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.clark-btn-primary {
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border: 1px solid var(--border);
+}
+
+.clark-btn-primary:hover {
+    opacity: 0.9;
+}
+
+.clark-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ----------------------------------------------------------------
+   MESSAGES
+   ---------------------------------------------------------------- */
+.temporary_message {
+    color: var(--text);
+    text-align: center;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.temporary_message.success {
+    color: var(--up);
+    background: color-mix(in srgb, var(--up) 10%, transparent);
+    border: 1px solid rgba(52, 192, 124, 0.3);
+}
+
+.temporary_message.error {
+    color: var(--down);
+    background: color-mix(in srgb, var(--down) 10%, transparent);
+    border: 1px solid rgba(224, 82, 82, 0.3);
+}
+
+.clark-message {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 12px;
+    display: none;
+}
+
+.clark-message.show {
+    display: block;
+}
+
+.clark-message.success {
+    background: color-mix(in srgb, var(--up) 10%, transparent);
+    color: var(--up);
+}
+
+.clark-message.error {
+    background: color-mix(in srgb, var(--down) 10%, transparent);
+    color: var(--down);
+}
+
+/* ----------------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .clark-app {
+        padding: 16px;
+    }
+    .clark_brand {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 640px) {
+    .clark_sections_row {
+        grid-template-columns: 1fr;
+    }
+    .clark-input-group {
+        grid-template-columns: 1fr;
+    }
+    .clark-status-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .clark-toggle-btn {
+        width: 100%;
+    }
+    .clark-brand {
+        font-size: 30px;
+    }
+}
+
+/* ----------------------------------------------------------------
+   TEMA CLARO / ACESSIBILIDADE
+   ---------------------------------------------------------------- */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f5f5f5;
+        --surface: #ffffff;
+        --surface-2: #ececec;
+        --border: #d8d8d8;
+        --text: #1a1a1a;
+        --muted: #666666;
+        --dim: #999999;
+        --accent: #111111;
+        --sidebar: #efefef;
+        --sidebar-hover: #e2e2e2;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}

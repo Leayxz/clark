@@ -1,0 +1,367 @@
+/* ============================================================
+   CLARK — SIDEBAR PREMIUM (v3 — construído 2026-09-10)
+   Sidebar scrollless (altura ≤ viewport) + gold dust micro-refinements.
+
+   Referência: Linear.app / Notion / GitHub NewNav — flat, glass,
+   active = 3px green bar (não verde full), scroll eliminado via
+   padding/nav compactos.
+
+   Segue:
+   - REGRAS TOKENS DE DESIGN.md (§1: :root só cores)
+   - REGRAS PÁGINAS HTML CSS.md (§10: standalone HTML)
+   - REGRAS PARA CONSTRUIR PÁGINAS PREMIUM.md
+     (§5: glassmorphic + inset highlights; §6: micro-interações; §13: anti-slop)
+   ============================================================ */
+
+:root {
+    --bg:            #050505;
+    --surface:       #0c0c0c;
+    --surface-2:     #141414;
+    --border:        #1f1f1f;
+    --text:          #e8eaed;
+    --muted:         #9aa0a8;
+    --dim:           #828a94;
+    --up:            #34c07c;          /* verde = estado positivo / 丰 */
+    --down:          #e05252;          /* vermelho = erro / risco */
+    --sidebar:       #0a0a0a;
+    --sidebar-hover: #111111;
+    /* Hairlines p/ dark */
+    --hairline:      rgba(255, 255, 255, .07);
+    --hairline-strong: rgba(255, 255, 255, .14);
+}
+
+/* ----------------------------------------------------------------
+   SIDEBAR — glassmorphism translucent, fixed, SCROLLLESS
+   ---------------------------------------------------------------- */
+.clark-sidebar {
+    background: rgba(10, 10, 10, .72);           /* translucent */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid var(--hairline);
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 23%;
+    max-width: 23%;
+    height: 100vh;
+    padding: 20px 16px 16px;                     /* v3: 32→20 top, 24→16 bottom */
+    overflow-y: hidden;                          /* v3: SCROLLLESS */
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;                                   /* v3: 24→16 */
+}
+
+/* ----------------------------------------------------------------
+   AUTOMATION STATUS BLOCK — compactado v3
+   ---------------------------------------------------------------- */
+.clark-automation-block {
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;                        /* v3: 10→8 */
+    padding: 16px;                            /* v3: 20→16 */
+    margin: 10% 0% 0% 0%;
+}
+
+.clark-automation-label {
+    font-family: var(--math);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--up);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.4;
+    margin-bottom: 8px;                        /* respiração */
+}
+
+.clark-automation-label.inactive {
+    color: var(--down);
+}
+
+.clark-automation-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--math);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--up);
+    justify-content: center;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+.clark-automation-status.inactive {
+    color: var(--down);
+}
+
+.clark-status-dot {
+    border-radius: 50%;
+    background: var(--up);
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(52, 192, 124, .06);  /* v3: glow suave .06 */
+}
+
+.clark-status-dot.active {
+    background: var(--up);
+    animation: clark-pulse 3s infinite;
+}
+
+.clark-status-dot.inactive {
+    background: var(--down);
+    animation: clark-pulse 2s infinite;
+}
+
+@keyframes clark-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+}
+
+.clark-automation-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;                                 /* v3: 10→6 compactado */
+}
+
+.clark-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--math);
+}
+
+.clark-meta-label {
+    color: var(--muted);
+    font-size: 11px;                         /* v3: 12→11 compactado */
+    line-height: 1.5;
+}
+
+.clark-meta-value {
+    color: var(--muted);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--math);
+    font-size: 11px;                         /* v3: 12→11 compactado */
+    line-height: 1.5;
+}
+
+/* ----------------------------------------------------------------
+   NAVIGATION — flat glassmorphic, icons 20px, scrollless
+   ---------------------------------------------------------------- */
+.clark-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.clark-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;                    /* v3: 20→16 */
+    border-bottom: 1px solid var(--hairline);
+}
+
+.clark-nav-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.clark-nav-label {
+    font-family: var(--math);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--dim);
+    opacity: .35;
+    padding: 0 12px;
+    margin-bottom: 8px;                    /* v3: 12→8 */
+    text-transform: uppercase;
+}
+
+.clark-nav-item {
+    position: relative;
+    width: 100%;
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0px 8px 42px;             /* v3: 10→8 vertical */
+    border-radius: 6px;                     /* v3: 8→6 */
+    border: 1px solid transparent;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .2s ease-out;
+    line-height: 1.5;
+}
+
+/* Flat base — micro-bg p/ depth */
+.clark-nav-item {
+    background: rgba(255, 255, 255, .02);
+}
+
+.clark-nav-item:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, .04);    /* v3: .03→.04 (hover lift mais perceptível) */
+    border-color: rgba(255, 255, 255, .03);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
+    transform: translateX(3px);
+}
+
+.clark-nav-item.active {
+    color: var(--text);
+    background: rgba(255, 255, 255, .04);
+    border-color: rgba(52, 192, 124, .12);  /* v3: .25→.12 (subtle) */
+    font-weight: 600;
+}
+
+.clark-nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 18px;
+    background: var(--up);
+    opacity: .8;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Icons — 20px */
+.clark-nav-icon {
+    position: absolute;
+    left: 14px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--dim);
+    transition: color .15s ease;
+}
+
+.clark-nav-item:hover .clark-nav-icon,
+.clark-nav-item.active .clark-nav-icon {
+    color: var(--text);
+}
+
+/* ----------------------------------------------------------------
+   FOOTER ACTIONS — compactado + premium
+   ---------------------------------------------------------------- */
+.clark-footer {
+    padding-top: 16px;                     /* v3: 24→16 */
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.clark-footer-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0px 8px 11px;             /* v3: 10→8 vertical, left 42px p/ icon */
+    font-family: var(--math);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    background: rgba(255, 255, 255, .02);
+    border: 1px solid transparent;
+    border-radius: 6px;                     /* v3: 8→6 */
+    cursor: pointer;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .2s ease-out;
+    line-height: 1.5;
+}
+
+.clark-footer-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, .04);
+    border-color: rgba(255, 255, 255, .03);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
+    transform: translateY(-1px);          /* v3: sutil, não translateX */
+}
+
+.clark-footer-danger {
+    color: var(--down);
+}
+
+.clark-footer-danger:hover {
+    background: rgba(224, 82, 82, .08);
+}
+
+.clark-footer-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ----------------------------------------------------------------
+   RESPONSIVE — mobile drawer
+   ---------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .clark-sidebar {
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+    }
+
+    .clark-nav-item,
+    .clark-footer-link {
+        padding: 8px 12px;
+        justify-content: center;
+    }
+
+    .clark-nav-icon,
+    .clark-footer-icon {
+        position: relative;
+        left: 0;
+    }
+}
+
+/* ----------------------------------------------------------------
+   REDUCED MOTION
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .clark-status-dot,
+    .clark-nav-item,
+    .clark-footer-link {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ----------------------------------------------------------------
+   TEMA CLARO
+   ---------------------------------------------------------------- */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg:            #f6f7f9;
+        --surface:       #ffffff;
+        --surface-2:     #eef0f3;
+        --border:        #d8dce1;
+        --text:          #16181c;
+        --muted:         #545b63;
+        --dim:           #6b737d;
+        --up:            #1f9e63;
+        --down:          #c23b3b;
+        --sidebar:       #eceef1;
+        --sidebar-hover: #e1e4e8;
+        --hairline:      #d8dce1;
+        --hairline-strong: #b9bfc6;
+    }
+
+    .clark-sidebar {
+        background: rgba(236, 238, 241, .68);
+    }
+}

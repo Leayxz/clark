@@ -1,11 +1,16 @@
 // script responsável por buscar os dados que precisam ser enviados para a API de cadastro
-document.getElementById("AuthForm")?.addEventListener("submit", async (event) => { event.preventDefault();
+document.getElementById("register_form")?.addEventListener("submit", async (event) => { event.preventDefault();
 
     const email = document.getElementById("email") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
+    const confirmed_password = document.getElementById("confirmed_password") as HTMLInputElement;
+    const errorEl = document.getElementById("register_error_show") as HTMLParagraphElement;
 
-    const errorEl = document.getElementById("error") as HTMLParagraphElement;
-    errorEl.style.display = "none";
+    if (password.value !== confirmed_password.value) {
+        errorEl.textContent = "Senhas não coincidem."
+        errorEl.style.display = "block";
+        return;
+    }
 
     const csrf = document.querySelector("[name=csrfmiddlewaretoken]") as HTMLInputElement;
     const PAYLOAD = {"email": email.value, "password": password.value}
@@ -25,9 +30,5 @@ document.getElementById("AuthForm")?.addEventListener("submit", async (event) =>
     }
 
     // Redireciona usuário registrado com sucesso para fazer o login
-    // deve redirecionar direto pra /home/
-    // talvez mostrar mensagem de sucesso, aguardar 1s e depois redirecionar.
-    console.log(result);
-    console.log(data);
-    //window.location.href = "/v1/login/"
+    window.location.href = "/login/"
 })

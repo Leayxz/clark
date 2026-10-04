@@ -1,9 +1,9 @@
-document.getElementById("AuthForm")?.addEventListener("submit", async (event) => { event.preventDefault()
+document.getElementById("authentication_form")?.addEventListener("submit", async (event) => { event.preventDefault()
 
     const email = document.getElementById("email") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
 
-    const errorEl = document.getElementById("error") as HTMLParagraphElement;
+    const errorEl = document.getElementById("clark_login_error") as HTMLParagraphElement;
     errorEl.style.display = "none";
 
     const csrf = document.querySelector("[name=csrfmiddlewaretoken]") as HTMLInputElement;

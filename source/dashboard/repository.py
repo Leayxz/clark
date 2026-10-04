@@ -10,7 +10,7 @@ from django.db.models import Sum, Count, Q
 from .models import ClosedOrder
 from .interfaces import DashboardProtocol
 from ..constants import CacheKeys
-from ..dtos import Overview, OverviewPeriod
+from ..dtos import Overview, OverviewPeriod, SidebarStatus
 from ..constants import Period
 from ..telemetry.tracing import tracer
 
@@ -49,8 +49,6 @@ class DashboardRepository(DashboardProtocol):
             open_orders=open_orders,
             all_time_profit=result.get("profit") or 0,
             last_month_profit=result.get("last_month_profit") or 0,
-            status_automation=True if automation else False,
-            status_telegram=False,
             goal_target=goal_target,
             last_operations=[{"tipo": "Venda", "profit": operation.profit, "closed_at": operation.closed_at, "closed_at": operation.closed_at.strftime("%H:%M") if operation.closed_at else None} for operation in last_operations],
         )
@@ -76,6 +74,35 @@ class DashboardRepository(DashboardProtocol):
                 total_profit=result.get("profit") or 0,
                 total_operations=result.get("operations") or 0,
                 total_fees=result.get("fees") or 0,
+            )
+
+
+    def get_sidebar_data(self, exchange: str, user_id: UUID) -> SidebarStatus:
+
+        with tracer.start_as_current_span("repository.get_sidebar_data"):
+
+            with self._cache_client.pipeline() as pipe:
+                payload = {"exchange": exchange, "user_id": user_id}
+                pipe.sismember(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}", json.dumps(payload))
+                pipe.get(f"{CacheKeys.NOTIFIER_TELEGRAM}:{user_id}")
+                pipe.get(f"{CacheKeys.LNMCONFIGURATION}:{user_id}")
+
+                automation, notifier_raw, configuration_raw = cast(tuple[int, bytes | None, bytes | None], pipe.execute())
+
+            configuration: dict[str, int] = json.loads(configuration_raw) if configuration_raw else {}
+            notifier: dict[str, str] = json.loads(notifier_raw) if notifier_raw else {}
+
+            last_operation = (ClosedOrder.objects.filter(user_id=user_id)
+                              .order_by("-closed_at")
+                              .values_list("closed_at", flat=True)
+                              .first())
+
+            return SidebarStatus(
+                last_operation=last_operation.strftime("%H:%M") if last_operation else "",
+                status_automation=True if automation else False,
+                status_telegram=bool(notifier.get("telegram_id")),
+                leverage=configuration.get("leverage") or 0,
+                percentage_profit=configuration.get("percentage_profit") or 0,
             )
 
 

@@ -3,8 +3,6 @@ interface OverviewProtocol {
     total_patrimony: number;
     total_margin_exposed: number;
     open_orders: number;
-    status_automation: boolean;
-    status_telegram: boolean;
     goal_target: number;
     all_time_profit: number;
     last_month_profit: number;
@@ -76,13 +74,7 @@ class Dashboard {
 
 
 
-        // ---------------------------------------------- Sidebar ---------------------------------------------- //
-
-        document.getElementById("last_operation")!.textContent = data.last_operations[0].closed_at;
-
-        data.status_telegram
-            ? document.getElementById("status_telegram")!.textContent = `Conectado`
-            : document.getElementById("status_telegram")!.textContent = `Desconectado`
+        // ---------------------------------------------- Main ---------------------------------------------- //
 
 
 

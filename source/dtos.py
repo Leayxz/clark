@@ -85,6 +85,8 @@ class SidebarStatus:
     last_operation: str
     status_automation: bool
     status_telegram: bool
+    leverage: int
+    percentage_profit: Decimal | int
 
 
 @dataclass
@@ -96,8 +98,6 @@ class Overview:
     goal_target: int
     all_time_profit: Decimal | int
     last_month_profit: Decimal | int
-    status_automation: bool
-    status_telegram: bool
     last_operations: list[dict]
 
 

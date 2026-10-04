@@ -26,8 +26,22 @@ def overview(request):
         "goal_target": overview.goal_target,
         "all_time_profit": overview.all_time_profit,
         "last_operations": overview.last_operations,
-        "status_automation": overview.status_automation,
-        "status_telegram": overview.status_telegram,
+        }, status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@authenticated
+def get_sidebar_data(request):
+
+    with tracer.start_as_current_span("get_sidebar_data"):
+        sidebar = dashboard_service.get_sidebar_data("lnmarkets", request.subject)
+
+    return Response({
+        "last_operation": sidebar.last_operation,
+        "status_automation": sidebar.status_automation,
+        "status_telegram": sidebar.status_telegram,
+        "leverage": sidebar.leverage,
+        "percentage_profit": sidebar.percentage_profit,
         }, status.HTTP_200_OK)
 
 

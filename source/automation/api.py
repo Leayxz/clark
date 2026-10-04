@@ -15,7 +15,8 @@ from ..dtos import ConfigurationDTO, ApiDTO
 @authenticated
 def automation_dashboard(request):
 
-    configuration, credentials, status_automation = automation_service.get_automation_overview("lnmarkets", request.subject)
+    exchange = request.query_params.get("exchange", "lnmarkets")
+    configuration, credentials, status_automation = automation_service.get_automation_overview(exchange, request.subject)
 
     return Response({"API_KEY": credentials.API_KEY,
                      "API_SECRET": credentials.API_SECRET,
@@ -57,29 +58,25 @@ def disable_automation(request):
 @authenticated
 def save_configuration(request):
 
-    if request.method == "POST":
+    serializer = ConfigurationSerializer(data=request.data)
+    if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
 
-        serializer = ConfigurationSerializer(data=request.data)
-        if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
+    validated_data = cast(dict[str, Any], serializer.validated_data)
+    data = ConfigurationDTO(**validated_data)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
-        data = ConfigurationDTO(**validated_data)
-
-        automation_service.save_configuration("lnmarkets", request.subject, data)
-        return Response({"message": "Configuração salva com sucesso."}, status=status.HTTP_200_OK)
+    automation_service.save_configuration(data.exchange, request.subject, data)
+    return Response({"message": "Configuração salva com sucesso."}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 @authenticated
 def save_api(request):
 
-    if request.method == "POST":
+    serializer = AutomationAPISerializer(data=request.data)
+    if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
 
-        serializer = AutomationAPISerializer(data=request.data)
-        if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)
+    validated_data = cast(dict[str, Any], serializer.validated_data)
+    data = ApiDTO(**validated_data)
 
-        validated_data = cast(dict[str, Any], serializer.validated_data)
-        data = ApiDTO(**validated_data)
-
-        automation_service.save_api("lnmarkets", request.subject, data)
-        return Response({"message": "API salva com sucesso."})
+    automation_service.save_api(data.exchange, request.subject, data)
+    return Response({"message": "API salva com sucesso."})

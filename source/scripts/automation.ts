@@ -43,8 +43,8 @@ function getExchangeLabel(exchange: string): string {
 
 // Busca dados do backend para a exchange selecionada e popula os formulários
 async function loadExchangeData(): Promise<void> {
-    // o backend ainda resolve a exchange no servidor; o seletor troca apenas o estado visual
-    const response = await fetch("/api/v1/automation/dashboard", {method: "GET", credentials: "include"});
+    const exchange = getActiveExchange();
+    const response = await fetch(`/api/v1/automation/dashboard?exchange=${exchange}`, {method: "GET", credentials: "include"});
     const data: ConfiguracaoData = await response.json();
 
     if (!response.ok) {

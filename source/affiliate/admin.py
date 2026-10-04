@@ -5,7 +5,7 @@ from .models import Affiliate
 @admin.register(Affiliate)
 class AffiliateAdmin(admin.ModelAdmin):
     list_display = ("user_email", "coupon_code", "liquid_address", "created_at")
-    search_fields = ("coupon_code", "liquid_address", "user__id")
+    search_fields = ("coupon_code", "liquid_address", "user__email")
     readonly_fields = ("terms_accepted_at", "created_at", "updated_at")
     ordering = ("-created_at",)
 

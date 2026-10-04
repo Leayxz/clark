@@ -31,7 +31,7 @@ class AuthService:
             return AuthResult(error=Error.INVALID_CREDENTIALS)
 
         # deve chamar auditoria depois de autenticar
-        access_token, refresh_token = self._generate_tokens(user.email)
+        access_token, refresh_token = self._generate_tokens(str(user.id))
         return AuthResult(access_token=access_token, refresh_token=refresh_token)
 
 

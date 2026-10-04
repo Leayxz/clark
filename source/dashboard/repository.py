@@ -29,12 +29,9 @@ class DashboardRepository(DashboardProtocol):
             pipe.get(f"{CacheKeys.GOAL_TARGET}:{user_id}")
             pipe.hget(f"{CacheKeys.TOTAL_PATRIMONY}:{user_id}", "total_patrimony")
             pipe.hget(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT)
-            pipe.get(f"{CacheKeys.LNMCONFIGURATION}:{user_id}")
             pipe.get(f"BTC_USD_PRICE")
 
-            automation, total_margin_used, goal_target, total_patrimony, open_orders, configuration_raw, btc_usd_price = cast(tuple[int, dict[str, int], int, int, int, bytes, int], pipe.execute())
-
-        configuration: dict[str, int] = json.loads(configuration_raw)
+            automation, total_margin_used, goal_target, total_patrimony, open_orders, btc_usd_price = cast(tuple[int, dict[str, int], int, int, int, int], pipe.execute())
 
         thirty_days_ago = timezone.now() - timedelta(days=30)
         last_operations = list(ClosedOrder.objects.filter(user_id=user_id).order_by("-closed_at")[:4])
@@ -46,8 +43,6 @@ class DashboardRepository(DashboardProtocol):
 
         return Overview(
             btc_usd_price=btc_usd_price,
-            percentage_profit=configuration.get("percentage_profit") or 0,
-            leverage=configuration.get("leverage") or 0,
             total_patrimony=total_patrimony,
             total_margin_exposed=total_margin_used.get("total_margin_used") or 0,
             open_orders=open_orders,

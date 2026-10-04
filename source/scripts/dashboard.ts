@@ -1,7 +1,5 @@
 interface OverviewProtocol {
     btc_usd_price: number;
-    percentage_profit: number;
-    leverage: number;
     total_patrimony: number;
     total_margin_exposed: number;
     open_orders: number;
@@ -80,7 +78,6 @@ class Dashboard {
 
         // ---------------------------------------------- Sidebar ---------------------------------------------- //
 
-        document.getElementById("estrategia_sidebar")!.textContent = `Target ${data.percentage_profit}% | Leverage ${data.leverage}x`
         document.getElementById("last_operation")!.textContent = data.last_operations[0].closed_at;
 
         data.status_telegram

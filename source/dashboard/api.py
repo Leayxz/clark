@@ -19,8 +19,6 @@ def overview(request):
 
     return Response({
         "btc_usd_price": overview.btc_usd_price,
-        "percentage_profit": overview.percentage_profit,
-        "leverage": overview.leverage,
         "total_patrimony": overview.total_patrimony,
         "total_margin_exposed": overview.total_margin_exposed,
         "open_orders": overview.open_orders,

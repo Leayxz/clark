@@ -90,8 +90,6 @@ class SidebarStatus:
 @dataclass
 class Overview:
     btc_usd_price: int
-    percentage_profit: int
-    leverage: int
     total_patrimony: int
     total_margin_exposed: int
     open_orders: int

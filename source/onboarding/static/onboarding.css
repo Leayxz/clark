@@ -1,0 +1,1012 @@
+/* ============================================================
+   CLARK â€” Onboarding (pÃ¡gina de venda, nÃ£o tutorial)
+   Baseado nas notas:
+     - [[MARKETING]] SeÃ§Ã£o 3.1: 5 telas, 1 CTA cada, sem menu
+     - [[REGRAS MARKETING CLARK]] SeÃ§Ã£o 8: vende, nÃ£o ensina
+     - [[REGRAS PÃGINAS HTML CSS]] SeÃ§Ã£o 11: sem prometer retorno
+   Dark-first Â· terminal financeiro premium Â· reaproveita tokens
+   da landing original (cores, mono, espaÃ§amentos).
+   ============================================================ */
+
+:root {
+  --bg: #050505;
+  --surface: #0c0c0c;
+  --surface-2: #141414;
+  --border: #1f1f1f;
+  --text: #e8eaed;
+  --muted: #9aa0a8;
+  --dim: #828a94;
+  --accent: #f5f7fa;
+  --up: #34c07c;            /* verde sÃ³ p/ estado/confianÃ§a/ä¸° */
+  --down: #e05252;          /* vermelho sÃ³ p/ erro/risco/prejuÃ­zo */
+  --math: math, "Microsoft YaHei", "Noto Sans SC", sans-serif;  /* fonte da UI + fallback CJK p/ ä¸° */
+  /* --mono e --sans (Inter) removidos: a tentativa de usar Inter foi revertida */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--math);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: hidden; /* página não rola — cada step rola internamente */
+}
+
+h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; }
+em { color: var(--accent); font-style: normal; }
+.accent { color: var(--accent); }
+
+.inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+/* Acessibilidade: foco de teclado visÃ­vel */
+a:focus-visible,
+.btn:focus-visible,
+.logo:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.checkbox input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.btn:active { transform: translateY(0); opacity: .82; }
+
+/* ---------- BotÃµes ---------- */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: transform .18s ease-out, opacity .18s ease-out, border-color .18s ease-out;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-solid {
+  background: var(--up);
+  color: var(--bg);
+  border-color: var(--up);
+}
+.btn-solid:hover { transform: translateY(-2px); box-shadow: 0 0 0 3px rgba(52,192,124,.16); }
+.btn-ghost {color: var(--text);background: var(--bg);}
+.btn-ghost:hover { border-color: var(--muted); background: var(--surface); }
+.btn-lg { padding: 14px 30px; font-size: 15px; }
+.btn-block { display: block; text-align: center; width: 100%; }
+.btn[disabled] {
+  opacity: .35;
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+/* ---------- Top bar (sem menu lateral, sem distraÃ§Ãµes) ---------- */
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.topbar-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-family: var(--math);
+  font-weight: 700;
+  font-size: 25px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: .08em;
+}
+.clark-brand__mark { color: var(--up); margin-left: 2px; }
+
+.topbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+
+/* ---------- Progress bar (verde arredondada, sem container cinza) ---------- */
+.progress-bar {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.progress-label {
+  font-family: var(--math);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.7;
+  flex: none;
+}
+.progress-fill {
+  height: 6px;
+  background: var(--up);
+  border-radius: 8px;
+  width: 20%;
+  transition: width .25s ease;
+}
+.progress-fill[data-step="1"] { width: 20%; }
+.progress-fill[data-step="2"] { width: 40%; }
+.progress-fill[data-step="3"] { width: 60%; }
+.progress-fill[data-step="4"] { width: 80%; }
+.progress-fill[data-step="5"] { width: 100%; }
+
+/* ---------- Tela 1 â€” Mini mock do dashboard (prova visual) ---------- */
+.mock-mini {
+  max-width: 560px;
+  margin: 0 auto 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  font-family: var(--math);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.mock-mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  letter-spacing: .12em;
+}
+.mock-mini-logo { color: var(--text); font-weight: 700; }
+.mock-mini-status { color: var(--up); display: flex; align-items: center; gap: 6px; font-size: 10px; }
+.mock-mini-main {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 16px 12px;
+  gap: 16px;
+}
+.mock-mini-block { display: flex; flex-direction: column; gap: 4px; }
+.mock-mini-block.right { text-align: right; }
+.mock-mini-label { font-size: 10px; letter-spacing: .16em; color: var(--dim); }
+.mock-mini-big { font-size: clamp(20px, 3vw, 26px); font-weight: 700; color: var(--text); }
+.mock-mini-big.up { color: var(--up); }
+
+.mock-mini-feed { border-top: 1px solid var(--border); }
+.feed-row {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+.feed-row + .feed-row { border-top: 1px solid var(--border); }
+.feed-row span:nth-child(2) { color: var(--dim); margin-left: auto; }
+.ok { color: var(--up); }
+.up { color: var(--up); font-family: var(--math); }
+.down { color: var(--down); }
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--up);
+  display: inline-block;
+}
+
+.proof {
+  text-align: center;
+  font-family: var(--math);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--muted);
+  margin: 0% auto -2% auto;
+  max-width: 560px;
+}
+
+/* ---------- Steps (uma seção por vez, JS alterna [data-active]) ---------- */
+.step {
+  display: none;
+  padding: 72px 24px 96px;
+  overflow-y: auto;
+  max-height: calc(100vh - 92px); /* 92px = topbar ~40px + progress ~52px */
+  box-sizing: border-box;
+}
+.step.active {display: flex;}
+
+.step-inner { max-width: 720px; margin: 0 auto; }
+
+.kicker {
+  font-family: var(--math);
+  font-size: 12px;
+  letter-spacing: .22em;
+  color: var(--dim);
+  margin: -8% 0% 1% 0%;
+  text-align: center;
+}
+.step h1 {
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 750;
+  margin: -7% 0% 1% 0%;   /* step 1 hero: compensa padding-top grande */
+  text-align: center;
+}
+
+/* Steps 2-5 tÃªm .kicker antes do h1 â€” margin-top negativo sobreporia o kicker */
+.kicker + h1,
+.step[data-step="2"] h1,
+.step[data-step="3"] h1,
+.step[data-step="4"] h1,
+.step[data-step="5"] h1 {
+  margin-top: 0%;
+       /* preserva o spacing compacto premium */
+}
+.step .lead {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 100%;
+  margin: 0% auto 6%;
+  text-align: center;
+}
+
+/* ---------- Tela 1 â€” Welcome (tese + 3 sinais) ---------- */
+.trust-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: -3% auto 3%;
+  max-width: 640px;
+  text-align: left;
+}
+.trust-item {
+  background: var(--surface);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.trust-head { display: flex; align-items: center; gap: 9px; }
+.trust-icon { width: 18px; height: 18px; color: var(--up); flex: none; }
+.trust-label {
+  font-family: var(--math);
+  font-size: 11px;
+  letter-spacing: .16em;
+  color: var(--accent);
+}
+.trust-desc { font-size: 13px; color: var(--muted); }
+
+.step-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+.footnote {
+  margin: -3% 0% -1% 0%;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+/* ---------- Tela 2 â€” Trust list (non-custodial, anti caixa-preta) ---------- */
+.trust-list {
+  list-style: none;
+  display: grid;
+  gap: 16px;
+  margin: 24px auto 32px;
+  max-width: 560px;
+}
+.trust-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+  text-align: left;
+}
+.trust-list svg {
+  width: 20px;
+  height: 20px;
+  color: var(--up);
+  flex: none;
+  margin-top: 2px;
+}
+.trust-list span {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.trust-list span strong {
+  color: var(--text);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 14.5px;
+}
+
+/* ---------- Tela 3 â€” Configure strategy (sliders com defaults) ---------- */
+.config-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 28px 28px;
+  margin: -2% 0% 0% 0%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.field { margin-bottom: 22px; }
+.field:last-child { margin-bottom: 0; }
+.field-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.field-label {
+  font-size: 14.5px;
+  color: var(--text);
+}
+.field-value {
+  font-family: var(--math);
+  font-size: 16px;
+  color: var(--accent);
+}
+
+/* Slider estilizado (cross-browser) */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.defaults-note {
+  font-family: var(--math);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Área 2: Máquina de decisão — sem container, 6 passos centralizados */
+.timeline-machine {
+  margin: -2% auto 0;
+  padding: 0;
+}
+.timeline-machine__head {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.timeline-machine__head h2 {
+  font-size: 20px;
+  font-weight: 650;
+  margin: 0;
+}
+.timeline-machine__sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+.transparency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--math);
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--dim);
+  margin: 5% 0% -2% 0%;
+}
+.transparency-badge .transparency-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--up);
+  box-shadow: 0 0 0 2px rgba(52,192,124,.12);
+}
+
+/* Rail centralizado — 6 passos */
+.timeline-machine__rail {
+  display: flex;
+  align-items: flex-start;
+                      /* ← 8px → 16px: espaçamento respirável */
+  margin: 5% auto;              /* ← auto: centraliza o bloco na tela */
+  justify-content: center;
+  position: relative;
+  max-width: 100%;       /* ← encolhe pro tamanho real dos nodes */
+                /* ← breathing room pros endpoints */
+}
+
+/* LINHA CONSTANTE: única linha horizontal de 01 → 06 */
+.timeline-machine__rail::before {
+  content: "";
+  position: absolute;
+  top: 32px;
+  left: -5%;
+  right: -5%;
+  height: 1px;
+  background: var(--border);
+}
+
+
+.timeline-machine__rail::-webkit-scrollbar { height: 0; }
+
+/* Nó do step — círculo sutil */
+.rail-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 20%;
+  position: relative;
+}
+.rail-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--dim);
+  font-family: var(--math);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  z-index: 3;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+/* Ícone minimalista — cor por categoria de nó */
+.rail-icon {
+  width: 18px;
+  height: 18px;
+  margin: 8px 0 6px;
+  color: var(--dim);
+  flex: none;
+}
+.rail-icon path { stroke-linecap: round; stroke-linejoin: round; }
+
+/* Cores específicas por categoria */
+.rail-node[data-type="input"] .rail-icon { color: var(--up); }     /* preço = verde (ativo) */
+.rail-node[data-type="decision"] .rail-icon { color: var(--up); }
+.rail-node[data-type="action"] .rail-icon { color: var(--up); }
+.rail-node[data-type="action"][data-outcome="sell"] .rail-icon { color: var(--warn); }
+
+/* Label */
+.rail-label {
+  font-family: var(--math);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+/* Flag SIM em decisions */
+.rail-flag {
+  font-family: var(--math);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.rail-flag--yes {
+  color: var(--up);
+  background: rgba(52,192,124,.08);
+}
+
+/* === CATEGORIAS DE NÓ === */
+/* INPUT — neutro (step number verde como os outros) */
+.rail-node[data-type="input"] .rail-step {
+  color: var(--up);
+  background: rgba(52,192,124,.06);
+  border-color: var(--up);
+}
+
+/* (rail-icon já verde via regra acima: data-type=input → --up) */
+
+/* DECISION — destaque leve verde */
+.rail-node[data-type="decision"] .rail-step {
+  border-color: var(--up);
+  color: var(--up);
+  background: rgba(52,192,124,.06);
+}
+.rail-node[data-type="decision"] .rail-icon { color: var(--up); }
+.rail-node[data-type="decision"] .rail-label {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* AÇÃO — maior destaque */
+.rail-node[data-type="action"] .rail-step {
+  border-color: var(--up);
+  color: var(--up);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(52,192,124,.08);
+}
+.rail-node[data-type="action"] .rail-icon { color: var(--up); }
+.rail-node[data-type="action"] .rail-label {
+  color: var(--text);
+  font-weight: 700;
+}
+.rail-node[data-type="action"] .rail-label::before {
+  content: "→";
+  color: var(--up);
+  margin-right: 4px;
+}
+
+/* SELL — outcome final */
+.rail-node[data-outcome="sell"] .rail-step {
+  box-shadow: 0 0 0 3px rgba(52,192,124,.12);
+}
+.rail-node[data-outcome="sell"] .rail-label {
+  color: var(--up);
+}
+
+/* Mensagem de confiança (conclusão conceitual) */
+.kicker-idle {
+  display: block;
+  font-family: var(--math);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 600;
+  margin: 24px 0 16px;
+}
+.idle-message {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 24px 28px;
+  margin: 48px auto 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+  text-align: center;
+}
+.idle-message__body {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+  text-align: left;
+}
+.idle-message__accent {
+  color: var(--text);
+  font-weight: 700;
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ---------- Tela 4 â€” Comparativo bruto â†’ taxas â†’ lÃ­quido ---------- */
+.net-demo {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto 32px;
+}
+.net-col {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--bg);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.good-example { background: var(--surface-2); }
+.net-tag {
+  font-family: var(--math);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 10px;
+}
+.net-tag.ok { color: var(--up); }
+.bad-example code {
+  font-family: var(--math);
+  font-size: 16px;
+  color: var(--muted);
+}
+.net-lines {
+  font-family: var(--math);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.net-lines > div {
+  display: flex;
+  justify-content: space-between;
+}
+.net-lines > div:not(.net-total) span:first-child { color: var(--muted); }
+.net-total {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 4px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  font-size: 12px;
+}
+.net-total span:first-child { color: var(--text); }
+
+@media (max-width: 560px) {
+  .net-demo { grid-template-columns: 1fr; }
+}
+
+/* ---------- Tela 4 â€” Review risk (checkbox obrigatÃ³rio) ---------- */
+.risk-table {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.risk-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 22px;
+  font-size: 14.5px;
+}
+.risk-row + .risk-row { border-top: 1px solid var(--border); }
+.risk-row .label { color: var(--muted); }
+.risk-row .value {
+  font-family: var(--math);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--down);
+  border-radius: 12px;
+  background: var(--bg);
+  margin-bottom: 28px;
+  cursor: pointer;
+  transition: border-left-color .18s ease-out, background .18s ease-out;
+}
+
+/* Estado marcado: borda de alerta vira accent, fundo sinaliza confirmado */
+.checkbox:has(input:checked) {
+  border-left-color: var(--accent);
+  background: var(--surface-2);
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  position: relative;
+  transition: background .15s ease-out, border-color .15s ease-out;
+}
+
+/* Tick visÃ­vel via pseudo-elemento (mais confiÃ¡vel que accent-color) */
+.checkbox input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox input:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--bg);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox span {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  transition: color .15s ease-out;
+}
+
+/* Texto fica mais visÃ­vel quando marcado */
+.checkbox:has(input:checked) span {
+  color: var(--text);
+}
+
+.checkbox span strong {
+  color: var(--text);
+  font-weight: 600;
+  transition: color .15s ease-out;
+}
+
+.checkbox:has(input:checked) span strong {
+  color: var(--accent);
+}
+
+/* ---------- Tela 5 â€” Price card (fechamento comercial) ---------- */
+.price-card {
+  max-width: 480px;
+  margin: 0 auto 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 36px 32px 32px;
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.price-amount strong {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.price-per {
+  font-size: 16px;
+  color: var(--dim);
+  font-weight: 500;
+}
+.price-via {
+  font-family: var(--math);
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: .04em;
+  margin-bottom: 24px;
+}
+.price-checks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--up);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.price-checks li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.check {
+  color: var(--up);
+  font-weight: 700;
+  font-size: 16px;
+}
+.price-note {
+  margin-top: 14px;
+  font-size: 11.5px;
+  color: var(--dim);
+  letter-spacing: .02em;
+}
+
+/* ---------- Risk note (rodapÃ© de qualquer tela que mostra nÃºmeros) ---------- */
+.risk-note {
+  max-width: 560px;
+  margin: 32px auto 0;
+  font-size: 12px;
+  color: var(--dim);
+  text-align: center;
+  line-height: 1.55;
+}
+.risk-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--down);
+  vertical-align: -2px;
+  margin-right: 6px;
+}
+
+/* Cupom de afiliado na Tela 5 (espelha payment.css:121-126) */
+.plan_coupon_row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin: 18px 0 0;
+  align-items: center;
+}
+.plan_discount_row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.plan_amount_discount {
+  font-family: var(--math);
+  font-weight: 600;
+  font-size: 90px;
+  color: var(--up);
+  opacity: 0.8;
+}
+.plan_period {
+  font-family: var(--math);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -.01em;
+  color: var(--muted);
+  background: rgba(255,255,255,.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+.plan_coupon_text {
+  font-family: var(--math);
+  font-weight: 700;
+  font-size: 33px;
+  letter-spacing: -.02em;
+  color: var(--text);
+}
+
+/* ---------- NavegaÃ§Ã£o entre steps (Voltar / Continuar) ---------- */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1% 0% 0% 0%;
+  gap: 16px;
+}
+.step-nav .btn-ghost {
+  font-family: var(--math);
+  font-size: 12px;
+  letter-spacing: .14em;
+  color: var(--dim);
+  border: none;
+  background: none;
+  padding: 8px 4px;
+}
+.step-nav .btn-ghost:hover { color: var(--text); background: none; border: none; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 720px) {
+  .trust-row { grid-template-columns: 1fr; }
+  .step-nav { flex-direction: column-reverse; }
+  .step-nav .btn-ghost { align-self: flex-start; }
+}
+
+/* Mobile: rail vira timeline vertical */
+@media (max-width: 720px) {
+  .timeline-machine__head { text-align: center; }
+  .timeline-machine__rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .step { padding: 56px 16px 72px; max-height: calc(100vh - 80px); }
+  .config-card, .risk-table, .price-card, .timeline-machine, .idle-message { padding: 22px 18px; }
+  .timeline-machine__head h2 { font-size: 20px; }
+}
+
+/* Respeita quem pediu menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none;
+    transition: none;
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Microinterações — máquina de decisão (Tela 4) ---------- */
+/* Entrada: cada rail-node entra com stagger */
+.rail-node {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .35s ease-out, transform .35s ease-out;
+}
+.rail-node:nth-child(1) { transition-delay: .05s; }
+.rail-node:nth-child(2) { transition-delay: .10s; }
+.rail-node:nth-child(3) { transition-delay: .15s; }
+.rail-node:nth-child(4) { transition-delay: .20s; }
+.rail-node:nth-child(5) { transition-delay: .25s; }
+.rail-node:nth-child(6) { transition-delay: .30s; }
+
+/* Só anima se preferir movimento */
+@media (prefers-reduced-motion: no-preference) {
+  .step.active .rail-node {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover — todos os steps elevam sutilmente (desktop apenas) */
+@media (hover: hover) {
+  .rail-node[data-type="input"]:hover .rail-step {
+    transform: translateY(-1px);
+    border-color: var(--up);
+    box-shadow: 0 0 0 2px rgba(52,192,124,.12);
+  }
+  .rail-node[data-type="decision"]:hover .rail-step {
+    transform: translateY(-1px);
+    border-color: var(--up);
+    box-shadow: 0 0 0 3px rgba(52,192,124,.16);
+  }
+  .rail-node[data-type="action"]:hover .rail-step {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 4px rgba(52,192,124,.20);
+  }
+}
+
+/* Tema claro (respeita preferÃªncia do sistema, mantendo dark-first) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #eef0f3;
+    --border: #d8dce1;
+    --text: #16181c;
+    --muted: #545b63;
+    --dim: #6b737d;
+    --accent: #0a0b0d;
+    --up: #1f9e63;
+    --down: #c23b3b;
+  }
+}

@@ -1,0 +1,392 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Onboarding do Clark — cinco passos para ativar a automação da sua estratégia de Bitcoin com controle total do capital.">
+<title>Clark — Configurar minha automação</title>
+<link rel="stylesheet" href="{% static 'onboarding.css' %}">
+</head>
+<body>
+
+<!-- TOPBAR (sem sidebar, sem menu, sem distrações — MARKETING.md §3.1) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="logo" href="">Clark<span class="clark-brand__mark">丰</span></a>
+    <nav class="topbar-actions">
+      <a class="btn btn-ghost btn-sm" href="/login/">Login</a>
+      <a class="btn btn-solid btn-sm" href="/register/">Quero usar o Clark</a>
+    </nav>
+  </div>
+</header>
+
+<!-- PROGRESSO (1/5 → 5/5) — barra verde arredondada, sem container cinza -->
+<div class="progress-bar" role="progressbar" aria-label="Progresso do onboarding" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+  <div class="progress-fill" id="progressFill" data-step="1"></div>
+</div>
+
+<!-- ============== TELA 1 — O QUE É O CLARK ============== -->
+<section class="step active" id="step-1" data-step="1" aria-labelledby="step1-title">
+  <div class="step-inner">
+    <h1 id="step1-title">Sua estratégia de Bitcoin.<br><span class="accent">Rodando automaticamente.</span></h1>
+    <p class="lead">
+      Visibilidade total e controle sobre o seu capital. Operações explicadas com taxas visíveis e resultado líquido claro.
+    </p>
+
+    <div class="trust-row">
+      <div class="trust-item">
+        <div class="trust-head">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span class="trust-label">NON-CUSTODIAL</span>
+        </div>
+        <span class="trust-desc">Seus fundos permanecem na sua exchange.</span>
+      </div>
+      <div class="trust-item">
+        <div class="trust-head">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span class="trust-label">VISIBILIDADE TOTAL</span>
+        </div>
+        <span class="trust-desc">Cada operação vem com o porquê explicado.</span>
+      </div>
+      <div class="trust-item">
+        <div class="trust-head">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="8" x2="20" y2="8"/>
+            <circle cx="9" cy="8" r="2.2" fill="var(--surface)"/>
+            <line x1="4" y1="16" x2="20" y2="16"/>
+            <circle cx="15" cy="16" r="2.2" fill="var(--surface)"/>
+          </svg>
+          <span class="trust-label">VOCÊ NO CONTROLE</span>
+        </div>
+        <span class="trust-desc">Interrompa a automação quando quiser.</span>
+      </div>
+    </div>
+
+    <!-- Mini mock do dashboard (prova visual) -->
+    <div class="mock-mini" aria-hidden="true">
+      <div class="mock-mini-header">
+        <span class="mock-mini-logo">CLARK</span>
+        <span class="mock-mini-status"><i class="dot"></i> AUTOMAÇÃO ATIVA</span>
+      </div>
+      <div class="mock-mini-main">
+        <div class="mock-mini-block">
+          <span class="mock-mini-label">PATRIMÔNIO</span>
+          <span class="mock-mini-big">丰 8,421,000</span>
+        </div>
+        <div class="mock-mini-block right">
+          <span class="mock-mini-label">RESULTADO · 30 DIAS</span>
+          <span class="mock-mini-big up">丰 231,000</span>
+        </div>
+      </div>
+
+      <div class="mock-mini-feed">
+        <div class="feed-row"><span class="ok">✓ VENDA</span><span>16:48</span><span class="up">+丰 42,000 líquido</span></div>
+        <div class="feed-row"><span class="ok">✓ COMPRA</span><span>14:32</span><span>丰 960,000</span></div>
+      </div>
+    </div>
+
+    <p class="proof">+100 operações reais nos últimos 30 dias · resultado líquido acumulado positivo</p>
+
+    <div class="step-cta">
+      <button class="btn btn-solid btn-lg" data-next="2">Começar configuração</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============== TELA 2 — POR QUE CONFIAR (non-custodial, anti caixa-preta) ============== -->
+
+<section class="step" id="step-2" data-step="2" aria-labelledby="step2-title">
+  <div class="step-inner">
+    <p class="kicker">PASSO 2 · CONECTAR EXCHANGE</p>
+    <h1 id="step2-title">Conecte sua exchange.<br><span class="accent">Sem custódia.</span></h1>
+    <p class="lead">Chave API com permissão exclusiva de trade e operações descritivas em tempo real.</p>
+
+    <ul class="trust-list">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <span><strong>Permissão só de trade.</strong> Saque bloqueado por padrão — mesmo no pior cenário, o atacante não consegue mover seu capital.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span><strong>Você vê tudo.</strong> Cada ordem, taxa e motivo — aberto na página <em>Operations</em>. Sem caixa-preta.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="8" x2="20" y2="8"/>
+          <circle cx="9" cy="8" r="2.2" fill="var(--surface)"/>
+          <line x1="4" y1="16" x2="20" y2="16"/>
+          <circle cx="15" cy="16" r="2.2" fill="var(--surface)"/>
+        </svg>
+        <span><strong>Você revoga em 1 clique.</strong> A qualquer momento, na página <em>Settings</em> — tudo para imediatamente.</span>
+      </li>
+    </ul>
+
+    <p class="footnote">
+      A conexão leva menos de 30 segundos.
+    </p>
+
+    <div class="step-cta">
+      <button class="btn btn-solid btn-lg" data-next="3">Conectar agora</button>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-ghost" data-prev="1">← Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TELA 3 — CONFIGURE STRATEGY (vende defaults, sliders opcionais) ============== -->
+<section class="step" id="step-3" data-step="3" aria-labelledby="step3-title">
+  <div class="step-inner">
+    <p class="kicker">PASSO 3 · DEFINIR ESTRATÉGIA</p>
+    <h1 id="step3-title">Vamos começar com defaults.<br><span class="accent">Você ajusta quando quiser.</span></h1>
+    <p class="lead">Defaults projetados para segurança operacional. Quem entende o mercado pode alterar depois.</p>
+
+    <div class="config-card">
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">Variação de compra</span>
+          <span class="field-value" id="buyVarVal">0,5%</span>
+        </div>
+        <input type="range" id="buyVar" min="0.1" max="3.0" step="0.1" value="0.5">
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">Alvo de lucro</span>
+          <span class="field-value" id="profitVal">0,5%</span>
+        </div>
+        <input type="range" id="profit" min="0.2" max="5.0" step="0.1" value="0.7">
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">Margem</span>
+          <span class="field-value" id="exposureVal">30$</span>
+        </div>
+        <input type="range" id="exposure" min="5" max="80" step="5" value="30">
+      </div>
+    </div>
+
+    <div class="step-cta">
+      <button class="btn btn-solid btn-lg" data-next="4">Continuar</button>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-ghost" data-prev="2">← Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TELA 4 — MÁQUINA DE DECISÃO PREMIUM ============== -->
+<section class="step" id="step-4" data-step="4" aria-labelledby="step4-title">
+  <div class="step-inner">
+
+    <!-- ÁREA 1: EXPLICAÇÃO -->
+    <p class="kicker">PASSO 4 · REVISAR RISCO</p>
+    <h1 id="step4-title">Veja exatamente o que vai rodar antes de ativar</h1>
+
+    <!-- ÁREA 2: FLUXO DE DECISÃO (timeline centralizada) -->
+    <div class="timeline-machine" aria-labelledby="decision-panel-title">
+      <div class="timeline-machine__head">
+        <span class="transparency-badge" aria-label="Lógica transparente e verificável">
+          Lógica Transparente — O Clark sempre executa esse fluxo
+        </span>
+      </div>
+
+
+      <!-- Timeline centralizada — 6 passos -->
+      <ul class="timeline-machine__rail" role="list">
+
+        <li class="rail-node" data-type="input">
+          <span class="rail-step" aria-hidden="true">01</span>
+          <svg class="rail-icon input" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M7 4v4M7 16v4M17 4v2M17 18v2"></path> <rect x="5" y="8" width="4" height="8" rx="1"></rect> <rect x="15" y="6" width="4" height="12" rx="1"></rect> </svg>
+          <span class="rail-label">Preço atual</span>
+        </li>
+
+        <li class="rail-node" data-type="decision">
+          <span class="rail-step" aria-hidden="true">02</span>
+          <svg class="rail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="9"/><path d="M9 12l3 3 5-5"/> </svg>
+          <span class="rail-label">Gatilho de compra atingido?</span>
+          <span class="rail-flag rail-flag--yes">SIM</span>
+        </li>
+
+        <li class="rail-node" data-type="decision">
+          <span class="rail-step" aria-hidden="true">03</span>
+          <svg class="rail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 10h10M7 16h10"/> </svg>
+          <span class="rail-label">Saldo suficiente?</span>
+          <span class="rail-flag rail-flag--yes">SIM</span>
+        </li>
+
+        <li class="rail-node" data-type="action">
+          <span class="rail-step" aria-hidden="true">04</span>
+          <svg class="rail-icon action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M12 19V5"/> <path d="M5 12l7 7 7-7"/>  <!-- compra = seta/subida --> </svg>
+          <span class="rail-label">Executa ordem de compra</span>
+        </li>
+
+        <li class="rail-node" data-type="decision">
+          <span class="rail-step" aria-hidden="true">05</span>
+          <svg class="rail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="9"/><path d="M12 9v5l4 2"/> </svg>
+          <span class="rail-label">Alvo + taxas atingido?</span>
+          <span class="rail-flag rail-flag--yes">SIM</span>
+        </li>
+
+        <li class="rail-node" data-type="action" data-outcome="sell">
+          <span class="rail-step" aria-hidden="true">06</span>
+          <svg class="rail-icon action sell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M12 5v14"/> <path d="M19 12l-7 7-7-7"/>  <!-- venda = seta/descida --> </svg>
+          <span class="rail-label">Executa venda · posição realizada</span>
+        </li>
+
+      </ul>
+    </div>
+
+
+    <!-- Mensagem de confiança (conclusão conceitual) -->
+    <div class="idle-message">
+      <span class="kicker-idle">Fora dessas condições?</span>
+      <p class="idle-message__body">
+        O Clark espera. <span class="idle-message__accent">Fazer nada também é uma decisão.</span>
+      </p>
+    </div>
+
+
+    <!-- Resumo da configuração -->
+    <div class="risk-table" aria-label="Resumo da configuração">
+
+      <div class="risk-row">
+        <span class="label">Capital disponível na exchange</span>
+        <span class="value">R$ 1.250,00</span>
+      </div>
+
+      <div class="risk-row">
+        <span class="label">Exposição máxima configurada</span>
+        <span class="value" id="reviewExposure">30%</span>
+      </div>
+
+      <div class="risk-row">
+        <span class="label">Capital que pode ficar alocado</span>
+        <span class="value" id="reviewAllocated">R$ 375,00</span>
+      </div>
+
+      <div class="risk-row">
+        <span class="label">Variação de compra</span>
+        <span class="value" id="reviewBuy">0,5%</span>
+      </div>
+
+      <div class="risk-row">
+        <span class="label">Alvo de lucro</span>
+        <span class="value" id="reviewProfit">0,7%</span>
+      </div>
+
+    </div>
+
+
+    <!-- Comparativo bruto → taxas → líquido -->
+    <div class="net-demo">
+      <div class="net-col bad-example">
+        <span class="net-tag">Outros bots</span>
+        <code>Profit: +$10.00</code>
+      </div>
+      <div class="net-col good-example">
+        <span class="net-tag ok">Clark</span>
+        <div class="net-lines">
+          <div><span>Resultado bruto</span><span>+$10.00</span></div>
+          <div><span>Taxas</span><span class="down">-$1.20</span></div>
+          <div class="net-total"><span>RESULTADO LÍQUIDO</span><span class="up">+$8.80</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checkbox obrigatório -->
+    <label class="checkbox">
+      <input type="checkbox" id="riskAck">
+      <span>
+        <strong>Eu entendo os riscos.</strong>
+        Operar Bitcoin envolve risco de perda parcial do capital exposto.
+        Resultados passados não garantem resultados futuros. A automação
+        executa a <em>minha</em> estratégia — não é aconselhamento financeiro.
+      </span>
+    </label>
+
+    <div class="step-cta">
+      <button class="btn btn-solid btn-lg" id="enableBtn" data-next="5" disabled>
+        Ativar automação
+      </button>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-ghost" data-prev="3">← Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TELA 5 — A OFERTA (fechamento comercial) ============== -->
+<section class="step" id="step-5" data-step="5" aria-labelledby="step5-title">
+  <div class="step-inner">
+    <p class="kicker">PASSO 5 · O RESTANTE É ASSINAR</p>
+    <h1 id="step5-title">Sua estratégia está pronta.<br><span class="accent">Agora falta um passo para começar.</span></h1>
+    <p class="lead">
+      Sem custo de entrada, sem percentual sobre lucro e sem fidelidade —
+      quando quiser, para.
+    </p>
+
+    <div class="price-card">
+      <div class="price-amount">
+        <strong>R$150</strong>
+        <span class="price-per">/mês</span>
+      </div>
+      <p class="price-via">Via Lightning Network ou Pix</p>
+
+      <div class="plan_coupon_row">
+        <div class="plan_discount_row">
+          <span class="plan_amount_discount">R$135</span>
+          <span class="plan_period">/cupom</span>
+        </div>
+        <p class="plan_coupon_text">Com cupom de afiliado</p>
+      </div>
+
+      <ul class="price-checks">
+        <li><span class="check">✓</span> Sem percentual sobre o lucro</li>
+        <li><span class="check">✓</span> Seus funds permanecem na sua exchange</li>
+        <li><span class="check">✓</span> Cancele quando quiser</li>
+      </ul>
+
+      <a class="btn btn-solid btn-lg btn-block" href="/register/" style="margin-bottom: 16px">Criar minha conta</a>
+      <a class="btn btn-ghost btn-lg btn-block" href="/login/">Já tenho uma conta</a>
+      <p class="price-note">Não é necessário cartão de crédito.</p>
+    </div>
+
+    <p class="proof">+100 operações reais nos últimos 30 dias · resultado líquido acumulado positivo</p>
+
+    <p class="risk-note">
+      <svg class="risk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3l9 16H3l9-16z"/>
+        <line x1="12" y1="10" x2="12" y2="14"/>
+        <circle cx="12" cy="17" r="0.9" fill="currentColor" stroke="none"/>
+      </svg>
+      Operar Bitcoin envolve risco. Resultados passados não garantem resultados futuros.
+      O Clark automatiza a <em>sua</em> estratégia — não dá conselhos financeiros.
+    </p>
+  </div>
+</section>
+
+<!-- JS do wizard — separado em source/scripts/onboarding.ts → static/javascript/onboarding.js -->
+<script type="module" src="{% static 'javascript/onboarding.js' %}"></script>
+
+</body>
+</html>

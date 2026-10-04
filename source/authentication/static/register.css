@@ -1,0 +1,388 @@
+/* ============================================
+   REGISTER — CLARK
+   Mesma linguagem da landing/login: dark-first,
+   tokens do projeto, fonte inherit, verde = confiança.
+   Segue REGRAS PÁGINAS HTML CSS.md (Seções 2,3,9).
+   ============================================ */
+
+/* --------------------------------------------
+   1. TOKENS (compartilhados com landing/login)
+   -------------------------------------------- */
+:root {
+    --bg: #050505;
+    --surface: #0c0c0c;
+    --surface-2: #141414;
+    --border: #1f1f1f;
+    --text: #e8eaed;
+    --muted: #9aa0a8;
+    --dim: #828a94;
+    --accent: #f5f7fa;
+    --up: #34c07c;          /* verde = confiança/estado positivo */
+    --down: #e05252;        /* vermelho = alerta/erro */
+    --warn: #c9a227;        /* amarelo = força média de senha */
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+    --math: math, "Microsoft YaHei", "Noto Sans SC", sans-serif; /* + fallback CJK p/ 丰 */
+}
+
+/* --------------------------------------------
+   2. BASE
+   -------------------------------------------- */
+body {
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+}
+
+.clark-register-wrap {
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.clark-register-wrap * {
+    box-sizing: border-box;
+}
+
+/* Acessibilidade: foco de teclado visível (nota Seção 3) */
+.clark-register-wrap a:focus-visible,
+.clark-btn:focus-visible,
+.clark-input:focus-visible,
+.clark-register-terms input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* --------------------------------------------
+   3. BRAND
+   -------------------------------------------- */
+.clark-register-brand {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.clark-register-brand-name {
+    color: var(--text);
+    font-family: var(--math);
+    font-size: 100px;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
+.clark-register-brand-name .clark-brand__mark {
+    color: var(--up);
+}
+
+.clark-register-brand-tagline {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* --------------------------------------------
+   4. TRUST PILLS (estilo igual ao login)
+   -------------------------------------------- */
+.clark-register-trust {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+    font-family: inherit;
+}
+
+.clark-register-trust-pill {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: inherit;
+    text-align: left;
+}
+
+.clark-register-trust-pill svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--up);     /* verde = confiança (nota Seção 9) */
+    flex-shrink: 0;
+}
+
+/* --------------------------------------------
+   5. REGISTRATION CARD
+   -------------------------------------------- */
+.clark-register-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 440px;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.5);
+}
+
+.clark-register-title {
+    color: var(--text);
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+/* --------------------------------------------
+   6. FORM FIELDS
+   -------------------------------------------- */
+.clark-field {
+    margin-bottom: 16px;
+}
+
+.clark-field-label {
+    color: var(--text);
+    display: block;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.clark-input {
+    width: 100%;
+    padding: 13px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.clark-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+.clark-input::placeholder {
+    color: var(--dim);
+}
+
+/* --------------------------------------------
+   7. PASSWORD STRENGTH
+   -------------------------------------------- */
+.clark-password-strength {
+    height: 3px;
+    border-radius: 2px;
+    margin-top: 8px;
+    background: var(--border);
+    overflow: hidden;
+}
+
+.clark-password-strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.clark-password-strength-bar.weak {
+    width: 33%;
+    background: var(--down);
+}
+
+.clark-password-strength-bar.medium {
+    width: 66%;
+    background: var(--warn);
+}
+
+.clark-password-strength-bar.strong {
+    width: 100%;
+    background: var(--up);
+}
+
+.clark-password-hint {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 5px;
+}
+
+/* --------------------------------------------
+   8. TERMS CHECKBOX
+   -------------------------------------------- */
+.clark-register-terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.clark-register-terms input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--up);
+    cursor: pointer;
+}
+
+.clark-register-terms-label {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+    font-family: inherit;
+}
+
+.clark-register-terms-label a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.clark-register-terms-label a:hover {
+    color: var(--text);
+}
+
+/* --------------------------------------------
+   9. ERROR MESSAGE
+   -------------------------------------------- */
+.clark_register_error_show {
+    background: rgba(224, 82, 82, 0.08);
+    border: 1px solid rgba(224, 82, 82, 0.25);
+    color: var(--down);
+    display: none;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* --------------------------------------------
+   10. BUTTONS
+   -------------------------------------------- */
+.clark-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.clark-btn:hover {
+    border-color: var(--muted);
+}
+
+.clark-btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.clark-btn-primary:hover {
+    opacity: 0.9;
+}
+
+.clark-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------
+   11. DIVIDER
+   -------------------------------------------- */
+.clark-register-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.clark-register-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.clark-register-divider-text {
+    font-size: 11px;
+    color: var(--dim);
+}
+
+/* --------------------------------------------
+   12. SECONDARY LINK
+   -------------------------------------------- */
+.clark-register-secondary {
+    text-align: center;
+    font-size: 13px;
+    color: var(--dim);
+}
+
+.clark-register-secondary a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
+.clark-register-secondary a:hover {
+    color: var(--text);
+}
+
+/* --------------------------------------------
+   13. RESPONSIVE + MOTION + TEMA CLARO
+   -------------------------------------------- */
+@media (max-width: 480px) {
+    .clark-register-card {
+        padding: 24px;
+    }
+    .clark-register-brand-name {
+        font-size: 40px;
+    }
+    .clark-register-trust {
+        gap: 10px;
+    }
+
+    .clark-register-trust-pill {
+        font-size: 11px;
+    }
+}
+
+/* Respeita quem pediu menos movimento (nota Seção 2) */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Tema claro: segue o sistema (nota Seção 2) */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --surface-2: #eef0f3;
+        --border: #d8dce1;
+        --text: #16181c;
+        --muted: #545b63;
+        --dim: #6b737d;
+        --accent: #0a0b0d;
+        --up: #1f9e63;
+        --down: #c23b3b;
+        --warn: #9a7b12;
+    }
+}

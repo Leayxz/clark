@@ -1,0 +1,794 @@
+/* ============================================
+   DASHBOARD — CLARK
+   Mesma linguagem da landing/login: dark-first
+   (#050505), tokens do projeto, fonte com fallback
+   CJK p/ 丰, verde/vermelho só para estado.
+   Segue REGRAS PÁGINAS HTML CSS.md (Seções 2,3,9,10)
+   e REGRAS PARA CONSTRUIR PÁGINAS PREMIUM (Seções 1,2,4,5,6).
+   Melhorias premium aplicadas em 2026-08:
+   - UI em --sans (Inter); --math só em números/丰
+   - escala de raio intencional (8/12/16px)
+   - elevação no dark: hairline clara + top-highlight
+   - micro-interação dimensional (transform + ease-out)
+   - glow sutil de estado (status dot, barra de objetivo)
+   - atmosfera sutil (glow radial no topo do main)
+   ============================================ */
+
+/* --------------------------------------------
+   1. TOKENS (compartilhados com landing/login)
+   -------------------------------------------- */
+:root {
+    --bg: #050505;
+    --surface: #0c0c0c;
+    --surface-2: #141414;
+    --border: #1f1f1f;
+    --text: #e8eaed;
+    --muted: #9aa0a8;
+    --dim: #828a94;
+    --accent: #f5f7fa;
+    --up: #34c07c;          /* verde = lucro positivo / resultado que entrou */
+    --down: #e05252;        /* vermelho = erro/estado negativo */
+    --warn: #d8b43a;       /* amarelo = operação de venda */
+    --sidebar: #0a0a0a;
+    --sidebar-hover: #111111;
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+    --math: math, "Microsoft YaHei", "Noto Sans SC", sans-serif; /* + fallback CJK p/ 丰 */
+
+    /* Raio intencional (note Seção 5/13): 3 passos, sem meio-termo genérico */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    /* Hairlines p/ dark: elevação por contraste claro, não sombra escura (note Seção 5) */
+    --hairline: rgba(255, 255, 255, .07);
+    --hairline-strong: rgba(255, 255, 255, .14);
+}
+
+/* --------------------------------------------
+   2. BASE
+   -------------------------------------------- */
+body {
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+}
+
+.clark-app {
+    /* MUDANÇA premium: UI em --sans (Inter); números usam --math via seletores abaixo */
+    color: var(--text);
+    background: var(--bg);
+    display: flex;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.clark-app * {
+    box-sizing: border-box;
+}
+
+.clark-app button,
+.clark-app input,
+.clark-app select {
+    font: inherit;
+}
+
+/* Acessibilidade: foco de teclado visível (nota Seção 3) */
+.clark-app a:focus-visible,
+.clark-app button:focus-visible,
+.clark-app .clark-nav-item:focus-visible,
+.clark-app .clark-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* --------------------------------------------
+   7. MAIN CONTENT
+   -------------------------------------------- */
+.container_header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.clark-brand {
+    font-family: var(--math);
+    font-size: 50px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--text);
+}
+
+.clark-brand__mark {
+    color: var(--up); /* 丰 em verde = marca do Clark (padrão de payment.html) */
+}
+
+.clark-main {
+    flex: 1;
+    padding: 32px 40px; /* MUDANÇA: 20->32 p/ respirar (note Seção 2) */
+    max-width: 1100px;
+    margin-left: 25%;
+    margin-right: auto;
+    position: relative;
+}
+
+/* MUDANÇA: atmosfera sutil (glow verde-claro no topo) — note Seção 5/12 */
+.clark-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(620px 320px at 18% -8%, rgba(52, 192, 124, .05), transparent 70%);
+}
+
+.clark-main > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Resultado acumulado = lucro, verde (estado positivo) */
+#resultado_acumulado {
+    color: var(--up);
+    font-family: var(--math); /* MUDANÇA: número em --math */
+}
+
+/* --------------------------------------------
+   8. HERO METRICS
+   -------------------------------------------- */
+.clark-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px; /* MUDANÇA: 20->32 */
+}
+
+.clark-hero-card {
+    padding: 24px; /* MUDANÇA: 22->24 (grade 8pt) */
+    border-radius: var(--radius-lg); /* MUDANÇA: 14->16 */
+    border: 1px solid var(--hairline); /* MUDANÇA: hairline clara */
+    background: var(--surface);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03); /* MUDANÇA: top-highlight (elevação no dark) */
+    /* MUDANÇA: hover dimensional */
+    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+}
+
+
+.clark-hero-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: .1em; /* MUDANÇA: .08->.1 */
+}
+
+.clark-hero-value {
+    /* MUDANÇA: fluído + maior contraste de tamanho (note Seção 1) */
+    font-family: var(--math);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+}
+
+.clark-hero-sub {
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 15px;
+    margin-top: 8px;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.clark-positive { color: var(--up); }
+.clark-negative { color: var(--down); }
+
+/* --------------------------------------------
+   9. PERIOD TABS
+   -------------------------------------------- */
+.container_periodo {
+    display: flex;
+    gap: 8px; /* MUDANÇA: 4->8 (grade 8pt) */
+    margin-bottom: 24px; /* MUDANÇA: 16->24 */
+}
+
+.clark-tab {
+    padding: 9px 18px; /* MUDANÇA: 8/16 -> 9/18 (8pt) */
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    /* MUDANÇA: transição + ease-out + hover dimensional */
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .2s ease-out;
+}
+
+.clark-tab:hover {
+    color: var(--up);
+    border-color: var(--up);
+    transform: translateY(-1px);
+}
+
+.clark-tab.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+}
+
+/* --------------------------------------------
+   10. GOAL PROGRESS (substitui o chart)
+   -------------------------------------------- */
+.clark-goal {
+    border: 1px solid var(--hairline); /* MUDANÇA: hairline clara */
+    border-radius: var(--radius-lg); /* MUDANÇA: 14->16 */
+    padding: 24px; /* MUDANÇA: 20->24 */
+    margin-bottom: 32px; /* MUDANÇA: 20->32 */
+    background: var(--surface);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03); /* MUDANÇA: top-highlight */
+    /* MUDANÇA: hover dimensional (alinhado aos demais cards) */
+    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+    opacity: 0;
+    animation: clark-fade-up 0.6s ease-out forwards;
+    animation-delay: .3s;
+}
+
+.clark-goal:hover {
+    transform: translateY(-4px);
+    border-color: var(--up);
+    box-shadow: 0 8px 32px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.clark-goal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.clark-goal-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: .1em; /* MUDANÇA: .08->.1 */
+    text-transform: uppercase;
+}
+
+.clark-goal-change {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    /* MUDANÇA: transição + ease-out + hover dimensional */
+    transition: color .15s ease, border-color .15s ease, transform .2s ease-out;
+}
+
+.clark-goal-change:hover {
+    color: var(--text);
+    border-color: var(--dim);
+    transform: translateY(-1px);
+}
+
+.clark-goal-target {
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 28px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+}
+
+.clark-goal-current {
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 20px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--up);
+    margin-top: 4px;
+}
+
+.clark-goal-pct {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+}
+
+.clark-goal-bar {
+    height: 12px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow: hidden;
+    margin: 16px 0 12px;
+}
+
+.clark-goal-fill {
+    height: 100%;
+    border-radius: 999px;
+    /* MUDANÇA: gradiente sutil de estado + glow de progresso (note Seção 5) */
+    background: linear-gradient(90deg, var(--up), #5fe0a3);
+    box-shadow: 0 0 12px rgba(52, 192, 124, .35);
+    transition: width 0.4s ease-out;
+}
+
+.clark-goal-remaining {
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.clark-goal-milestone {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------
+   11. STATS ROW
+   -------------------------------------------- */
+.clark-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; /* MUDANÇA: 12->16 (grade 8pt) */
+    margin-bottom: 32px; /* MUDANÇA: 24->32 */
+}
+
+.clark-stat {
+    padding: 20px 24px; /* MUDANÇA: 16/18 -> 20/24 */
+    border-radius: var(--radius-lg); /* MUDANÇA: 12->16 */
+    border: 1px solid var(--hairline); /* MUDANÇA: hairline clara */
+    background: var(--surface);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03); /* MUDANÇA: top-highlight */
+    /* MUDANÇA: hover dimensional */
+    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+}
+
+.clark-stat:hover {
+    transform: translateY(-4px);
+    border-color: var(--up);
+    box-shadow: 0 8px 32px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+.clark-stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.clark-stat-value {
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+}
+
+/* USD secundário — mesma cara do .clark-hero-sub (sats em cima, USD muted) */
+.clark-stat-sub {
+    font-family: var(--math);
+    font-size: 14px;
+    margin-top: 6px;
+    font-weight: 500;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------
+   12. SECTION TITLES
+   -------------------------------------------- */
+.clark-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: .04em;
+    opacity: 0;
+    animation: clark-fade-up 0.5s ease-out forwards;
+    animation-delay: .6s;
+}
+
+/* --------------------------------------------
+   13. OPERATIONS TIMELINE — LINHA ÚNICA, MESMA FILEIRA
+   -------------------------------------------- */
+.clark-ops {
+    border: 1px solid var(--hairline); /* MUDANÇA: hairline clara */
+    border-radius: var(--radius-lg); /* MUDANÇA: 14->16 */
+    overflow: hidden;
+    background: var(--surface);
+    opacity: 0;
+    animation: clark-fade-up 0.6s ease-out forwards;
+    animation-delay: .7s;
+}
+
+.clark-op {
+    display: grid;
+    grid-template-columns: 28px 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px; /* MUDANÇA: 12/18 -> 14/20 */
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+    transition: background .15s ease;
+}
+
+.clark-op:last-child {
+    border-bottom: none;
+}
+
+.clark-op:hover {
+    background: var(--surface-2);
+}
+
+.clark-op-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+}
+
+.clark-op-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* Compra = verde (lucro que entra); Venda = amarelo */
+.clark-op-icon.buy {
+    background: rgba(52, 192, 124, 0.12);
+    color: var(--up);
+}
+.clark-op-icon.sell {
+    background: rgba(216, 180, 58, 0.14);
+    color: var(--warn);
+}
+
+.clark-op-main {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+}
+
+.clark-op-type {
+    font-weight: 600;
+    font-size: 14px;
+}
+.clark-op-type.sell { color: var(--warn); }
+.clark-op-type.buy { color: var(--up); }
+
+.clark-op-time {
+    color: var(--dim);
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.clark-op-result {
+    text-align: right;
+    font-weight: 600;
+    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+/* Verde para lucro que entrou, vermelho para prejuízo */
+.clark-op-result.clark-positive { color: var(--up); }
+.clark-op-result.clark-negative { color: var(--down); }
+
+.clark-op-empty {
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--dim);
+    font-size: 13px;
+}
+
+/* --------------------------------------------
+   14. MODAL (INVOICE + GOAL)
+   -------------------------------------------- */
+.clark-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.clark-modal.active {
+    display: flex;
+}
+
+.clark-modal-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+}
+
+.clark-modal-title {
+    color: var(--text);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 20px;
+    font-family: var(--sans);
+}
+
+.clark-modal-text {
+    color: var(--dim);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.clark-modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: var(--math);
+    font-size: 16px;
+    outline: none;
+    transition: border-color .15s ease;
+    margin-bottom: 12px;
+}
+
+.clark-modal-input:focus {
+    border-color: var(--up);
+}
+
+.clark-modal-highlight {
+    color: var(--warn);
+    font-family: var(--math);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clark-modal-id,
+.clark-modal-hash {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    word-break: break-all;
+    margin: 0 0 8px;
+}
+
+.clark-modal-id {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.clark-modal-features {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.clark-modal-features span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.clark-modal-expiry {
+    color: var(--down);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    margin-top: 8px;
+}
+
+.clark-modal-error {
+    color: var(--down);
+    font-size: 13px;
+    margin: 0 0 12px;
+}
+
+.clark-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* --------------------------------------------
+   15. BOTÕES (clark-btn / clark-btn-ghost)
+   -------------------------------------------- */
+.clark-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, transform .2s ease-out;
+}
+
+.clark-btn:hover {
+    border-color: var(--up);
+    transform: translateY(-1px);
+}
+
+.clark-btn-ghost {
+    background: transparent;
+    color: var(--muted);
+}
+
+.clark-btn-ghost:hover {
+    color: var(--text);
+    border-color: var(--dim);
+}
+
+/* --------------------------------------------
+   16. RESPONSIVE + MOTION + TEMA CLARO
+   -------------------------------------------- */
+@media (max-width: 768px) {
+    .clark-app { flex-direction: column; }
+    .clark-main { padding: 20px; margin-left: 0; max-width: 100%; }
+    .clark-hero { grid-template-columns: 1fr; }
+    .clark-stats { grid-template-columns: 1fr; }
+    .clark-op { grid-template-columns: 32px 1fr auto; gap: 8px; padding: 12px; }
+}
+
+@media (max-width: 480px) {
+    .clark-brand { font-size: 30px; }
+    .clark-hero-value { font-size: 26px; }
+    .clark-main { padding: 16px; }
+    .clark-op { grid-template-columns: 28px 1fr auto; gap: 8px; padding: 12px; }
+    .clark-op-result { min-width: auto; }
+    .container_periodo { flex-wrap: wrap; }
+    .clark-tab { flex: 1; text-align: center; }
+}
+
+/* --------------------------------------------
+   -------------------------------------------- */
+@keyframes clark-fade-up {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.clark-hero {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.6s ease-out backwards;
+}
+
+.clark-hero-card {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.5s ease-out backwards;
+    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+}
+
+.clark-hero-card:nth-child(1) { animation-delay: .1s; }
+.clark-hero-card:nth-child(2) { animation-delay: .2s; }
+
+.clark-stats {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.6s ease-out backwards;
+    animation-delay: .3s;
+    transition: transform .2s ease-out;
+}
+
+.clark-stat {
+    opacity: 1;
+    transform: translateY(0);
+    animation: clark-fade-up 0.5s ease-out backwards;
+    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+}
+
+.clark-stat:nth-child(1) { animation-delay: .4s; }
+.clark-stat:nth-child(2) { animation-delay: .5s; }
+.clark-stat:nth-child(3) { animation-delay: .6s; }
+.clark-stat:nth-child(4) { animation-delay: .7s; }
+
+/* Hover profundo nos hero cards */
+.clark-hero-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border);
+    box-shadow: 0px 0px 10px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.clark-hero-card:active {
+    transform: translateY(-1px);
+}
+
+/* Active state nos stats */
+.clark-stat:active {
+    transform: translateY(-1px);
+}
+
+/* Active state nas tabs */
+.clark-tab:active {
+    transform: translateY(0px);
+}
+
+/* Active state nos botões */
+.clark-btn:active {
+    transform: translateY(0px);
+}
+
+.clark-goal-change:active {
+    transform: translateY(0px);
+}
+
+/* Respeita quem pediu menos movimento (nota Seção 2) */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .clark-hero,
+    .clark-hero-card,
+    .clark-stats,
+    .clark-stat {
+        opacity: 1 !important;
+    }
+}
+
+/* Tema claro: segue o sistema (nota Seção 2) */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --surface-2: #eef0f3;
+        --border: #d8dce1;
+        --text: #16181c;
+        --muted: #545b63;
+        --dim: #6b737d;
+        --accent: #0a0b0d;
+        --up: #1f9e63;
+        --down: #c23b3b;
+        --sidebar: #eceef1;
+        --sidebar-hover: #e1e4e8;
+        /* No tema claro as hairlines viram bordas sólidas suaves */
+        --hairline: #d8dce1;
+        --hairline-strong: #b9bfc6;
+    }
+}

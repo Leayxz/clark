@@ -15,18 +15,16 @@ from ..dtos import ConfigurationDTO, ApiDTO
 @authenticated
 def automation_dashboard(request):
 
-    if request.method == "GET":
+    configuration, credentials, status_automation = automation_service.get_automation_overview("lnmarkets", request.subject)
 
-        configuration, credentials, status_automation = automation_service.get_automation_overview("lnmarkets", request.subject)
-
-        return Response({"API_KEY": credentials.API_KEY,
-                         "API_SECRET": credentials.API_SECRET,
-                         "API_PASSPHRASE": credentials.API_PASSPHRASE,
-                         "status_automation": status_automation,
-                         "marginUSD": configuration.marginUSD,
-                         "leverage": configuration.leverage,
-                         "percentage_profit": configuration.percentage_profit,
-                         "buy_variation": configuration.buy_variation}, status.HTTP_200_OK)
+    return Response({"API_KEY": credentials.API_KEY,
+                     "API_SECRET": credentials.API_SECRET,
+                     "API_PASSPHRASE": credentials.API_PASSPHRASE,
+                     "status_automation": status_automation,
+                     "marginUSD": configuration.marginUSD,
+                     "leverage": configuration.leverage,
+                     "percentage_profit": configuration.percentage_profit,
+                     "buy_variation": configuration.buy_variation}, status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -47,7 +45,7 @@ def enable_automation(request):
 def disable_automation(request):
 
     serializer = ExchangeSerializer(data=request.data)
-    if not serializer.is_valid(): return Response({"error": serializer.error_messages}, status.HTTP_400_BAD_REQUEST)    
+    if not serializer.is_valid(): return Response({"error": Error.INVALID_CREDENTIALS.value}, status.HTTP_400_BAD_REQUEST)    
 
     exchange = cast(dict[str, str], serializer.validated_data)["exchange"]
     automation_service.disable_automation(exchange, request.subject)

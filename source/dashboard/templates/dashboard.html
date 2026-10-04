@@ -1,58 +1,156 @@
-{% extends "layout.html" %}
 {% load static %}
 
-{% block title %} Clark {% endblock %}
+<link rel="stylesheet" href="{% static 'dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'sidebar.css' %}">
 
-{% block main %}
-<link rel = "stylesheet" href = "{% static 'pagina_inicial.css' %}"> {% csrf_token %}
+<div class="clark-app">
+    {% csrf_token %}
+    {% include "sidebar.html" %}
 
-    <div id="total_profit_today" class="status"> Total Profit Today: </div>
 
-    <div id="lado-esquerdo" class="lado_esquerdo_pagina_inicial">
-        <div class="status_container">
-                <div id="cotacao" class="status"> Verificando... $</div>
-                <div id="automation" class="status"> Verificando... </div>
-                <div id="telegram" class="status"> Verificando... </div>
-                <div id="payment" class="status"> Verificando... </div>
-                <p id="tutorial" class="tutorial"> Tutorial: https://youtu.be/B0hWxMv_b0E </p>
+    <!-- --------------------------------------------              -------------------------------------------- -->
+    <!-- -------------------------------------------- Main Content -------------------------------------------- -->
+    <!-- --------------------------------------------              -------------------------------------------- -->
+
+    <main class="clark-main">
+
+        <div class="container_header">
+            <div class="clark-brand">Clark <span class="clark-brand__mark">丰</span></div>
         </div>
-    </div>
 
 
-    <div class="lado_direito_pagina_inicial">
-        <div class="botao_container">
-                <a class="botao" href="{% url 'pagina_automacao' %}"> Configurar Sessão </a>
-                <a id="gerar_invoice" class="botao" onclick="this.disabled=true; this.textContent='Processando...'"> Gerar Invoice </a>
-                <a class="botao" href="{% url 'pagina_telegram' %}"> Telegram </a>
-                <button id="button_logout" class="botao" type="button"> Sair </button>
+        <!-- Hero Metrics -->
+        <section class="clark-hero">
+            <div class="clark-hero-card">
+                <div class="clark-hero-label">Patrimônio Acumulado</div>
+                <div class="clark-hero-value" id="total_patrimony">丰 {{ patrimonio_btc|default:"0.00000" }}</div>
+                <div class="clark-hero-sub" id="usd_patrimony">${{ patrimonio_usd|default:"0.00" }}</div>
+            </div>
+
+
+            <div class="clark-hero-card">
+                <div class="clark-hero-label">Resultado Acumulado</div>
+                <div class="clark-hero-value" id="resultado_acumulado"></div>
+                <div class="clark-hero-sub" id="resultado_acumulado_usd">$0.00</div>
+            </div>
+        </section>
+
+
+        <!-- ------------------------ Period Tabs ------------------------ -->
+
+        <div class="container_periodo">
+            <button class="clark-tab active" id="info_today">Hoje</button>
+            <button class="clark-tab" id="info_month">30 Dias</button>
+            <button class="clark-tab" id="info_all_period">Desde o início</button>
         </div>
-    </div>
 
 
-    <!-- ------------------- INVOICE ------------------- -->
+        <!-- ---------------------------------------------- Goal Progress ---------------------------------------------- -->
 
-    <div id="modal-invoice" class="modal_invoice">
-        <div class="conteudo_invoice">
-                <h3 class="titulo">Confirme Seu Pagamento</h3>
+        <div class="clark-goal" id="goal-progress">
 
-                <p class="texto_explicacao">
-                    Se o pagamento foi feito e não foi confirmado, <br>
-                    aguarde alguns minutos e atualize a página. Se mesmo <br>
-                    assim não for, entre em contato enviando comprovante, <br>
-                    email, e o id abaixo.
-                </p>
+            <div class="clark-goal-head">
+                <span class="clark-goal-label">Objetivo</span>
+                <button class="clark-goal-change" id="change-goal" type="button">Alterar Objetivo</button>
+            </div>
 
-                <img id="qrcode_img" src="" alt="qr_code">
-                <p class="texto_lightning">⚡ Lightning: R$25</p>
-                <p id="deposit-id" class="id_invoice"></p>
-                <p id="payment-request" class="payment_hash"></p>      
-                <p class="texto_compra_venda">✅ Compra Automática <br> ✅ Venda Automática</p>
-                <p class="expiracao">Expira em 2 minutos</p>
+            <div class="clark-goal-target" id="goal_target">0,00000 sats</div>
+            <div class="clark-goal-current" id="current_goal_state">0,00000 sats</div>
 
-                <button id="btn-pagamento">Já Paguei</button>
+            <div class="clark-goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="24.96">
+                <div class="clark-goal-fill" id="goal_progress_bar" style="width: 0%;"></div>
+            </div>
+
+            <div class="clark-goal-remaining" id="goal_remaining">Sats Remaining</div>
         </div>
-    </div>
 
-    <script type="module" src="{% static 'javascript/dashboard.js' %}"></script>
-    <script type="module" src="{% static 'javascript/qrcode.js' %}"></script>
-{% endblock %}
+
+        <!-- ------------------------------------- Key Stats ------------------------------------- -->
+
+        <div class="clark-stats">
+            <div class="clark-stat">
+                <div class="clark-stat-label">Operações Realizadas</div>
+                <div class="clark-stat-value" id="total_operations"></div>
+            </div>
+
+
+            <div class="clark-stat">
+                <div class="clark-stat-label">Taxas</div>
+                <div class="clark-stat-value" id="total_fees"> 丰 0.00 </div>
+                <div class="clark-stat-sub" id="total_fees_usd">$0.00</div>
+            </div>
+
+
+            <div class="clark-stat">
+                <div class="clark-stat-label">Margem Exposta</div>
+                <div class="clark-stat-value" id="total_margin_used"> 丰 0.00 </div>
+                <div class="clark-stat-sub" id="total_margin_used_usd">$0.00</div>
+            </div>
+        </div>
+
+        <!-- --------------------------------------- Latest Operations --------------------------------------- -->
+
+        <div class="clark-section-title">Ultimas Operações</div>
+
+        <template id="op-template">
+            <div class="clark-op">
+                
+                <div class="clark-op-icon">
+                    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.2c0-1.2 1.1-2 2.5-2s2.5.8 2.5 2-1.1 1.8-2.5 1.8-2.5.8-2.5 2 1.1 2 2.5 2 2.5-.8 2.5-2"/></svg>
+                </div>
+
+                <div class="clark-op-main">
+                    <div class="clark-op-type"></div>
+                    <div class="clark-op-time"></div>
+                </div>
+
+                <div class="clark-op-result"></div>
+
+            </div>
+        </template>
+
+        <div class="clark-ops" id="last_operations"></div>
+    </main>
+</div>
+
+
+<!-- ------------------------------------------------- Invoice Modal ------------------------------------------------- -->
+
+<div id="modal-invoice" class="clark-modal">
+    <div class="clark-modal-content">
+        <h3 class="clark-modal-title">confirme seu pagamento</h3>
+        <p class="clark-modal-text">
+            Se o pagamento foi feito e não foi confirmado, aguarde alguns minutos e atualize a página.
+            Se mesmo assim não for, entre em contato enviando comprovante, email, e o id abaixo.
+        </p>
+        <img id="qrcode-img" src="" alt="qr_code">
+        <p class="clark-modal-highlight"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Lightning: R$25</p>
+        <p id="deposit-id" class="clark-modal-id"></p>
+        <p id="payment-request" class="clark-modal-hash"></p>
+        <p class="clark-modal-features"><span><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Compra Automática</span><br><span><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Venda Automática</span></p>
+        <p class="clark-modal-expiry">expira em 2 minutos</p>
+        <button id="btn-pagamento" class="clark-btn">já paguei</button>
+    </div>
+</div>
+
+
+<!-- ------------------------------------------------- Goal Modal ------------------------------------------------- -->
+
+<div id="modal-goal" class="clark-modal">
+    <div class="clark-modal-content">
+
+        <h3 class="clark-modal-title">Alterar objetivo</h3>
+        <p class="clark-modal-text">Defina o valor da sua meta de lucro acumulado em sats.</p>
+        <input id="goal-input" class="clark-modal-input" type="number" min="1" step="1" placeholder="ex: 50000" inputmode="numeric">
+        <p id="goal-error" class="clark-modal-error" hidden>Informe um valor maior que zero.</p>
+
+        <div class="clark-modal-actions">
+            <button id="goal-save" class="clark-btn" type="button">Salvar</button>
+            <button id="goal-cancel" class="clark-btn clark-btn-ghost" type="button">Cancelar</button>
+        </div>
+
+    </div>
+</div>
+
+<script type="module" src="{% static 'javascript/dashboard.js' %}"></script>
+<script type="module" src="{% static 'javascript/sidebar.js' %}"></script>

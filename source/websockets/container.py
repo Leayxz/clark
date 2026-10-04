@@ -1,4 +1,5 @@
 import redis.asyncio as async_redis
+from pathlib import Path
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from .repository import WSUserStateRepository, AutomationExecutorRepository
@@ -10,7 +11,10 @@ from .providers.hyperliquid import HyperliquidClient
 from .notifier import Telegram
 from ..constants import EXCHANGES
 
-engine = create_async_engine("sqlite+aiosqlite:///sqlite.db", echo=False)
+# Banco unico do projeto (raiz). Caminho absoluto para nao depender do CWD.
+DATABASE_PATH = Path(__file__).resolve().parents[2] / "sqlite.db"
+
+engine = create_async_engine(f"sqlite+aiosqlite:///{DATABASE_PATH.as_posix()}", echo=False)
 SessionLocal = async_sessionmaker(bind=engine)
 redis_client = async_redis.Redis(decode_responses=True)
 

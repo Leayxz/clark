@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # COPIA ARQUIVOS
-COPY _projeto _projeto
+COPY config config
 COPY aplicacao aplicacao
 COPY dominio dominio
 COPY infra infra

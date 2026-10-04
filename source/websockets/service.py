@@ -59,7 +59,7 @@ class AutomationExecutor:
             self._repository.add_buy_order(user_id, new_order)
             self._repository.update_wallet_balance(user_id, new_order.margin_used, BUY=True)
             await self._repository.update_dashboard_overview(user_id, new_order.margin_used, True)
-            await self._notifier.send_buy_message(new_order.entry_price)
+            await self._notifier.send_buy_message(new_order.entry_price, len(all_open_orders))
 
 
     async def evaluate_sell_condition(self,

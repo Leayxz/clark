@@ -1,5 +1,6 @@
 from .interfaces import DashboardProtocol
-from ..dtos import DashboardResult
+from ..dtos import Overview, OverviewPeriod
+from ..constants import Period
 
 
 class DashboardService:
@@ -8,11 +9,13 @@ class DashboardService:
         self._repository = repository
 
 
-    def overview(self, exchange: str, email: str) -> DashboardResult:
-        status_automation = self._repository.get_status_automation(exchange, email)
-        total_profit_today = self._repository.get_total_profit_today()
+    def overview(self, exchange: str, user_id: str) -> Overview:
+        return self._repository.get_overview(exchange, user_id)
 
-        return DashboardResult(total_profit_today=total_profit_today,
-                               status_automation=status_automation,
-                               status_telegram=False,
-                               status_payment=False)
+
+    def overview_period(self, exchange: str, user_id: str, period: str) -> OverviewPeriod:
+        return self._repository.get_overview_period(exchange, user_id, period)
+
+
+    def update_goal(self, exchange: str, user_id: str, goal_target: int) -> None:
+        self._repository.update_goal_target(exchange, user_id, goal_target)

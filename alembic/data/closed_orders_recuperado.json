@@ -1,0 +1,1325 @@
+[
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "32039263-3364-49b5-a7ad-0cb9e2719e87",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 23:27:39.396612"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6a7516f9-f5f9-406e-9057-0c45eefb9d96",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 18:32:48.764379"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "36380583-2715-4ca8-b138-ce69eaea8e69",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 18:23:51.982083"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "927b284e-b1cb-47bf-98a6-0b06e3c717c9",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 13:29:27.542785"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "707566af-f172-4327-a141-354ea975238b",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 12:14:17.083993"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "094966a6-9aab-4656-b676-e977a2093f8e",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 11:46:41.251917"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "4e21d509-1e50-47ea-bcbd-da73a3e2d334",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 10:42:13.164644"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "1dfafb83-4304-405a-bd13-16b1df886149",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 09:39:53.407434"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c98e6cd1-df81-454a-9b8b-e2ad6fb4588f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 07:16:27.373071"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6f50d349-db41-4f44-94b2-36e415c3d0ae",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 06:43:32.565542"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "fc795476-5667-4b12-af5a-8c9b93dee490",
+  "profit": 5,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 05:58:02.656944"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "a3565b1c-b5a4-4473-b91e-33380cb62043",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 05:52:10.475756"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "cd8e4d49-bcf9-4451-863e-a07b460c01e8",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 05:48:14.208671"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "bec95da9-b864-46d9-8000-ecf1b46c974d",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 05:32:27.719483"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b604085d-ac4b-43f6-aa51-2b517e162d4c",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 05:13:40.222696"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "09a49ad9-d437-4982-9fdf-b217fe9de2f0",
+  "profit": 11,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 04:16:29.494597"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7a57f456-661c-473e-a510-5e5ddc832932",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 04:11:37.822012"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3d5e3a01-5410-4e26-a77c-caf4f8fd6aa6",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 03:07:26.517894"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "527a4076-f6fa-4c6a-98dc-5c7984a967d2",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-21 01:32:26.700439"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c9409bad-d2c2-49fe-a734-c46731ac1285",
+  "profit": 9,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 22:48:07.480851"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "050ade47-2b2a-443f-8ff7-36a305bab436",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 22:32:51.211536"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3c820a03-6e7b-436d-8d54-09f0a7ff91ee",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 22:18:08.127510"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "91e589bf-7436-4ed3-9c80-e0972a35d68c",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 21:32:02.532941"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "34674b47-510b-455d-ae9c-54daa579f081",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 20:27:59.072853"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3b69f078-2bed-4b3e-ba06-b9108387bca1",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 17:26:04.818632"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3da1d97c-fb72-4ef9-b9e9-3c4be488f0e7",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 13:59:34.671517"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ffb322d8-4480-4fda-9812-5ee7b86539d6",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 12:03:59.470856"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ec125821-69fa-41fc-902a-c7fbf55e184c",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 10:51:45.078212"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "59c48e6d-8cce-4801-920d-36279ee5b97f",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 07:15:25.978645"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d6751f23-8b7d-4d77-a9ba-495b3426bec5",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 05:54:13.331138"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3f99fe58-21b7-4618-98f7-f4035369ab47",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 05:13:48.112271"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "53ef19ae-9e1a-49e7-84a7-3de3127dca2e",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 05:07:20.845475"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "cb8d4f66-82f2-459b-bf0b-c350dc991bf1",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-20 03:41:17.818071"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d7fc3d0c-687a-4112-bdb9-f23d87de0f2f",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-19 22:48:26.542613"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "86adffa9-020a-4ae3-8b44-88c4e1b8fdb0",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-19 18:31:05.460007"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e600bf83-fd88-4f7a-9285-18c11367171c",
+  "profit": 11,
+  "total_fees": 2,
+  "closed_at": "2026-08-19 18:07:20.248310"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "db7f1466-403c-41bc-a479-f82fee1699c9",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-03 01:16:13.412000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b66c4b30-78ec-4e91-b2f9-62a32633bdfa",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 13:37:18.708000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "422c0c40-0892-4d4b-83cd-d312ab9ec647",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 12:30:07.187000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6ecad477-9c13-4b86-8b0b-11831d233959",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 08:17:30.488000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "36d6f1fe-ab21-4a21-9946-4536bec08eaa",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 04:25:28.916000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3a85a904-38b9-48ae-8fdb-ffddab05c1c2",
+  "profit": 11,
+  "total_fees": 2,
+  "closed_at": "2026-08-19 17:50:43.459886"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "64561e67-8a53-44b7-b2cf-6f216b9a80fa",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 04:19:57.940000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "4cb8f9e9-5bfa-4bd7-a87b-27b77d1f514b",
+  "profit": 5,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 03:55:38.387000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e5cdbdd5-46a4-4350-a4a5-a081f78bfc08",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-02 03:01:00.206000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d8cdf770-dda5-4932-ad5a-e9d87a4eca1e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-01 18:38:25.219000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3c41bed4-9e03-4953-a359-412c01cc149e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-01 17:17:29.507000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e0c4697b-1f5a-46bb-8dbc-6ec7c275cda9",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-01 16:15:08.304000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "38ac4218-33ea-4638-88cf-edfffbbccbd7",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-01 10:45:19.928000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "593606dd-633d-4613-a53b-a2740f4fb91f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-10-01 05:39:24.694000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e1fd0701-d47e-4dbb-89ad-a1f2a4e7c877",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 15:31:59.448000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b66c3b06-7548-4b0b-b040-d28b9627c520",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 13:47:10.878000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "dd22dae8-ee32-4c39-b209-4999cababe48",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 12:51:57.416000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6502cb54-825b-4ee2-9996-48705de4070e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 12:48:39.407000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "90a705e5-12a4-4dc7-9496-338e4d2fd51b",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 12:35:09.704000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "5b889867-e7b0-41d0-bd2c-e36de136239e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 12:30:19.680000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ae089bf8-2f2e-4cb7-b69e-11caf6b0eb3d",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-30 09:32:36.409000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "014c5705-dac0-41b5-a966-0454437b1902",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-29 18:38:37.315000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "158bf4af-1a56-4106-b299-db2c33687346",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-29 13:25:16.577000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f411142a-b82d-4d2c-a6ce-35ff6576e368",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-29 07:11:08.086000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c37f0372-ae76-4342-82d4-e9f2b34bec20",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-29 06:05:21.275000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0365ddb2-a118-4597-8e9b-17bf6d370227",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-28 16:26:35.374000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2e76dceb-9701-49ea-9738-fd962ec0b019",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-28 16:17:42.758000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6d33e72f-eea4-4f26-a895-70cc8ee117d1",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-28 12:53:50.973000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c298f05c-d1d1-4173-b489-1e6b7e28b418",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-28 00:21:29.176000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "1609d3df-a7b5-4032-9f03-e2ece7712d35",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-27 09:46:01.723000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "caa9c8f9-c8fb-4f12-9476-4decc6aa0072",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-26 13:44:22"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "323780aa-148e-417e-bea4-0138b0bc283c",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 15:51:45.045000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "686a76c5-83c2-4754-a888-ef2df1b056ef",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 14:04:40.799000"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0fb85397-0263-4cfc-a694-f1117e3075b9",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:42"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b49abaa7-1f18-4557-874e-c37c7f85dd1f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:24"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2ab39dc2-1c29-4ab4-a07e-3954efd5c7e1",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:07"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d7957ab4-b460-4282-b805-8b285ba4d92b",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:42"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b760ac09-2769-4843-8964-7630d49f053c",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:42"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "a0ae3320-9ecf-4deb-9d69-e264f055e8b7",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-25 12:13:42"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0692b6e0-dd68-4f8c-90e9-501990b04053",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-24 11:27:41.289459"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ffddea56-4f1b-4182-9be1-be7520485961",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-24 10:19:48.960602"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b6477254-b69a-440a-8986-c7ea079f01da",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-24 04:31:53.725123"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7a4cdc64-b0ce-4328-8642-4075ec1b52ae",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-24 00:02:13.807868"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2f112d46-1aad-4ff4-b532-0b42f2fae20f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-14 15:23:20.431629"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "970575e7-e647-4491-9491-0727556560ad",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-14 13:18:06.622253"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "60bdc8c2-de7c-4d48-9588-899697f0fd05",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-13 18:22:59.082508"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "82ef2a18-cc96-4f32-bb7b-2bc76a4eedf2",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-11 11:03:04.327973"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2bfd8025-88f2-4bb1-aa9c-8baf0677c662",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-11 10:59:15.790072"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "a6716133-d4f0-49f0-b5d1-2125f4b95f77",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-11 10:52:16.912473"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "16f888de-2e64-436f-baa4-944209ff8f38",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-09 12:35:02.527612"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2aee4337-e675-4399-9619-74e718993cc2",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-09 09:42:20.359013"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "816a4643-232f-4862-8ff3-6717de0147c6",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-09-09 06:15:01.971536"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "59a51fe1-9cd2-4d57-a055-d81124934b77",
+  "profit": 15,
+  "total_fees": 2,
+  "closed_at": "2026-09-09 06:14:45.565951"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "9431e6de-f1e5-4672-b01e-3988fe17f744",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-08 11:48:04.127543"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d48e0862-2c96-446f-b94b-4de927276416",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-08 07:20:30.268039"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "07d08522-61ee-4470-b9e8-e27db914ce3e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-07 22:23:09.997833"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ace30c43-0671-4ab2-99c5-09c5c13fa605",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-07 16:35:58.561416"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "aed3f509-1666-435b-a064-460660abc863",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-06 23:40:03.700703"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "cdac3e95-aaeb-4d2a-ab3a-c4536a965ee0",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-06 20:38:27.525038"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b08e2e3c-c3b4-4c2d-b9bc-3a5fb59fe969",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-06 15:06:00.358136"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "43af8528-f52f-4a68-8959-c92170cf07bd",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-04 13:41:40.061270"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "5c7df3b4-fc8e-4342-8308-074626b89e5b",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-04 12:25:05.051417"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "27471938-dbd1-41ef-b727-3bfe74143468",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-04 05:34:45.106987"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b3f84f64-48c9-44bd-96a1-7ddabbb2b0f0",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 18:34:22.565531"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3b9d3d0e-1c8d-485d-99e7-1ed05300a415",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 16:05:28.355636"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "70c36466-ab3a-44f2-83b4-26c0df878e0a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 12:51:57.499580"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f308069c-293c-41a3-b58f-dfca58383852",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 11:59:56.870624"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "84440c69-25f8-465b-841b-2a8a56be8d06",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 11:48:13.257837"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "8f4f85c5-d6e6-4811-92d1-ce04c378d770",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 11:26:51.045240"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b38453d5-3224-4332-954e-fd7350ca0fe7",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 10:45:06.045347"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "9c79c57e-6ca0-4cfb-9d4d-97a76f518931",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 09:32:14.957617"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "94fd3618-dffd-4bd6-aace-03106c9b6530",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-03 04:04:10.048531"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6ce5b01b-6880-432a-8b78-fdb6bcb6210a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-02 23:34:48.682857"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0323cea2-fc5c-4351-8423-ccaf400a6f53",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-01 01:26:17.908013"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "508f0b27-6599-4eb8-9a0e-7952c4e8e65a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-31 14:41:33.973896"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "6f0bfd3a-055b-4bfb-aa39-7bd5648c9620",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-31 11:42:06.642854"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f7ee668f-26a7-4c84-b9a5-f7f00487d5d4",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-31 05:57:40.535657"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f0ae3aad-6074-415a-96b9-9802b783b2dd",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-30 14:18:07.198598"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "a6acdd0c-8870-448b-b4bd-81a254fa89e2",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-30 09:07:15.828393"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "d55c9712-f223-4ac7-9eaf-868946b74689",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-28 11:37:18.401815"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "01f11995-ab50-4e76-8d55-58fbecfb8fa2",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 22:18:59.855256"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "79612890-756f-4835-a7a5-48f214364cd7",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 21:57:40.221851"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "06658518-d052-41d1-a779-0e13f2b52e9e",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 12:12:59.824300"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "eecf6a41-79e3-4dd6-b25e-c8fc804aa643",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 11:31:47.185350"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "883824e6-2cdf-4a31-9b91-7edc2ad77ea0",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 06:27:09.743832"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "58508ee9-acca-4c7d-bde6-d2c9c24c46f8",
+  "profit": 5,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 05:46:17.825494"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "88be27ee-0cf7-44ac-b48b-435f405adb66",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 05:04:34.426592"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "190b421c-5214-4b39-9d9d-d567d6bcfec4",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-27 05:02:22.805774"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c853b4d0-c2c4-4ffd-94f7-9f9ed9218321",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-26 20:45:48.263781"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "360115b2-b1d2-420d-be8b-271c1b191ffa",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-26 15:12:16.867038"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "073729e7-9bfb-4e44-95d0-02c93756ea4f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-26 11:08:37.688659"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c4b6e96b-9998-4fa6-8971-5b50b374ab00",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-25 23:25:20.591619"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "addca16a-eecc-4e86-a262-273735748a23",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-25 18:29:31.579582"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7f6021c3-fcdd-44dd-b2a7-66d7cda7fbb6",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-25 12:59:24.822071"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f84f9112-9552-4eaf-a9b1-720e7171b1f6",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-25 11:10:12.532522"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2cad04bb-3a58-4f5f-b927-2fa0fd177766",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-25 05:12:30.042641"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "822487e0-c862-4ecd-9c34-666d2430a5b8",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 23:20:19.856986"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "1c7ad6f9-0c9b-44f4-89da-8ba8e693b859",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 23:17:57.461747"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "8412fe56-04ec-4298-b495-c9d5029798ef",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 22:02:39.173349"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e30a4cbe-26a6-4351-9645-12cb655dc795",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 21:45:44.667543"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b26224ee-9d35-48e7-956a-1974d3fc279a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 13:05:39.448438"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7eb43e3d-f16a-406f-9ce0-b8ab1e3c1f1f",
+  "profit": 5,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 12:25:29.308808"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0b759ac0-0424-454b-aca8-d407a7e88046",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 11:32:21.631687"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ddd86c6f-2c91-4a10-9b64-8c7027a7e2bf",
+  "profit": 8,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 11:23:10.657685"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "3229976e-c45d-47c4-af56-f9b5deee8a9e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 11:09:55.438721"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c6bcea8f-2848-46c1-a39b-e5f188b628ba",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 09:47:22.767332"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "cba9e0cd-002c-43ae-bb5c-bda65cd41485",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 08:37:36.427403"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "322adfb5-3754-4439-8a6c-56c2b060a510",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 07:19:21.727702"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7f00304b-429b-462e-8509-bdcb9e55abb4",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 06:30:09.350829"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "500bac89-7ea3-4373-a9e2-1d75b9228854",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-24 03:12:15.260715"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "c059aa0f-eaad-427e-910c-f385a345b378",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-23 18:16:04.801174"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "9cc32c94-3451-4ad4-8d92-54becfd50a07",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-23 13:32:19.027316"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "938bf2b4-07dc-4fd8-b1c9-1cdea056ee89",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-23 08:24:31.906150"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "53bd148d-8f83-4062-853d-6594bd7f18ad",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-23 07:21:07.457858"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "4e944e40-eeb5-4136-a370-27ab8dafb431",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-08-22 13:41:07.110423"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b0a30c27-482c-4296-81e0-3b893806e621",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-22 16:17:23.399070"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "196b3e20-4e74-4b86-8243-06c5cf63ad01",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-08-22 16:17:01.471743"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "02b3c01d-b06a-4ace-8101-90ad6436d19e",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-23 14:53:13.777548"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ae9b7363-77f2-4032-911e-9436b14a7046",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-23 00:40:27.056900"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "86adc341-55ba-4ec2-8b50-67d337eed7ad",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-22 12:44:36.171284"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "09d8d7fa-7d0a-4c9e-bd26-60b7cada5d28",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-22 11:13:03.631529"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f1fc55f3-bd91-4da4-89f9-c28a5db7bf87",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-22 05:38:25.531660"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "7bae41c0-1dec-4de3-ad20-eb015ba43c6d",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 17:26:33.427242"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "67f16867-998e-4583-91f3-70931977ec15",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 16:34:26.794083"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e8746ff9-d9e0-42a5-8035-f5ef964011bc",
+  "profit": 7,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 16:20:12.593796"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "e3f34804-4e7c-4759-88f0-77c75ba5658b",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 12:08:08.175613"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2f4ec111-4de7-487d-980a-d22e26e239e2",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 14:48:25.208773"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "fdbf532a-ee51-4898-a9de-1d8f51f25ec5",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 11:33:20.173160"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "0ba104d4-6aa9-4f2d-9bb6-3e005b7fb045",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 10:51:30.379343"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "cd0ca733-3769-4a9c-96ea-e9158788181a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 10:47:49.548111"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "46aedbbb-2ce9-4bb0-9de1-4746e6dd2581",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 09:21:09.300414"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "ea912cbb-5ffb-4fbe-97b5-a09bc61dc7c3",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 08:40:59.846121"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "22dd089f-23b7-45c0-92c0-55fc5234dbb3",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 06:38:45.173137"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "88e05fd6-a7e3-41e4-9cb8-22c9d5a67fca",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 06:33:14.691006"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "44b5c7a9-f6f6-471d-90e9-f0b2cf2a0a65",
+  "profit": 9,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 06:26:22.565022"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "641ad2af-d611-4b57-9c90-3c31b0dca3f6",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 05:38:49.177936"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "20e5958a-e807-492b-a18e-9698acde3234",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 05:38:33.485100"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "dddaedd1-a345-48de-a243-ec42d2c63625",
+  "profit": 9,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 05:38:20.027652"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "36fb9084-5367-4108-908d-5c32cfd59cde",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 05:32:44.207371"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "9213ca94-76f0-484e-bd8f-4d96f9f4d1e0",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-21 05:23:18.669390"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "dafc2967-80ed-46cd-96ab-fc0587ec659a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-20 21:12:58.787528"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "b35e20ca-73df-4127-ad00-4989f827fdec",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-20 19:11:20.584983"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2515562f-4740-4586-9fab-879f3281b5e9",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-20 13:11:32.704197"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2477cb77-bccb-4de3-8531-81219129ab4d",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-19 12:05:08.696936"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "27f32982-21f2-429e-af64-a6f21a938136",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-19 01:23:38.670892"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "335504ad-9cd4-4c10-a9e3-b5714469a59f",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 19:38:41.606902"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "82c06881-7a7a-4163-a76d-10585cf21a0a",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 19:38:26.118692"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "2f51e423-b05a-4584-9a12-524655a28c7d",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 19:38:13.643881"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "f093aafb-6a62-41ed-9a84-5561e919dfdf",
+  "profit": 6,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 14:23:29.433839"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "9bdee10c-3358-4326-ac4e-062fc5d43889",
+  "profit": 12,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 14:22:28.057001"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "10c7c4f8-0fd4-489d-8c8a-e22dbc01e17b",
+  "profit": 15,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 14:22:28.057001"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "facd0fb9-16ac-480f-a11e-b03a2b95c406",
+  "profit": 23,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 14:21:23.007447"
+ },
+ {
+  "user_id": "01a01a22-8c4c-71a6-ab57-f15d7b23faa2",
+  "order_id": "63eac84b-4015-43e6-8aad-3bfb1413b271",
+  "profit": 38,
+  "total_fees": 2,
+  "closed_at": "2026-09-18 14:21:00.208566"
+ }
+]

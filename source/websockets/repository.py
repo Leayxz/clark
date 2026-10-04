@@ -75,7 +75,7 @@ class AutomationExecutorRepository:
 
 
     async def get_all_open_orders(self, user_id: UUID, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], float]:
-        
+
         all_open_orders = self._all_running_open_orders.get(user_id, None)
         total_margin_used = None
 

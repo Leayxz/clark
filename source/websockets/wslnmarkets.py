@@ -1,8 +1,9 @@
 import asyncio, json, websockets, traceback
 
-from .repository import WSLNMarketsRepository, AutomationExecutorRepository
+from .repository import WSUserStateRepository, AutomationExecutorRepository
 from .service import AutomationExecutor
-from .container import automation_executor, ws_lnmarkets_repository, automation_executor_repository
+from .container import automation_executor, ws_repository, automation_executor_repository
+from ..constants import EXCHANGES
 from ..events import AutomationEvent, Channel
 
 
@@ -10,9 +11,10 @@ URL = "wss://stream.lnmarkets.com/v1"
 
 
 async def websocket_lnmarket(automation_executor: AutomationExecutor,
-                             repository: WSLNMarketsRepository):
+                             repository: WSUserStateRepository,
+                             exchange: str):
 
-    await repository.synchronize_websocket()
+    await repository.synchronize_websocket(exchange)
 
     while True:
 
@@ -29,8 +31,8 @@ async def websocket_lnmarket(automation_executor: AutomationExecutor,
                         current_price = price_message["params"]["data"]["lastPrice"]
                         print(f"Price: {current_price}")
 
-                        for email in repository.get_all_activated_automations():
-                            await automation_executor.execute(email, current_price)
+                        for user_id, user_exchange in repository.get_all_activated_automations():
+                            await automation_executor.execute(user_id, current_price, user_exchange)
 
 
         except Exception as error:
@@ -39,7 +41,7 @@ async def websocket_lnmarket(automation_executor: AutomationExecutor,
             await asyncio.sleep(5)
 
 
-async def listen_enable_disable_automations(ws_repository: WSLNMarketsRepository,
+async def listen_enable_disable_automations(ws_repository: WSUserStateRepository,
                                             automation_executor_repository: AutomationExecutorRepository):
 
     async for payload in ws_repository.subscribe_channel(Channel.AUTOMATION):
@@ -56,8 +58,8 @@ async def main():
 
 
     await asyncio.gather(
-        websocket_lnmarket(automation_executor, ws_lnmarkets_repository),
-        listen_enable_disable_automations(ws_lnmarkets_repository, automation_executor_repository)
+        websocket_lnmarket(automation_executor, ws_repository, EXCHANGES.LNMARKETS),
+        listen_enable_disable_automations(ws_repository, automation_executor_repository)
     )
 
 asyncio.run(main())

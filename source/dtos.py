@@ -58,6 +58,8 @@ class DeflowExchangeDTO:
     status: str
     expires_at: datetime | None = None
     coupon: str = ""
+    affiliate_commission_rate: int = 0
+    affiliate_commission_amount: Decimal = Decimal("0")
 
 
 @dataclass
@@ -95,6 +97,9 @@ class Overview:
     open_orders: int
     goal_target: int
     all_time_profit: Decimal | int
+    last_month_profit: Decimal | int
+    status_automation: bool
+    status_telegram: bool
     last_operations: list[dict]
 
 

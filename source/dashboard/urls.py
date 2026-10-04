@@ -7,5 +7,4 @@ urlpatterns = [
     path("api/v1/dashboard", api.overview, name="overview"),
     path("api/v1/dashboard/period", api.overview_period, name="overview_period"),
     path("api/v1/dashboard/goal", api.update_goal_target, name="update_goal"),
-    path("api/v1/sidebar", api.sidebar_status, name="sidebar_status"),
 ]

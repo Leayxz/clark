@@ -16,3 +16,10 @@ class Authentication:
 class TelegramKeys:
     TELEBOT = os.environ["TELEBOT"]
     CHAT_ID = os.environ["CHAT_ID"]
+
+
+class DeflowExchange:
+    API_URL = os.environ.get("DEFLOW_API_URL", "https://api.deflow.exchange")
+    API_KEY = os.environ.get("DEFLOW_API_KEY", "")
+    API_SECRET = os.environ.get("DEFLOW_API_SECRET", "")
+    API_PASSPHRASE = os.environ.get("DEFLOW_API_PASSPHRASE", "")

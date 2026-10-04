@@ -8,4 +8,5 @@ urlpatterns = [
     path("affiliate/terms/", views.page_affiliate_terms, name="page_affiliate_terms"),
     path("api/v1/affiliates/register", api.register_affiliate, name="api_affiliate_register"),
     path("api/v1/affiliates/validate", api.validate_affiliate, name="api_affiliate_validate"),
+    path("api/v1/affiliates/dashboard", api.get_dashboard, name="api_affiliate_dashboard"),
 ]

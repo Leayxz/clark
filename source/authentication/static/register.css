@@ -177,38 +177,8 @@ body {
 }
 
 /* --------------------------------------------
-   7. PASSWORD STRENGTH
+   7. PASSWORD HINT
    -------------------------------------------- */
-.clark-password-strength {
-    height: 3px;
-    border-radius: 2px;
-    margin-top: 8px;
-    background: var(--border);
-    overflow: hidden;
-}
-
-.clark-password-strength-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 2px;
-    transition: all 0.3s;
-}
-
-.clark-password-strength-bar.weak {
-    width: 33%;
-    background: var(--down);
-}
-
-.clark-password-strength-bar.medium {
-    width: 66%;
-    background: var(--warn);
-}
-
-.clark-password-strength-bar.strong {
-    width: 100%;
-    background: var(--up);
-}
-
 .clark-password-hint {
     font-size: 11px;
     color: var(--dim);

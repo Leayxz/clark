@@ -161,10 +161,6 @@ body {
     margin-bottom: 16px;
 }
 
-.clark_login_error_message.show {
-    display: block;
-}
-
 /* --------------------------------------------
    7. BUTTONS
    -------------------------------------------- */

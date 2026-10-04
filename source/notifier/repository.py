@@ -1,9 +1,10 @@
 import redis, json
+from uuid import UUID
 from typing import cast
 from dataclasses import asdict
+
 from ..dtos import NotifierDTO
 from ..constants import CacheKeys
-from uuid import UUID
 
 
 class NotifierRepository:

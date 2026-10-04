@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clark — Automação</title>
+    <meta name="description" content="Configure a estratégia, conecte sua exchange e ative a automação do Clark.">
+    <link rel="stylesheet" href="{% static 'automation.css' %}">
+<link rel="stylesheet" href="{% static 'sidebar.css' %}">
+</head>
+<body>
+<div class="clark-app">
+
+    <!-- -------------------------------------------- Sidebar -------------------------------------------- -->
+
+    {% include "sidebar.html" %}
+
+    <!-- -------------------------------------- Header -------------------------------------- -->
+
+    <header class="clark-header">
+        <div class="container_header">
+            <div class="clark-brand">Clark <span class="clark-brand__mark">丰</span></div>
+            <p class="clark-page-subtitle">Configure sua estratégia e deixe o Clark operar por você.</p>
+        </div>
+    </header>
+
+
+    <!-- -------------------------------------- Exchange Selector -------------------------------------- -->
+    <div class="clark-exchange-wrapper">
+        <div class="clark-exchange-selector" role="radiogroup" aria-label="Selecione a exchange">
+            <button type="button" role="radio" aria-checked="true" data-exchange="lnmarkets" class="clark-exchange-card clark-exchange-card--active" id="exchange-lnmarkets">
+                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3z"/>
+                </svg>
+                <span class="clark-exchange-name">LNMarkets</span>
+            </button>
+            <button type="button" role="radio" aria-checked="false" data-exchange="hyperliquid" class="clark-exchange-card" id="exchange-hyperliquid">
+                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 9a6 6 0 1 1 12 0c0 3.375 2.25 4.5 3 5v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5c.75-.5 3-1.625 3-5z"/>
+                    <path d="M9 9a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/>
+                </svg>
+                <span class="clark-exchange-name">Hyperliquid</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="clark_sections_row">
+        <!-- Strategy Configuration -->
+        <section class="clark-section">
+            <h2 class="clark-section-title">Estratégia</h2>
+
+            <div class="clark-card">
+                <form id="configuration_form" method="post"> {% csrf_token %}
+                    
+                    <div class="clark-input-group">
+
+                        <div class="clark-field">
+                            <label class="clark-field-label" for="percentage_profit">Alvo Lucro (%)</label>
+                            <input class="clark-input" type="number" id="percentage_profit" name="percentage_profit" min="0" step="0.1" required>
+                            <div class="clark-field-hint">Alvo de lucro por operação</div>
+                        </div>
+
+
+                        <div class="clark-field">
+                            <label class="clark-field-label" for="buy_variation">Variação Compra ($)</label>
+                            <input class="clark-input" type="number" id="buy_variation" name="buy_variation" min="0" step="100" required>
+                            <div class="clark-field-hint">Variação mínima para disparar compra</div>
+                        </div>
+        
+                    </div>
+
+                    <div class="clark-input-group" style="margin-top: 16px;">
+                        <div class="clark-field">
+                            <label class="clark-field-label" for="marginUSD">Margem ($)</label>
+                            <input class="clark-input" type="number" id="marginUSD" name="marginUSD" min="1" required>
+                            <div class="clark-field-hint">Capital exposto por operação</div>
+                        </div>
+
+
+                        <div class="clark-field">
+                            <label class="clark-field-label" for="leverage">Alavancagem</label>
+                            <input class="clark-input" type="number" id="leverage" name="leverage" min="1" max="100" required>
+                            <div class="clark-field-hint">Multiplicador de posição</div>
+                        </div>
+                    </div>
+
+
+                    <!-- Live Preview -->
+                    <div class="clark-strategy-preview">
+                        <div class="clark-strategy-preview-title">Pré-Visualização da Configuração</div>
+
+                        <div class="clark-strategy-row">
+                            <span class="clark-strategy-row-label">Variação Compra $</span>
+                            <span class="clark-strategy-row-value" id="buy_variation_preview"></span>
+                        </div>
+
+
+                        <div class="clark-strategy-row">
+                            <span class="clark-strategy-row-label">Alvo Lucro %</span>
+                            <span class="clark-strategy-row-value" id="percentage_profit_preview"></span>
+                        </div>
+
+
+                        <div class="clark-strategy-row">
+                            <span class="clark-strategy-row-label">Exposição ($)</span>
+                            <span class="clark-strategy-row-value" id="marginUSD_preview"></span>
+                        </div>
+                        <div class="clark-strategy-row">
+                            <span class="clark-strategy-row-label">Alavancagem</span>
+                            <span class="clark-strategy-row-value" id="leverage_preview"></span>
+                        </div>
+                    </div>
+
+                    <p class="temporary_message" id="configuration_message"></p>
+                    <button class="clark-btn clark-btn-primary" type="submit" id="save-strategy">Salvar Estratégia</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ----------------------------------------------------------------- API Connection ----------------------------------------------------------------- -->
+
+        <section class="clark-section">
+            <h2 class="clark-section-title">Conexão Api</h2>
+            <div class="clark-card">
+                <div class="clark-api-status disconnected" id="api-status">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span id="api-status-text">Api Desconectada — Configure Suas Chaves</span>
+                </div>
+
+                <form id="form_api" method="post"> {% csrf_token %}
+
+                    <div class="clark-field">
+                        <label class="clark-field-label" for="api-key">Api Key</label>
+                        <input class="clark-input" type="password" id="api_key" name="API_KEY" 
+                            value="{{ api_credentials.key|default:'' }}" placeholder="cole sua api key">
+                        <div class="clark-field-hint">Chave de acesso à exchange</div>
+                    </div>
+                    <div class="clark-field">
+                        <label class="clark-field-label" for="api-secret">Secret Key</label>
+                        <input class="clark-input" type="password" id="api_secret" name="SECRET_KEY" value="{{ api_credentials.secret|default:'' }}" placeholder="cole sua secret key">
+                        <div class="clark-field-hint">Chave secreta — Nunca compartilhada</div>
+                    </div>
+                    <div class="clark-field">
+                        <label class="clark-field-label" for="api-passphrase">Passphrase</label>
+                        <input class="clark-input" type="password" id="api_passphrase" name="passphrase" value="{{ api_credentials.passphrase|default:'' }}" placeholder="sua passphrase">
+                        <div class="clark-field-hint">Passphrase da api (se necessário)</div>
+                    </div>
+
+                    <p class="temporary_message" id="api_message"></p>
+                    <button class="clark-btn clark-btn-primary" type="submit" id="save-api">Salvar e Testar Conexão</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+
+
+
+    <!-- --------------------------------------------------------------- Risk Warning --------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------- Risk Warning --------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------- Risk Warning --------------------------------------------------------------- -->
+
+    <div class="clark-risk">
+        <svg class="clark-risk-icon" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+
+        <div class="clark-risk-text">
+            <strong>ATENÇÃO:</strong> O Clark executará ordens reais na sua exchange. 
+            Revise cuidadosamente os valores de margem e alavancagem antes de ativar. 
+            O clark nunca solicitará saques ou transferências.
+        </div>
+
+    </div>
+
+
+    <!-- ----------------------------------------------------------------- Status Banner ----------------------------------------------------------------- -->
+    <!-- ----------------------------------------------------------------- Status Banner ----------------------------------------------------------------- -->
+    <!-- ----------------------------------------------------------------- Status Banner ----------------------------------------------------------------- -->
+
+    <div class="clark-status-banner">
+        <div class="clark-status-info">
+
+            <span class="clark-status-dot" id="dot_animation"></span>
+
+            <div>
+                <div class="clark-status-label" id="status_label">Automação Inativa</div>
+                <div class="clark-status-desc" id="sub_status_automation">Execução Parada!</div>
+            </div>
+        </div>
+
+        <button class="clark-toggle-btn" id="enable_automation" type="button">Ativar Automação</button>
+        </div>
+        </div>
+
+        <script type="module" src="{% static 'javascript/automation.js' %}"></script>
+    <script type="module" src="{% static 'javascript/sidebar.js' %}"></script>
+        </body>
+        </html>

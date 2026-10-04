@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 class ConfigurationSerializer(serializers.Serializer):
+    exchange = serializers.CharField(max_length=15)
     marginUSD = serializers.IntegerField()
     leverage = serializers.IntegerField()
     buy_variation = serializers.DecimalField(max_digits=5, decimal_places=0)

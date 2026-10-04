@@ -1,7 +1,6 @@
 import redis, json
 from decimal import Decimal
 from typing import cast
-from dataclasses import asdict
 
 from .interfaces import AutomationProtocol
 from ..dtos import ConfigurationDTO, ApiDTO
@@ -20,18 +19,18 @@ class AutomationRepository(AutomationProtocol):
 
 
     def get_configuration(self, exchange: str, user_id: str) -> ConfigurationDTO:
-        # json não suporta decimal e portanto deve ser convertido para Decimal quando buscar
-        bytes_config = cast(bytes, self._client.get(f"{CacheKeys.LNMCONFIGURATION}:{user_id}"))
-        if not bytes_config: return ConfigurationDTO()
+        # a configuracao vive em um hash por exchange, compartilhado com o websocket
+        configuration = cast(dict[str, str], self._client.hgetall(f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}"))
+        if not configuration: return ConfigurationDTO(exchange=exchange)
 
-        dict_config = json.loads(bytes_config)
-        payload = {"wallet_balance": Decimal(dict_config['wallet_balance']),
-                   "marginUSD": dict_config['marginUSD'],
-                   "leverage": dict_config['leverage'],
-                   "percentage_profit": Decimal(dict_config['percentage_profit']),
-                   "buy_variation": Decimal(dict_config['buy_variation']),
-                   "last_buy_up": Decimal(dict_config['last_buy_up']),
-                   "last_buy_down": Decimal(dict_config['last_buy_down'])}
+        payload = {"wallet_balance": Decimal(configuration.get("wallet_balance", "0")),
+                   "marginUSD": int(configuration.get("marginUSD", 0)),
+                   "leverage": int(configuration.get("leverage", 0)),
+                   "percentage_profit": Decimal(configuration.get("percentage_profit", "0")),
+                   "buy_variation": Decimal(configuration.get("buy_variation", "0")),
+                   "last_buy_up": Decimal(configuration.get("last_buy_up", "0")),
+                   "last_buy_down": Decimal(configuration.get("last_buy_down", "0")),
+                   "exchange": exchange}
 
         return ConfigurationDTO(**payload)
 
@@ -43,26 +42,36 @@ class AutomationRepository(AutomationProtocol):
 
 
     def get_api(self, exchange: str, user_id: str) -> ApiDTO:
-        api = cast(bytes | None, self._client.get(f"{CacheKeys.LNMCREDENTIALS}:{user_id}"))
-        return ApiDTO(**json.loads(api)) if api else ApiDTO()
+        credentials = cast(dict[str, str], self._client.hgetall(f"{CacheKeys.AUTOMATION_CREDENTIALS}:{exchange}:{user_id}"))
+        if not credentials: return ApiDTO()
+
+        return ApiDTO(API_KEY=credentials.get("API_KEY"),
+                      API_SECRET=credentials.get("API_SECRET"),
+                      API_PASSPHRASE=credentials.get("API_PASSPHRASE"),
+                      exchange=credentials.get("EXCHANGE") or exchange)
 
 
     def save_api(self, exchange, user_id, api_data: ApiDTO):
-        api = json.dumps(asdict(api_data))
-        self._client.set(f"{CacheKeys.LNMCREDENTIALS}:{user_id}", api, CacheKeys.THIRTY_DAYS_IN_SECONDS)
+        # hset preserva os campos que nao vierem no payload
+        key = f"{CacheKeys.AUTOMATION_CREDENTIALS}:{exchange}:{user_id}"
+        self._client.hset(key, mapping={"EXCHANGE": exchange,
+                                        "API_KEY": api_data.API_KEY or "",
+                                        "API_SECRET": api_data.API_SECRET or "",
+                                        "API_PASSPHRASE": api_data.API_PASSPHRASE or ""})
+        self._client.expire(key, CacheKeys.THIRTY_DAYS_IN_SECONDS)
 
 
     def save_configuration(self, exchange, user_id: str, configuration: ConfigurationDTO) -> None:
-        # json não suporta decimal e portanto deve ser convertido para string quando salvar
-        payload = {"wallet_balance": str(configuration.wallet_balance),
-                   "marginUSD": configuration.marginUSD,
+        # apenas os campos que o formulario gerencia; wallet_balance e as refs de compra
+        # pertencem ao websocket e sobrevivem porque o hset so sobrescreve o que recebe
+        key = f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}"
+        payload = {"marginUSD": configuration.marginUSD,
                    "leverage": configuration.leverage,
                    "percentage_profit": str(configuration.percentage_profit),
-                   "buy_variation": str(configuration.buy_variation),
-                   "last_buy_up": str(configuration.last_buy_up),
-                   "last_buy_down": str(configuration.last_buy_down)}
+                   "buy_variation": str(configuration.buy_variation)}
 
-        self._client.set(f"{CacheKeys.LNMCONFIGURATION}:{user_id}", json.dumps(payload), CacheKeys.THIRTY_DAYS_IN_SECONDS)
+        self._client.hset(key, mapping=payload)
+        self._client.expire(key, CacheKeys.THIRTY_DAYS_IN_SECONDS)
 
 
     def remove_activated_automation(self, exchange: str, user_id: str):

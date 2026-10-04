@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import CouponSerializer
+from .serializers import CouponSerializer, PaymentSerializer
 from ..authentication.decorators import authenticated
 from ..dtos import PaymentDTO
 from ..errors import Error, ERROR_CODE_MAPPING
@@ -31,8 +31,8 @@ def validate_coupon(request):
 @authenticated
 def generate_qrcode_in_pix(request):
 
-    serializer = CouponSerializer(data=request.data)
-    if not serializer.is_valid(): return Response({"error": Error.INVALID_COUPON.value}, status.HTTP_400_BAD_REQUEST)
+    serializer = PaymentSerializer(data=request.data)
+    if not serializer.is_valid(): return Response({"error": Error.INVALID_INPUT.value}, status.HTTP_400_BAD_REQUEST)
 
     payment = PaymentDTO(**cast(dict[str, str], serializer.validated_data))
     result = payment_service.generate_payment_invoice_pix(UUID(request.subject), payment)

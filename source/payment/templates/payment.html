@@ -1,0 +1,316 @@
+'{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Assinar o Clark — Mensalidade</title>
+  <meta name="description"
+    content="Assine o Clark e automatize suas operações por R$150/mês. Pague direto no PIX, sem fidelidade. Cancele quando quiser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'payment.css' %}">
+</head>
+
+<body class="clark-app payment-page"> {% csrf_token %}
+
+  <!-- ----------------------------------------------- Topbar ----------------------------------------------- -->
+  <header class="topbar">
+    <span class="brand">Clark <span class="brand__mark">丰</span></span>
+    <a class="topbar__back" href="/dashboard/">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar
+    </a>
+  </header>
+
+  <main>
+
+    <!-- ----------------------------------------------- Hero ----------------------------------------------- -->
+    <section class="hero">
+      <p class="eyebrow">Assinatura</p>
+      <h1 class="hero__title">Pague de um jeito simples. Cancele quando quiser.</h1>
+      <p class="hero__sub">
+        Só um plano, R$150 por mês. Pague direto no PIX e pronto.
+        Sem fidelidade, sem letra miúda, sem surpresa de preço.</p>
+    </section>
+
+    <form class="pay-form" data-btc-usd="{{ btc_usd_price|default:'' }}">
+
+      <!-- -------------------------------------------- Plano Único (Split Layout) -------------------------------------------- -->
+
+      <!-- Mensalidade 4.1 + AFILIAÇÃO: sem anual, só mensal R$150 -->
+
+      <fieldset class="plans">
+        <legend class="sr-only">Plano</legend>
+        <input type="radio" name="plan" id="plan-clube" class="plan__input" checked>
+        <label class="plan plan--featured" for="plan-clube">
+
+          <!-- ESQUERDA: Identidade + Preço + Segurança -->
+          <div class="plan__identity">
+            <span class="plan__badge">Plano único</span>
+            <h3 class="plan__name">Clark <span class="brand__mark">丰</span></h3>
+            <p class="plan__tag">Automação completa das suas operações.</p>
+
+            <div class="plan_price">
+                <span class="plan_amount" id="amount-full">R$150<span class="plan_period">/mês</span></span>
+                <span class="plan_amount plan_amount_discount" id="amount-discount">R$135<span class="plan_period">/cupom</span></span>
+            </div>
+
+
+            <div class="plan__trust">
+              <div class="plan__trust-item">
+                <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10V7a6 6 0 0 1 12 0v3"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v3"/></svg>
+                <span>Pagamento seguro — via PIX, sem dados de cartão</span>
+              </div>
+              <div class="plan__trust-item">
+                <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Pare de usar quando quiser. Você tem o controle.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIREITA: Benefícios -->
+          <ul class="plan__features">
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Nenhuma limitação por planos.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Sem taxas sobre o lucro operado.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Non-Custodial — fundos na sua exchange</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Histórico auditável de cada operação</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Pare de usar sem qualquer compromisso.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Suporte a qualquer momento por email.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Automatização da sua estratégia de ganhos.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Performance detalhada sobre cada operação.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Exchanges agregadas.</li>
+            <li><svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Construído para comunidade.</li>
+          </ul>
+        </label>
+      </fieldset>
+
+
+      <!-- ----------------------------------------- Forma de Pagamento ----------------------------------------- -->
+
+      <section class="pay" aria-label="Forma de pagamento">
+        <p class="pay__label">Realizar Pagamento</p>
+        <fieldset class="methods">
+
+          <legend class="sr-only">Método de pagamento</legend>
+          <input type="radio" name="forma_pagamento" id="pagamento_pix" class="method__input" checked>
+          <label class="method" for="pagamento_pix">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16v8H4z"/><path d="M8 12h8"/></svg>
+            <span class="method__text">
+              <strong>PIX</strong>
+              <span class="method__price">R$150,00/mês</span>
+              <small class="method__hint">Gere o PIX na hora e pague pelo app do banco. Sem cobrança automática.</small>
+            </span>
+          </label>
+        </fieldset>
+      </section>
+
+
+            <!-- ----------------------------------------- CPF Compliance ----------------------------------------- -->
+
+      <section class="cpf-section" aria-label="Identificação do pagador">
+        <span class="field__label" id="cpf-label">CPF/CNPJ do Pagador</span>
+        <input class="field__input" type="text" id="cpf_input" name="cpf" autocomplete="off" spellcheck="false" placeholder="00000000000" maxlength="14" minlength="11" inputmode="numeric" required>
+        <p class="cpf-hint">Digite apenas números, sem pontos ou traços.</p>
+        <p class="cpf-error" id="cpf_error">
+          <svg class="ico ico--error" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span id="cpf_error_text"></span>
+        </p>
+        <p class="cpf-warning" id="cpf_warning">
+          <svg class="ico ico--warning" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          O CPF é obrigatório para compliance das corretoras e parceiros comerciais da Eulen e do Sistema Pix, mas não se preocupe, a transação consta como pix comum. CPF/CNPJ deve ser o mesmo da conta pagadora.
+        </p>
+      </section>
+
+
+        <!-- ----------------------------------------- Cupom de Afiliado ----------------------------------------- -->
+
+        <section class="coupon" aria-label="Cupom de desconto">
+            <span class="field__label" id="coupon-label">Cupom de afiliado</span>
+
+            <span class="coupon__row">
+                <input class="field__input" type="text" id="coupon_input" name="coupon" autocomplete="off" spellcheck="false" placeholder="CUPOM">
+                <button class="coupon__btn" type="button" id="coupon_button">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>             
+                    Aplicar
+                </button>
+            </span>
+
+            <p class="coupon__hint coupon__hint--hidden" id="coupon_hint" hidden>
+                <svg class="clark-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span id="coupon_hint_text">
+                    <strong id="coupon_code"></strong>
+                    <span id="coupon_separator"></span>
+                    <span id="coupon_percent"></span>
+                </span>
+            </p>
+
+        </section>
+
+
+
+      <!-- --------------------------------------- Resumo e Confirmação --------------------------------------- -->
+      <section class="confirm">
+        <div class="order-summary">
+
+          <div class="order-summary__row">
+            <span class="order-summary__label">Clark</span>
+            <span class="order-summary__val" id="os-full">R$150,00</span>
+          </div>
+
+
+          <div class="order-summary__row order-summary__row--discount is-hidden" id="os-discount-row">
+            <span class="order-summary__label">Cupom <span id="os-coupon-name">—</span></span>
+            <span class="order-summary__val order-summary__val--down">—</span>
+          </div>
+
+
+          <div class="order-summary__row order-summary__row--total">
+            <span class="order-summary__label">Total</span>
+            <span class="order-summary__val" id="os-total-full">R$150,00</span>
+          </div>
+
+          <p class="order-summary__next" id="os-next">Próximo pagamento em 30 dias.</p>
+
+        </div>
+
+        <p class="payment-error" id="payment_error">
+          <svg class="ico ico--error" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span id="payment_error_text"></span>
+        </p>
+
+        <button class="btn btn--primary" type="button" id="confirmar_assinatura">Confirmar assinatura</button>
+
+        <!-- ------------------------------------- Sinais de Confiança ------------------------------------- -->
+        <ul class="trust">
+          <li class="trust__item">
+            <span class="trust__head">
+              <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10V7a6 6 0 0 1 12 0v3"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v3"/></svg>
+              <span class="trust__title">Pagamento seguro</span>
+            </span>
+            <span class="trust__desc">Via PIX, sem dados de cartão.</span>
+          </li>
+
+
+          <li class="trust__item">
+            <span class="trust__head">
+              <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l9 9-7 7-9-9V7z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+              <span class="trust__title">Sem taxa de adesão</span>
+            </span>
+            <span class="trust__desc">Você paga só o mensal. Nada além.</span>
+          </li>
+          <li class="trust__item">
+            <span class="trust__head">
+              <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+              <span class="trust__title">Cancele quando quiser</span>
+            </span>
+            <span class="trust__desc">Encerra a qualquer momento, no app.</span>
+          </li>
+        </ul>
+      </section>
+    </form>
+  </main>
+
+  <!-- ------------------------------------------------ Modal de Pagamento ------------------------------------------------ -->
+
+  <div id="pay-modal" class="clark-modal pay-modal" data-state="aguardando" data-variant="pix" aria-hidden="true">
+    <div class="pay-modal__content" role="dialog" aria-modal="true" aria-labelledby="pay-modal-title">
+      <button class="pay-modal__close" id="pay-modal-close" type="button" aria-label="Fechar">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <header class="pay-modal__bar">
+        <span class="pay-modal__brand">Clark <span class="brand__mark">丰</span></span>
+        <h3 class="pay-modal__title" id="titulo_forma_pagamento">Pagar com Pix</h3>
+      </header>
+
+      <div class="pay-modal__split">
+        <!-- Esquerda: QR + endereço + copiar -->
+        <div class="pay-modal__pay">
+          <!-- Estado 1: criando -->
+          <div class="pay-modal__state pay-modal__state--criando">
+            <div class="pay-modal__skeleton"></div>
+            <p class="pay-modal__status"><span class="pay-modal__dot" aria-hidden="true"></span>Preparando seu pagamento...</p>
+          </div>
+
+          <!-- Estado 2: aguardando -->
+          <div class="pay-modal__state pay-modal__state--aguardando">
+            <div class="pay-modal__qr" id="qrcode_image" aria-hidden="true"></div>
+            <div class="pay-modal__code">
+              <code class="pay-modal__code-val" id="pm-code-val">placeholder.gov.bcb.pix...</code>
+              <span class="pay-modal__code-overflow" id="pm-code-overflow" aria-hidden="true">…</span>
+            </div>
+            <button class="pay-modal__copy" id="pm-copy" type="button">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><rect x="5" y="5" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              <span id="pm-copy-text">Copiar código PIX</span>
+            </button>
+            <p class="pay-modal__status"><span class="pay-modal__dot" aria-hidden="true"></span>Aguardando pagamento...</p>
+          </div>
+
+          <!-- Estado 3: pago -->
+          <div class="pay-modal__state pay-modal__state--pago">
+            <div class="pay-modal__success">
+              <svg class="ico ico--up" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+              <p class="pay-modal__success-title">Pagamento confirmado</p>
+              <p class="pay-modal__success-text">Sua assinatura Clark está ativa.</p>
+            </div>
+            <button class="btn btn--primary pay-modal__continue" id="pm-continue" type="button">Continuar</button>
+          </div>
+
+          <!-- Estado 4: expirado -->
+          <div class="pay-modal__state pay-modal__state--expirado">
+            <p class="pay-modal__expired-title">Esse pagamento expirou.</p>
+            <p class="pay-modal__expired-text">Gere um novo pagamento para continuar.</p>
+            <button class="btn btn--primary" id="pm-retry" type="button">Gerar novo pagamento</button>
+          </div>
+        </div>
+
+        <!-- Direita: resumo do pedido -->
+        <aside class="pay-modal__summary">
+          <p class="pay-modal__summary-label">Resumo do pedido</p>
+          <div class="pay-modal__item">
+            <span class="pay-modal__item-name">Assinatura mensal</span>
+            <span class="pay-modal__item-price" id="pm-full">R$150<span class="per">/mês</span></span>
+          </div>
+
+          <div class="pay-modal__coupon" id="pm-coupon-line" hidden>
+            <div class="pay-modal__row pay-modal__row--discount">
+              <span class="pay-modal__row-label">Cupom —</span>
+              <span class="pay-modal__row-val pay-modal__row-val--up">—</span>
+            </div>
+            <div class="pay-modal__row pay-modal__row--total">
+              <span class="pay-modal__row-label">Total</span>
+              <span class="pay-modal__row-val" id="pm-total">R$150<span class="per">/mês</span></span>
+            </div>
+            <div class="pay-modal__feedback" id="pm-feedback" hidden>
+              <svg class="pay-modal__feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="pm-feedback-icon">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="pm-feedback-text"></span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------- Rodapé ------------------------------------------------- -->
+  <footer class="footer">
+    <span class="brand">Clark <span class="brand__mark">丰</span></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script type="module" src="/static/javascript/payment.js"></script>
+
+</body>
+
+</html>'

@@ -7,9 +7,9 @@ class NotifierService:
         self._repository = repository
 
 
-    def get_notifier(self, email: str) -> NotifierDTO:
-        return self._repository.get_notifier(email)
+    def get_notifier(self, user_id: str) -> NotifierDTO:
+        return self._repository.get_notifier(user_id)
 
 
-    def save_notifier(self, email: str, notifier: NotifierDTO):
-        return self._repository.save_notifier(email, notifier)
+    def save_notifier(self, user_id: str, notifier: NotifierDTO):
+        return self._repository.save_notifier(user_id, notifier)

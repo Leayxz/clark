@@ -4,6 +4,7 @@ interface OverviewProtocol {
     leverage: number;
     total_patrimony: number;
     total_margin_exposed: number;
+    open_orders: number;
     status_automation: boolean;
     status_telegram: boolean;
     goal_target: number;
@@ -97,6 +98,8 @@ class Dashboard {
         
         document.getElementById("total_margin_used")!.textContent = `丰 ${data.total_margin_exposed}`;
         document.getElementById("total_margin_used_usd")!.textContent = `$${((data.total_margin_exposed / 100_000_000) * data.btc_usd_price).toFixed(2)}`;
+
+        document.getElementById("open_orders")!.textContent = `${data.open_orders}`;
 
 
 

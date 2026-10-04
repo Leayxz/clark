@@ -23,6 +23,7 @@ def overview(request):
         "leverage": overview.leverage,
         "total_patrimony": overview.total_patrimony,
         "total_margin_exposed": overview.total_margin_exposed,
+        "open_orders": overview.open_orders,
         "last_month_profit": overview.last_month_profit,
         "goal_target": overview.goal_target,
         "all_time_profit": overview.all_time_profit,

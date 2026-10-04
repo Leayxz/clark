@@ -3,9 +3,9 @@ from typing import cast, Any
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from ..authentication.decorators import authenticated
-from .serializers import InputTelegramSerializer
 
+from .serializers import InputTelegramSerializer
+from ..authentication.decorators import authenticated
 from ..container import notifier_service
 from ..errors import Error
 from ..dtos import NotifierDTO

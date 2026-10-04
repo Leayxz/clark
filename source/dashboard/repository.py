@@ -2,9 +2,10 @@ import redis, json
 from typing import Any, cast
 from uuid import UUID
 from datetime import timedelta
+from decimal import Decimal
+
 from django.utils import timezone
 from django.db.models import Sum, Count, Q
-from decimal import Decimal
 
 from .models import ClosedOrder
 from .interfaces import DashboardProtocol

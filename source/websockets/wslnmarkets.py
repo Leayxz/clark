@@ -1,4 +1,5 @@
 import asyncio, json, websockets, traceback
+from uuid import UUID
 
 from .repository import WSUserStateRepository, AutomationExecutorRepository
 from .service import AutomationExecutor
@@ -47,12 +48,12 @@ async def listen_enable_disable_automations(ws_repository: WSUserStateRepository
     async for payload in ws_repository.subscribe_channel(Channel.AUTOMATION):
 
         if payload["type"] == AutomationEvent.STARTED:
-            ws_repository.add_activated_automation(payload["email"])
+            ws_repository.add_activated_automation(UUID(payload.get("user_id")), payload.get("exchange"))
 
 
         elif payload["type"] == AutomationEvent.STOPPED:
-            automation_executor_repository.clear_user_memory_state(payload['email'])
-            ws_repository.remove_activated_automation(payload['email'])
+            automation_executor_repository.clear_user_memory_state(UUID(payload.get('user_id')))
+            ws_repository.remove_activated_automation(UUID(payload.get('user_id')))
 
 async def main():
 

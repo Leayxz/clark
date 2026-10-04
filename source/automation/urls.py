@@ -2,7 +2,7 @@ from django.urls import path
 from . import api, views
 
 urlpatterns = [
-    path("automacao/", views.page_automation, name="pagina_automacao"),
+    path("automation/", views.page_automation, name="page_automation"),
 
     path("api/v1/automation/dashboard", api.automation_dashboard, name="automation_dashboard"),
     path("api/v1/automation/enable", api.enable_automation, name="enable_automation"),

@@ -145,7 +145,7 @@ document.getElementById("configuration_form")?.addEventListener("submit", async 
     if (data.message) {
         message.className = "temporary_message success";
         message.textContent = `Configuração salva com sucesso para ${exchange_label}.`;
-        setTimeout(() => {message.hidden = true; window.location.href = "/automacao/"}, 2000);
+        setTimeout(() => {message.hidden = true; window.location.href = "/automation/"}, 2000);
     }
 })
 
@@ -210,5 +210,5 @@ document.getElementById("enable_automation")?.addEventListener("click", async ()
         return;
     }
 
-    window.location.href = "/automacao/";
+    window.location.href = "/automation/";
 });

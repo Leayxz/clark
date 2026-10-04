@@ -85,11 +85,10 @@ class DashboardRepository(DashboardProtocol):
                 payload = {"exchange": exchange, "user_id": user_id}
                 pipe.sismember(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}", json.dumps(payload))
                 pipe.get(f"{CacheKeys.NOTIFIER_TELEGRAM}:{user_id}")
-                pipe.get(f"{CacheKeys.LNMCONFIGURATION}:{user_id}")
+                pipe.hgetall(f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}")
 
-                automation, notifier_raw, configuration_raw = cast(tuple[int, bytes | None, bytes | None], pipe.execute())
+                automation, notifier_raw, configuration = cast(tuple[int, bytes | None, dict[str, str]], pipe.execute())
 
-            configuration: dict[str, int] = json.loads(configuration_raw) if configuration_raw else {}
             notifier: dict[str, str] = json.loads(notifier_raw) if notifier_raw else {}
 
             last_operation = (ClosedOrder.objects.filter(user_id=user_id)

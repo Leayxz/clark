@@ -7,9 +7,16 @@ interface SidebarStatusProtocol {
 }
 
 
+// o seletor de exchange so existe na pagina de automação; nas demais assume lnmarkets
+function getActiveExchange(): string {
+    const active = document.querySelector(".clark-exchange-card--active") as HTMLElement | null;
+    return active?.dataset.exchange || "lnmarkets";
+}
+
+
 export async function refreshSidebar(): Promise<void> {
     try {
-        const response = await fetch("/api/v1/sidebar", { method: "GET", credentials: "include" });
+        const response = await fetch(`/api/v1/sidebar?exchange=${getActiveExchange()}`, { method: "GET", credentials: "include" });
         if (response.status === 401) { window.location.href = "/"; return; }
         if (!response.ok) { return; }
 

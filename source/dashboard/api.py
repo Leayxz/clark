@@ -34,7 +34,8 @@ def overview(request):
 def get_sidebar_data(request):
 
     with tracer.start_as_current_span("get_sidebar_data"):
-        sidebar = dashboard_service.get_sidebar_data("lnmarkets", request.subject)
+        exchange = request.query_params.get("exchange", "lnmarkets")
+        sidebar = dashboard_service.get_sidebar_data(exchange, request.subject)
 
     return Response({
         "last_operation": sidebar.last_operation,

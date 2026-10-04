@@ -25,8 +25,6 @@ class CacheKeys:
     AUTOMATION_CONFIGURATION = "automation_configuration"
     AUTOMATION_API = "automation_api"
     AUTOMATION_CREDENTIALS = "automation_credentials"
-    LNMCREDENTIALS = "lnmcredentials"
-    LNMCONFIGURATION = "lnmconfiguration"
     THIRTY_DAYS_IN_SECONDS = 60*60*24*30
     DASHBOARD_ACCOUNT_OVERVIEW = "dashboard_account_overview"
     DASHBOARD_TOTAL_MARGIN_USED = "total_margin_used"

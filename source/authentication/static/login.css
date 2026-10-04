@@ -1,0 +1,321 @@
+/* ============================================
+   LOGIN — CLARK
+   Mesma linguagem da landing: dark-first, tokens
+   do projeto, fonte math, verde = confiança.
+   Segue REGRAS PÁGINAS HTML CSS.md (Seções 2,3,9).
+   ============================================ */
+
+/* --------------------------------------------
+   1. TOKENS (compartilhados com landing_page.css)
+   -------------------------------------------- */
+:root {
+    --bg: #050505;
+    --surface: #0c0c0c;
+    --surface-2: #141414;
+    --border: #1f1f1f;
+    --text: #e8eaed;
+    --muted: #9aa0a8;
+    --dim: #828a94;
+    --accent: #f5f7fa;
+    --up: #34c07c;          /* verde = confiança/estado positivo */
+    --down: #e05252;        /* vermelho = alerta/erro */
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+    --math: math, "Microsoft YaHei", "Noto Sans SC", sans-serif; /* + fallback CJK p/ 丰 */
+}
+
+/* --------------------------------------------
+   2. BASE
+   -------------------------------------------- */
+body {
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+}
+
+.clark-login-wrap {
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.clark-login-wrap * {
+    box-sizing: border-box;
+}
+
+/* Acessibilidade: foco de teclado visível (nota Seção 3) */
+.clark-login-wrap a:focus-visible,
+.clark-btn:focus-visible,
+.clark-input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* --------------------------------------------
+   3. BRAND
+   -------------------------------------------- */
+.clark-login-brand {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.clark-login-brand-name {
+    color: var(--text);
+    font-family: var(--math);
+    font-size: 100px;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
+.clark-login-brand-name .clark-brand__mark {
+    color: var(--up);
+}
+
+.clark-login-brand-tagline {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 8px;
+}
+
+/* --------------------------------------------
+   4. LOGIN CARD
+   -------------------------------------------- */
+.clark-login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 440px;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.5);
+}
+
+.clark-login-title {
+    color: var(--text);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* --------------------------------------------
+   5. FORM FIELDS
+   -------------------------------------------- */
+.clark-field {
+    margin-bottom: 16px;
+}
+
+.clark-field-label {
+    color: var(--text);
+    display: block;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.clark-input {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.clark-input::placeholder {
+    color: var(--dim);
+}
+
+.clark-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* --------------------------------------------
+   6. ERROR MESSAGE
+   -------------------------------------------- */
+.clark_login_error_message {
+    background: rgba(224, 82, 82, 0.08);
+    border: 1px solid rgba(224, 82, 82, 0.25);
+    color: var(--down);
+    display: none;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.clark_login_error_message.show {
+    display: block;
+}
+
+/* --------------------------------------------
+   7. BUTTONS
+   -------------------------------------------- */
+.clark-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.clark-btn:hover {
+    border-color: var(--muted);
+    background: var(--surface-2);
+}
+
+.clark-btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.clark-btn-primary:hover {
+    opacity: 0.9;
+}
+
+.clark-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------
+   8. DIVIDER
+   -------------------------------------------- */
+.clark-login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.clark-login-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.clark-login-divider-text {
+    font-size: 11px;
+    color: var(--dim);
+}
+
+/* --------------------------------------------
+   9. SECONDARY LINK
+   -------------------------------------------- */
+.clark-login-secondary {
+    text-align: center;
+    font-size: 13px;
+    color: var(--dim);
+}
+
+.clark-login-secondary a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
+.clark-login-secondary a:hover {
+    color: var(--text);
+}
+
+/* --------------------------------------------
+   10. TRUST SIGNALS
+   -------------------------------------------- */
+.clark-login-trust {
+    margin-top: 32px;
+    text-align: center;
+    max-width: 440px;
+    width: 100%;
+}
+
+.clark-login-trust-items {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.clark-login-trust-item {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-family: inherit;
+    text-align: left;
+}
+
+.clark-login-trust-item svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--up);     /* verde = confiança (nota Seção 9) */
+    flex-shrink: 0;
+}
+
+/* --------------------------------------------
+   11. RESPONSIVE + MOTION + TEMA CLARO
+   -------------------------------------------- */
+@media (max-width: 480px) {
+    .clark-login-card {
+        padding: 24px;
+    }
+    .clark-login-brand-name {
+        font-size: 40px;
+    }
+    .clark-login-trust-items {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+}
+
+/* Respeita quem pediu menos movimento (nota Seção 2) */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Tema claro: segue o sistema (nota Seção 2) */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --surface-2: #eef0f3;
+        --border: #d8dce1;
+        --text: #16181c;
+        --muted: #545b63;
+        --dim: #6b737d;
+        --accent: #0a0b0d;
+        --up: #1f9e63;
+        --down: #c23b3b;
+    }
+}

@@ -16,6 +16,9 @@ class Error(Enum):
     LIQUID_ADDRESS_EXISTS = "Endereço Liquid já cadastrado."
     INVALID_INPUT = "Dados inválidos."
     PROVIDER_ERROR = "Erro interno do provedor."
+    INVALID_TAX_NUMBER = "CPF/CNPJ inválido."
+    DUPLICATE_DEPOSIT = "Depósito recente. Aguarde."
+    DEFLOW_ERROR = "Erro no provedor de pagamento."
 
 
 ERROR_CODE_MAPPING = {
@@ -33,4 +36,7 @@ ERROR_CODE_MAPPING = {
     Error.COUPON_ALREADY_EXISTS: status.HTTP_409_CONFLICT,
     Error.LIQUID_ADDRESS_EXISTS: status.HTTP_409_CONFLICT,
     Error.PROVIDER_ERROR: status.HTTP_503_SERVICE_UNAVAILABLE,
+    Error.INVALID_TAX_NUMBER: status.HTTP_400_BAD_REQUEST,
+    Error.DUPLICATE_DEPOSIT: status.HTTP_409_CONFLICT,
+    Error.DEFLOW_ERROR: status.HTTP_502_BAD_GATEWAY,
 }

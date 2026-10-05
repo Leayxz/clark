@@ -20,6 +20,6 @@ class TelegramKeys:
 
 class DeflowExchange:
     API_URL = os.environ.get("DEFLOW_API_URL", "https://api.deflow.exchange")
-    API_KEY = os.environ.get("DEFLOW_API_KEY", "")
-    API_SECRET = os.environ.get("DEFLOW_API_SECRET", "")
-    API_PASSPHRASE = os.environ.get("DEFLOW_API_PASSPHRASE", "")
+    API_KEY = os.environ.get("DEFLOW_ID_KEY", "")
+    API_SECRET = os.environ.get("DEFLOW_SECRET", "")
+    API_PASSPHRASE = os.environ.get("DEFLOW_PASSWORD", "")

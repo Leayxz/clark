@@ -22,7 +22,7 @@ class DeflowExchangeProvider(DeflowExchangeProtocol):
                 headers = {
                     "Authorization": f"Bearer {DeflowExchange.API_KEY}",
                     "X-DF-Secret": DeflowExchange.API_SECRET,
-                    "X-DF-Idempotency-Key": str(uuid.uuid4()),
+                    "X-DF-Idempotency-Key": uuid.uuid4().hex,
                     "Content-Type": "application/json",
                 }
 
@@ -34,20 +34,25 @@ class DeflowExchangeProvider(DeflowExchangeProtocol):
                 payload = { "amountInCents": amount_in_cents, "payerTaxNumber": payment.payer_tax_number, }
 
                 response = requests.post(
-                    url=f"{DeflowExchange.API_URL}/deposit/create",
+                    url=f"{DeflowExchange.API_URL}/v1/deposit/create",
                     headers=headers,
                     json=payload,
                     timeout=30,
                 )
 
-                print(response.json())
-
                 if response.status_code >= 400:
-                    error_message = response.json().get("message", "Erro desconhecido no provedor de pagamento.")
+                    # a Deflow aninha a mensagem em error.message, e o code vem em error.code
+                    body = response.json()
+                    error_body = body.get("error") if isinstance(body.get("error"), dict) else {}
+                    error_message = error_body.get("message") or body.get("message") or "Erro desconhecido no provedor de pagamento."
+                    error_code = error_body.get("code", "")
+
                     logger.error("❌ Falha ao criar PIX", extra={"user_id": str(user_id), "error": error_message}, exc_info=True)
+
+                    # mapeamento por string, a Deflow não tem error code estável em todas as respostas
                     if "CPF" in error_message or "CNPJ" in error_message:
                         return Error.INVALID_TAX_NUMBER
-                    elif "depósito recente" in error_message or "Aguarde" in error_message:
+                    elif error_code == "DUPLICATE_AMOUNT_RECENT" or "cobrança com este mesmo valor" in error_message or "depósito recente" in error_message:
                         return Error.DUPLICATE_DEPOSIT
                     return Error.DEFLOW_ERROR
 
@@ -81,7 +86,7 @@ class DeflowExchangeProvider(DeflowExchangeProtocol):
                     headers["X-DF-Passphrase"] = DeflowExchange.API_PASSPHRASE
 
                 response = requests.get(
-                    url=f"{DeflowExchange.API_URL}/deposit-status/{payment_id}",
+                    url=f"{DeflowExchange.API_URL}/v1/deposit-status/{payment_id}",
                     headers=headers,
                     timeout=30,
                 )

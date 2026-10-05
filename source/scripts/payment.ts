@@ -96,9 +96,27 @@ class Cupom {
         const cpfError = document.getElementById("cpf_error") as HTMLElement | null;
         const cpfErrorText = document.getElementById("cpf_error_text") as HTMLElement | null;
         const confirmBtn = document.getElementById("confirmar_assinatura") as HTMLButtonElement | null;
+        const couponInput = document.getElementById("coupon_input") as HTMLInputElement | null;
+        const couponHint = document.getElementById("coupon_hint") as HTMLElement | null;
+        const couponHintText = document.getElementById("coupon_hint_text") as HTMLElement | null;
 
         if (cpfError) {
             cpfError.classList.remove("is-visible");
+        }
+
+        // o cupom é opcional, mas quando preenchido precisa do tamanho mínimo que o backend exige
+        if (coupon_code.length > 0 && coupon_code.length < 10) {
+            if (couponInput) {
+                couponInput.classList.remove("field__input--shake");
+                void couponInput.offsetWidth;
+                couponInput.classList.add("field__input--error", "field__input--shake");
+            }
+            if (couponHint && couponHintText) {
+                couponHintText.textContent = "Cupom inválido — confira o código ou deixe em branco.";
+                couponHint.className = "coupon__hint coupon__hint--visible coupon__hint--error";
+                couponHint.removeAttribute("hidden");
+            }
+            return;
         }
 
         if (cleanCpf.length < 11) {
@@ -129,15 +147,17 @@ class Cupom {
 
         if (!response.ok) {
             const data = await response.json();
+            // a API devolve o campo "error"; "message" fica como fallback de compatibilidade
+            const errorText = data.error || data.message;
             if (response.status === 400) {
                 if (cpfError && cpfErrorText) {
-                    cpfErrorText.textContent = data.message || "CPF/CNPJ inválido.";
+                    cpfErrorText.textContent = errorText || "CPF/CNPJ inválido.";
                     cpfError.classList.add("is-visible");
                 }
             } else {
                 const paymentErrorText = document.getElementById("payment_error_text");
                 if (paymentErrorText) {
-                    paymentErrorText.textContent = data.message || "Erro ao criar pagamento. Aguarde alguns minutos e tente novamente.";
+                    paymentErrorText.textContent = errorText || "Erro ao criar pagamento. Aguarde alguns minutos e tente novamente.";
                 }
                 const paymentError = document.getElementById("payment_error");
                 if (paymentError) {

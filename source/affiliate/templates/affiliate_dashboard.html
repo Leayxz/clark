@@ -39,7 +39,7 @@
                             <svg class="clark-stat-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <text x="1" y="19" font-size="18" font-weight="700" fill="currentColor">R$</text>
                             </svg>
-                            <span class="clark-stat-value">2.430,00</span>
+                            <span class="clark-stat-value" id="stat_commissions">—</span>
                         </div>
                     </div>
 
@@ -48,8 +48,8 @@
                         <div class="clark-stat-label">Tier Atual</div>
                         <div class="clark-stat-row">
                             <svg class="clark-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /> </svg>
-                            <span class="clark-stat-placeholder">Prata</span>
-                            <span class="clark-stat-pct">/15%</span>
+                            <span class="clark-stat-placeholder" id="stat_tier">—</span>
+                            <span class="clark-stat-pct" id="stat_tier_pct"></span>
                         </div>
                     </div>
 
@@ -58,14 +58,14 @@
                         <div class="clark-stat-label">Cupom Ativo</div>
                         <div class="clark-stat-row">
                             <svg class="clark-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M13 2L3 14h6v6l10-10V6l-6-4z" /> </svg>
-                            <span class="clark-stat-value clark-stat-mono">ANTONIO157</span>
+                            <span class="clark-stat-value clark-stat-mono" id="stat_coupon">—</span>
                         </div>
                     </div>
                     <div class="clark-stat-card">
                         <div class="clark-stat-label">Usuários Pagantes</div>
                         <div class="clark-stat-row">
                             <svg class="clark-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /> </svg>
-                            <span class="clark-stat-value">8 <span class="clark-stat-sub">/25</span></span>
+                            <span class="clark-stat-value"><span id="stat_paying">0</span> <span class="clark-stat-sub" id="stat_paying_threshold"></span></span>
                         </div>
                     </div>
                 </div>
@@ -78,15 +78,15 @@
                     <span class="clark-tier-label" id="tier-title">Progresso como parceiro</span>
 
                     <p class="clark-tier-hero">
-                        <span class="clark-tier-hero-tier">Prata</span>
+                        <span class="clark-tier-hero-tier" id="tier_hero">—</span>
                         <span class="clark-tier-hero-sep">·</span>
-                        <span class="clark-tier-hero-pct">15%</span>
+                        <span class="clark-tier-hero-pct" id="tier_hero_pct"></span>
                     </p>
 
                     <p class="clark-tier-context">
-                        <span class="clark-tier-cta">Faltam X para o Ouro</span>
+                        <span class="clark-tier-cta" id="tier_cta">—</span>
                         <span class="clark-tier-sep">·</span>
-                        <span class="clark-tier-reward">25%</span>
+                        <span class="clark-tier-reward" id="tier_reward"></span>
                     </p>
 
                 </div>
@@ -109,49 +109,8 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="clark-table-date">26 Set 2026</td>
-                                <td class="clark-table-mono">JOAO2025</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--ok">Confirmado</span></td>
-                            </tr>
-                            <tr>
-                                <td class="clark-table-date">22 Set 2026</td>
-                                <td class="clark-table-mono">JOAO2025</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--ok">Confirmado</span></td>
-                            </tr>
-                            <tr>
-                                <td class="clark-table-date">18 Set 2026</td>
-                                <td class="clark-table-mono">JOAO2025</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--pending">Pendente</span></td>
-                            </tr>
-                            <tr>
-                                <td class="clark-table-date">15 Set 2026</td>
-                                <td class="clark-table-mono">JOAO2025</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--ok">Confirmado</span></td>
-                            </tr>
-                            <tr>
-                                <td class="clark-table-date">10 Set 2026</td>
-                                <td class="clark-table-mono">MARIA2026</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--refund">Refund</span></td>
-                            </tr>
-                            <tr>
-                                <td class="clark-table-date">05 Set 2026</td>
-                                <td class="clark-table-mono">JOAO2025</td>
-                                <td>R$ 150,00</td>
-                                <td class="clark-table-up">+R$ 22,50</td>
-                                <td><span class="clark-status clark-status--ok">Confirmado</span></td>
-                            </tr>
+                        <tbody id="payments_body">
+                            <tr><td colspan="5" class="clark-table-empty" id="payments_empty">Nenhum pagamento ainda.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -164,7 +123,7 @@
                     <h2 id="coupon-title" class="clark-section-title">Seu cupom de indicação</h2>
                 </div>
                 <div class="clark-coupon-box">
-                    <div class="clark-coupon-code">{{ coupon|default:"JOAO2025" }}</div>
+                    <div class="clark-coupon-code" id="coupon_code">—</div>
                     <p class="clark-coupon-desc">Compartilhe este cupom com sua audiência. Cada uso gera sua comissão. Sem cupom, sem comissão.</p>
                 </div>
             </section>
@@ -181,6 +140,7 @@
 
     <!-- Scripts -->
     <script type="module" src="{% static 'javascript/sidebar.js' %}"></script>
+    <script type="module" src="{% static 'javascript/affiliate_dashboard.js' %}"></script>
 
     <!-- Modal de Confirmação -->
     <div class="clark-modal-overlay" id="clark-modal-overlay" hidden>

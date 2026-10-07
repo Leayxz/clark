@@ -1,0 +1,118 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clark — Operations</title>
+    <meta name="description" content="Every trade executed by Clark. Evidência financeira das operações realizadas com seu capital.">
+    <link rel="stylesheet" href="{% static 'operations.css' %}">
+<link rel="stylesheet" href="{% static 'sidebar.css' %}">
+</head>
+
+
+<body>
+<div class="clark-app">
+
+    <!-- -------------------------------------------- Sidebar -------------------------------------------- -->
+
+    {% include "sidebar.html" %}
+
+    <!-- -------------------------------------------- Header -------------------------------------------- -->
+
+    <header class="clark-header">
+        <div class="container_header">
+            <div class="clark-brand">Clark <span class="clark-brand__mark">丰</span></div>
+            <p class="clark-page-subtitle">Every trade executed by Clark.</p>
+        </div>
+    </header>
+
+    <!-- -------------------------------------------- Summary (3 períodos) -------------------------------------------- -->
+
+    <section class="clark-summary">
+
+        <div class="clark-summary-card">
+            <div class="clark-summary-label">Hoje</div>
+            <div class="clark-summary-count" id="today_operations">—</div>
+            <div class="clark-summary-net up" id="today_profit">—</div>
+        </div>
+
+        <div class="clark-summary-card">
+            <div class="clark-summary-label">30 Days</div>
+            <div class="clark-summary-count" id="month_operations">—</div>
+            <div class="clark-summary-net up" id="month_profit">—</div>
+        </div>
+
+        <div class="clark-summary-card">
+            <div class="clark-summary-label">All Time</div>
+            <div class="clark-summary-count" id="all_time_operations">—</div>
+            <div class="clark-summary-net up" id="all_time_profit">—</div>
+        </div>
+    </section>
+
+    <!-- -------------------------------------------- Capital -------------------------------------------- -->
+
+    <section class="clark-capital">
+
+        <div class="clark-capital-item">
+            <span class="clark-capital-label">Total Balance</span>
+            <span class="clark-capital-value" id="total_balance">—</span>
+        </div>
+
+        <div class="clark-capital-item">
+            <span class="clark-capital-label">Available</span>
+            <span class="clark-capital-value" id="total_balance_available">—</span>
+        </div>
+
+        <div class="clark-capital-item">
+            <span class="clark-capital-label">Exposed</span>
+            <span class="clark-capital-value" id="total_balance_exposed">—</span>
+        </div>
+    </section>
+
+    <!-- -------------------------------------------- Filters -------------------------------------------- -->
+
+    <section class="clark-filters">
+        <div class="clark-filter-group">
+            <span class="clark-filter-label">Period</span>
+            <select class="clark-select" id="period-filter">
+                <option>Last 30 days</option>
+                <option>Today</option>
+                <option>All time</option>
+            </select>
+        </div>
+        <div class="clark-filter-group">
+            <span class="clark-filter-label">Strategy</span>
+            <select class="clark-select" id="strategy-filter" disabled>
+                <option>Em breve</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- -------------------------------------------- Operations Table -------------------------------------------- -->
+
+    <table class="clark-ops-table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>BTC Price</th>
+                <th>Margin</th>
+                <th>Result</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="operations_body">
+            <tr>
+                <td colspan="6" class="clark-ops-empty">Nenhuma operação encontrada.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<script type="module" src="{% static 'javascript/operations.js' %}"></script>
+<script type="module" src="{% static 'javascript/sidebar.js' %}"></script>
+</body>
+</html>

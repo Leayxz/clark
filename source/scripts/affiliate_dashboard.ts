@@ -29,15 +29,15 @@ interface AffiliateDashboard {
 // o backend devolve o status em ingles; a pagina rotula e colore por aqui
 const STATUS_LABEL: Record<string, string> = {
     PENDING: "Pendente",
-    PAID: "Confirmado",
-    PROCESSED: "Pago",
+    PAID: "Em Processamento",
+    PROCESSED: "Processado",
     REFUNDED: "Reembolsado",
 };
 
 const STATUS_CLASS: Record<string, string> = {
     PENDING: "clark-status--pending",
-    PAID: "clark-status--ok",
-    PROCESSED: "clark-status--paid",
+    PAID: "clark-status--paid",
+    PROCESSED: "clark-status--ok",
     REFUNDED: "clark-status--refund",
 };
 
@@ -92,11 +92,20 @@ function renderPayments(payments: AffiliatePayment[]): void {
         const statusClass = STATUS_CLASS[payment.status] ?? "clark-status--pending";
         const statusLabel = STATUS_LABEL[payment.status] ?? payment.status;
 
+        let commissionText: string;
+        if (payment.status === "PROCESSED") {
+            commissionText = `+R$ ${formatBrl(payment.commission_brl)}`;
+        } else if (payment.status === "PAID") {
+            commissionText = "Aguardando";
+        } else {
+            commissionText = "—";
+        }
+
         row.innerHTML = `
             <td class="clark-table-date">${payment.date}</td>
             <td class="clark-table-mono">${payment.coupon}</td>
             <td>R$ ${formatBrl(payment.amount_brl)}</td>
-            <td class="clark-table-up">+R$ ${formatBrl(payment.commission_brl)}</td>
+            <td class="clark-table-up">${commissionText}</td>
             <td><span class="clark-status ${statusClass}">${statusLabel}</span></td>
         `;
         body.appendChild(row);

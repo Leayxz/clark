@@ -72,6 +72,99 @@
         </div>
     </section>
 
+    <!-- -------------------------------------------- Calculator -------------------------------------------- -->
+
+    <section class="clark-calculator">
+        <div class="clark-calculator-header">
+            <span class="clark-calculator-title">Calculadora</span>
+            <span class="clark-calculator-subtitle">Contrato inverso BTC/USD — escolha uma das duas perguntas</span>
+        </div>
+
+        <div class="clark-calculator-toggle">
+            <button type="button" class="clark-calculator-toggle-btn is-active" id="calc_mode_usd">Tenho X USD</button>
+            <button type="button" class="clark-calculator-toggle-btn" id="calc_mode_sats">Quero X sats</button>
+        </div>
+
+        <div class="clark-calculator-ask">
+            <label class="clark-calculator-label" for="calc_value" id="calc_value_label">Quanto você coloca por operação (USD)</label>
+            <input class="clark-calculator-input clark-calculator-input--lg" type="number" id="calc_value" value="19" min="0" step="0.01">
+        </div>
+
+        <div class="clark-calculator-inputs">
+            <div class="clark-calculator-field">
+                <label class="clark-calculator-label" for="calc_entry">Preço Entrada (USD)</label>
+                <input class="clark-calculator-input" type="number" id="calc_entry" value="90000" min="0" step="1">
+            </div>
+            <div class="clark-calculator-field">
+                <label class="clark-calculator-label" for="calc_exit">Preço Saída (USD)</label>
+                <input class="clark-calculator-input" type="number" id="calc_exit" value="90700" min="0" step="1">
+            </div>
+            <div class="clark-calculator-field">
+                <label class="clark-calculator-label" for="calc_leverage">Alavancagem</label>
+                <select class="clark-calculator-select" id="calc_leverage">
+                    <option value="1">1x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                    <option value="5" selected>5x</option>
+                    <option value="10">10x</option>
+                    <option value="20">20x</option>
+                </select>
+            </div>
+            <div class="clark-calculator-field">
+                <label class="clark-calculator-label" for="calc_direction">Direção</label>
+                <select class="clark-calculator-select" id="calc_direction">
+                    <option value="long" selected>Long</option>
+                    <option value="short">Short</option>
+                </select>
+            </div>
+        </div>
+
+        <details class="clark-calculator-advanced">
+            <summary>Avançado</summary>
+            <div class="clark-calculator-inputs">
+                <div class="clark-calculator-field">
+                    <label class="clark-calculator-label" for="calc_ops">Nº de Operações</label>
+                    <input class="clark-calculator-input" type="number" id="calc_ops" value="100" min="1" step="1">
+                </div>
+                <div class="clark-calculator-field">
+                    <label class="clark-calculator-label" for="calc_fee">Taxa por lado (%)</label>
+                    <input class="clark-calculator-input" type="number" id="calc_fee" value="0.1" min="0" step="0.01">
+                </div>
+            </div>
+        </details>
+
+        <div class="clark-calculator-answer">
+            <p class="clark-calculator-answer-text" id="calc_answer">—</p>
+            <div class="clark-calculator-answer-grid">
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">Quantidade por Ordem</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_quantity">—</span>
+                </div>
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">Margem por Ordem</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_margin_sats">—</span>
+                </div>
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">Margem por Ordem (USD)</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_margin_usd">—</span>
+                </div>
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">P/L Bruto por Ordem</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_pnl_order">—</span>
+                </div>
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">P/L Líquido por Ordem</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_net_order">—</span>
+                </div>
+                <div class="clark-calculator-answer-item">
+                    <span class="clark-calculator-answer-label">Liquidação</span>
+                    <span class="clark-calculator-answer-value" id="calc_ans_liquidation">—</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- -------------------------------------------- Filters -------------------------------------------- -->
 
     <section class="clark-filters">

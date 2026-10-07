@@ -208,9 +208,9 @@ body {
 }
 
 .clark-tab:hover {
-    color: var(--up);
-    border-color: var(--up);
-    transform: translateY(-1px);
+    transform: translateY(-4px);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
 
 .clark-tab.active {
@@ -239,8 +239,8 @@ body {
 
 .clark-goal:hover {
     transform: translateY(-4px);
-    border-color: var(--up);
-    box-shadow: 0 8px 32px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
 
 .clark-goal-head {
@@ -341,25 +341,29 @@ body {
 .clark-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px; /* MUDANÇA: 12->16 (grade 8pt) */
-    margin-bottom: 32px; /* MUDANÇA: 24->32 */
+    gap: 24px;
+    margin-bottom: 32px;
 }
 
 .clark-stat {
-    padding: 20px 24px; /* MUDANÇA: 16/18 -> 20/24 */
-    border-radius: var(--radius-lg); /* MUDANÇA: 12->16 */
-    border: 1px solid var(--hairline); /* MUDANÇA: hairline clara */
+    padding: 20px 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
     background: var(--surface);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03); /* MUDANÇA: top-highlight */
-    /* MUDANÇA: hover dimensional */
-    transition: transform .2s ease-out, border-color .15s ease, box-shadow .2s ease-out;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+    transition: transform .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
 }
 
 .clark-stat:hover {
     transform: translateY(-4px);
-    border-color: var(--up);
-    box-shadow: 0 8px 32px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
+
+.clark-stat:active {
+    transform: translateY(-1px);
+}
+
 .clark-stat-label {
     font-size: 12px;
     color: var(--muted);
@@ -369,7 +373,7 @@ body {
 }
 
 .clark-stat-value {
-    font-family: var(--math); /* MUDANÇA: número em --math */
+    font-family: var(--math);
     font-size: 22px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -730,8 +734,8 @@ body {
 /* Hover profundo nos hero cards */
 .clark-hero-card:hover {
     transform: translateY(-4px);
-    border-color: var(--border);
-    box-shadow: 0px 0px 10px rgba(52, 192, 124, .2), inset 0 1px 0 rgba(255, 255, 255, .05);
+    border-color: rgba(52, 192, 124, .25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
 
 .clark-hero-card:active {

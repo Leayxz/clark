@@ -2,7 +2,7 @@ import re
 from rest_framework import serializers
 
 class CouponSerializer(serializers.Serializer):
-    coupon_code = serializers.CharField(min_length=10, max_length=15, allow_blank=False)
+    coupon_code = serializers.CharField(min_length=3, max_length=15, allow_blank=False)
 
     def to_internal_value(self, data):
         data = super().to_internal_value(data)

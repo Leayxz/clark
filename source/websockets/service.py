@@ -36,10 +36,6 @@ class AutomationExecutor:
         await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders, total_margin_used)
 
 
-    def _user_should_have_margin(self, configuration: ConfigurationDTO, current_price: Decimal) -> bool:
-        margin_sats = Decimal(configuration.marginUSD) / (current_price * configuration.leverage) * 100_000_000
-        return configuration.wallet_balance >= margin_sats
-
     async def evaluate_purchase_condition(self,
                                           user_id: UUID,
                                           credentials: CredentialsDTO,
@@ -91,3 +87,8 @@ class AutomationExecutor:
                 await self._repository.update_dashboard_overview(user_id, sold_order.margin_used, False)
                 await self._repository.save_closed_order(str(user_id), sold_order)
                 await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders), str(user_id))
+
+
+    def _user_should_have_margin(self, configuration: ConfigurationDTO, current_price: Decimal) -> bool:
+        margin_sats = Decimal(configuration.marginUSD) / (current_price * configuration.leverage) * 100_000_000
+        return configuration.wallet_balance >= margin_sats

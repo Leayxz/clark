@@ -1,4 +1,5 @@
 import asyncio, json, websockets, traceback
+from decimal import Decimal
 from uuid import UUID
 
 from .repository import WSUserStateRepository, AutomationExecutorRepository
@@ -29,7 +30,7 @@ async def websocket_lnmarket(automation_executor: AutomationExecutor,
                     price_message = json.loads(message)
 
                     if price_message.get("method") == "subscription":
-                        current_price = price_message["params"]["data"]["lastPrice"]
+                        current_price = Decimal(str(price_message["params"]["data"]["lastPrice"]))
                         print(f"Price: {current_price}")
 
                         for user_id, user_exchange in repository.get_all_activated_automations():
@@ -48,7 +49,7 @@ async def listen_enable_disable_automations(ws_repository: WSUserStateRepository
     async for payload in ws_repository.subscribe_channel(Channel.AUTOMATION):
 
         if payload["type"] == AutomationEvent.STARTED:
-            ws_repository.add_activated_automation(UUID(payload.get("user_id")), payload.get("exchange"))
+            ws_repository.add_activated_automation(UUID(payload.get("user_id")), str(payload.get("exchange")))
 
 
         elif payload["type"] == AutomationEvent.STOPPED:

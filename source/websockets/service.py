@@ -17,6 +17,7 @@ class AutomationExecutor:
                  repository: AutomationExecutorProtocol,
                  gateway: ExchangeGateway,
                  notifier: NotifierProtocol) -> None:
+
                 self._repository = repository
                 self._gateway = gateway
                 self._notifier = notifier
@@ -30,10 +31,10 @@ class AutomationExecutor:
         if not configuration.wallet_balance:
             wallet_balance = await self._gateway.get_current_wallet_balance(credentials)
             configuration.wallet_balance = wallet_balance
-            await self._repository.update_total_patrimony(user_id, (Decimal(total_margin_used) + wallet_balance))
+            await self._repository.update_user_balance(user_id, wallet_balance, Decimal(total_margin_used))
 
-        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price, all_open_orders)
-        await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders)
+        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price, all_open_orders, total_margin_used)
+        await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders, total_margin_used)
 
 
     async def evaluate_purchase_condition(self,
@@ -41,7 +42,8 @@ class AutomationExecutor:
                                           credentials: CredentialsDTO,
                                           configuration: ConfigurationDTO,
                                           current_price: Decimal,
-                                          all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO]):
+                                          all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO],
+                                          total_margin_used: float):
 
         if configuration.wallet_balance <= Regras.SALDO_INSUFICIENTE:
             return
@@ -58,7 +60,8 @@ class AutomationExecutor:
 
         if new_order:
             self._repository.add_buy_order(user_id, new_order)
-            self._repository.update_wallet_balance(user_id, new_order.margin_used, BUY=True)
+            configuration.wallet_balance -= new_order.margin_used
+            await self._repository.update_user_balance(user_id, configuration.wallet_balance, Decimal(total_margin_used))
             await self._repository.update_dashboard_overview(user_id, new_order.margin_used, True)
             await self._notifier.send_buy_message(new_order.entry_price, len(all_open_orders))
 
@@ -68,7 +71,8 @@ class AutomationExecutor:
                                       credentials: CredentialsDTO,
                                       configuration: ConfigurationDTO,
                                       current_price: Decimal,
-                                      all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO]):
+                                      all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO],
+                                      total_margin_used: float):
 
 
         for order in all_open_orders.copy():
@@ -79,7 +83,8 @@ class AutomationExecutor:
                 sold_order = await self._gateway.close_profitable_orders(user_id, credentials, order.order_id)
                 self._repository.remove_sold_order(user_id, order.order_id)
                 self._repository.update_last_buy(user_id, sold_order.exit_price, BUY_UP=False)
-                self._repository.update_wallet_balance(user_id, sold_order.margin_used, sold_order.profit)
+                configuration.wallet_balance += sold_order.margin_used + sold_order.profit
+                await self._repository.update_user_balance(user_id, configuration.wallet_balance, Decimal(total_margin_used))
                 await self._repository.update_dashboard_overview(user_id, sold_order.margin_used, False)
                 await self._repository.save_closed_order(str(user_id), sold_order)
                 await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders), str(user_id))

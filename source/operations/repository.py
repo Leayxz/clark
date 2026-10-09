@@ -1,15 +1,21 @@
+import redis
 from uuid import UUID
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
+from typing import cast
 
 from django.db.models import Sum, Count, Q
 
 from .interfaces import OperationsProtocol
+from ..constants import CacheKeys
 from ..dtos import OperationsResultDTO
 from ..dashboard.models import ClosedOrder
 
 
 class OperationsRepository(OperationsProtocol):
+
+    def __init__(self, cache_client: redis.Redis) -> None:
+        self._cache_client = cache_client
 
     def get_overview(self, user_id: UUID) -> OperationsResultDTO:
 
@@ -25,6 +31,8 @@ class OperationsRepository(OperationsProtocol):
             all_time_profit=Sum("profit"),
         )
 
+        balance = cast(dict[str, str], self._cache_client.hgetall(f"{CacheKeys.USER_BALANCE}:{user_id}"))
+
         return OperationsResultDTO(
             today_operations=result["today_operations"] or 0,
             today_profit=result["today_profit"] or Decimal("0"),
@@ -32,7 +40,7 @@ class OperationsRepository(OperationsProtocol):
             month_profit=result["month_profit"] or Decimal("0"),
             all_time_operations=result["all_time_operations"] or 0,
             all_time_profit=result["all_time_profit"] or Decimal("0"),
-            total_balance=Decimal("0"),
-            total_balance_available=Decimal("0"),
-            total_balance_exposed=Decimal("0"),
+            total_balance=Decimal(balance.get("total_balance", "0")),
+            total_balance_available=Decimal(balance.get("total_balance_available", "0")),
+            total_balance_exposed=Decimal(balance.get("total_balance_exposed", "0")),
         )

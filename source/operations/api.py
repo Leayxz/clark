@@ -16,10 +16,10 @@ def operations_overview(request):
 
     return Response({
         "today_operations": overview.today_operations,
-        "today_profit": float(overview.today_profit),
         "month_operations": overview.month_operations,
-        "month_profit": float(overview.month_profit),
         "all_time_operations": overview.all_time_operations,
+        "today_profit": float(overview.today_profit),
+        "month_profit": float(overview.month_profit),
         "all_time_profit": float(overview.all_time_profit),
         "total_balance": float(overview.total_balance),
         "total_balance_available": float(overview.total_balance_available),

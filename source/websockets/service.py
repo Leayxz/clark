@@ -32,7 +32,7 @@ class AutomationExecutor:
             configuration.wallet_balance = wallet_balance
             await self._repository.update_total_patrimony(user_id, (Decimal(total_margin_used) + wallet_balance))
 
-        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price)
+        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price, all_open_orders)
         await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders)
 
 
@@ -40,7 +40,8 @@ class AutomationExecutor:
                                           user_id: UUID,
                                           credentials: CredentialsDTO,
                                           configuration: ConfigurationDTO,
-                                          current_price: Decimal):
+                                          current_price: Decimal,
+                                          all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO]):
 
         if configuration.wallet_balance <= Regras.SALDO_INSUFICIENTE:
             return

@@ -26,13 +26,12 @@ class DashboardRepository(DashboardProtocol):
         with self._cache_client.pipeline() as pipe:
             payload = {"exchange": exchange, "user_id": user_id}
             pipe.sismember(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}", json.dumps(payload))
-            pipe.hgetall(f"{CacheKeys.RISK_EXPOSURE}:{user_id}")
+            pipe.hgetall(f"{CacheKeys.USER_BALANCE}:{user_id}")
             pipe.get(f"{CacheKeys.GOAL_TARGET}:{user_id}")
-            pipe.hget(f"{CacheKeys.TOTAL_PATRIMONY}:{user_id}", "total_patrimony")
             pipe.hget(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT)
             pipe.get(f"BTC_USD_PRICE")
 
-            automation, total_margin_used, goal_target, total_patrimony, open_orders, btc_usd_price = cast(tuple[int, dict[str, int], int, int, int, int], pipe.execute())
+            automation, user_balance, goal_target, open_orders, btc_usd_price = cast(tuple[int, dict[str, str], str | None, str | None, str | None], pipe.execute())
 
         thirty_days_ago = timezone.now() - timedelta(days=30)
         last_operations = list(ClosedOrder.objects.filter(user_id=user_id).order_by("-closed_at")[:4])
@@ -43,13 +42,13 @@ class DashboardRepository(DashboardProtocol):
                                                                         ))
 
         return Overview(
-            btc_usd_price=btc_usd_price,
-            total_patrimony=total_patrimony,
-            total_margin_exposed=total_margin_used.get("total_margin_used") or 0,
-            open_orders=open_orders,
+            btc_usd_price=int(btc_usd_price) if btc_usd_price else 0,
+            total_patrimony=int(user_balance.get("total_balance", "0")),
+            total_margin_exposed=int(user_balance.get("total_balance_exposed", "0")),
+            open_orders=int(open_orders) if open_orders else 0,
             all_time_profit=result.get("profit") or 0,
             last_month_profit=result.get("last_month_profit") or 0,
-            goal_target=goal_target,
+            goal_target=int(goal_target) if goal_target else 0,
             last_operations=[{"tipo": "Venda", "profit": operation.profit, "closed_at": operation.closed_at, "closed_at": operation.closed_at.strftime("%H:%M") if operation.closed_at else None} for operation in last_operations],
         )
 
@@ -100,8 +99,8 @@ class DashboardRepository(DashboardProtocol):
                 last_operation=last_operation.strftime("%H:%M") if last_operation else "",
                 status_automation=True if automation else False,
                 status_telegram=bool(notifier.get("telegram_id")),
-                leverage=configuration.get("leverage") or 0,
-                percentage_profit=configuration.get("percentage_profit") or 0,
+                leverage=int(configuration.get("leverage") or 0),
+                percentage_profit=Decimal(configuration.get("percentage_profit") or 0),
             )
 
 

@@ -23,6 +23,7 @@ class AutomationExecutorRepository:
                  cache_client: async_redis.Redis,
                  database_client: async_sessionmaker[AsyncSession],
                  exchange_gateway: ExchangeGateway) -> None:
+
                 self._database_client = database_client
                 self._cache_client = cache_client
                 self._exchange_gateway = exchange_gateway
@@ -81,7 +82,7 @@ class AutomationExecutorRepository:
 
         if not all_open_orders:
             all_open_orders, total_margin_used = await self._exchange_gateway.get_all_open_orders(credentials)
-            await self._cache_client.hset(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", mapping={"total_margin_used": total_margin_used, "open_orders_count": len(all_open_orders)})
+            await self._cache_client.hset(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", mapping={"open_orders_count": len(all_open_orders)})
             self._all_running_open_orders[user_id] = all_open_orders
             print(f"TODAS AS ORDENS ABERTAS E TOTAL MARGEM USADA BUSCADOS COM SUCESSO: {len(all_open_orders)} | {total_margin_used}")
 
@@ -130,40 +131,34 @@ class AutomationExecutorRepository:
 
 
     def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):
+        
         if BUY_UP:
             self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = entry_price
             print(f"ATUALIZANDO REF BUY UP: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up}")
+
         else:
             self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = entry_price
             print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
 
 
-    def update_wallet_balance(self, user_id: UUID, margin_used: Decimal, net_profit: Decimal = Decimal("0"), BUY: bool = False):
-
-        if BUY:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance -= margin_used
-        else:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance += margin_used
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).wallet_balance += net_profit
-            print(f"NOVA VENDA EXECUTADA!!")
-            print(f"ADICIONANDO A CARTEIRA | MARGEM: {margin_used} | PROFIT: {net_profit}")
-
-
     async def update_dashboard_overview(self, user_id: UUID, margin_used: Decimal, BUY: bool):
+        
         if BUY:
-            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_TOTAL_MARGIN_USED, int(margin_used))
             await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, 1)
+
         else:
-            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_TOTAL_MARGIN_USED, int(-margin_used))
             await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
 
+    async def update_user_balance(self, user_id: UUID, wallet_balance: Decimal, total_margin_used: Decimal) -> None:
 
-    async def update_total_patrimony(self, user_id: UUID, total_patrimony: Decimal) -> None:
-        await self._cache_client.hset(f"{CacheKeys.TOTAL_PATRIMONY}:{user_id}", mapping={"total_patrimony": str(total_patrimony)})
+        await self._cache_client.hset(f"{CacheKeys.USER_BALANCE}:{user_id}",
+                                      mapping={"total_balance": str(wallet_balance + total_margin_used),
+                                               "total_balance_available": str(wallet_balance),
+                                               "total_balance_exposed": str(total_margin_used)})
 
 
     def remove_sold_order(self, user_id: UUID, order_id: str):
-        
+
         orders = self._all_running_open_orders.get(user_id, [])
 
         for order in orders:

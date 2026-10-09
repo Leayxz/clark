@@ -7,7 +7,6 @@ from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderD
 
 
 class Regras:
-    SALDO_INSUFICIENTE: Decimal = Decimal("320")
     FIXED_RATE: Decimal = Decimal("0.002") # 0.2%
 
 
@@ -37,6 +36,10 @@ class AutomationExecutor:
         await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders, total_margin_used)
 
 
+    def _user_should_have_margin(self, configuration: ConfigurationDTO, current_price: Decimal) -> bool:
+        margin_sats = Decimal(configuration.marginUSD) / (current_price * configuration.leverage) * 100_000_000
+        return configuration.wallet_balance >= margin_sats
+
     async def evaluate_purchase_condition(self,
                                           user_id: UUID,
                                           credentials: CredentialsDTO,
@@ -45,7 +48,7 @@ class AutomationExecutor:
                                           all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO],
                                           total_margin_used: float):
 
-        if configuration.wallet_balance <= Regras.SALDO_INSUFICIENTE:
+        if not self._user_should_have_margin(configuration, current_price):
             return
 
         new_order = None

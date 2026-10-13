@@ -1,5 +1,4 @@
 import json, redis.asyncio as async_redis
-from typing import cast
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
@@ -103,15 +102,16 @@ class AutomationExecutorRepository:
                 async with self._database_client.begin() as session:
                     session.add(ClosedOrder(user_id=str(user_id), order_id=sold_order.order_id, profit=sold_order.profit, total_fees=sold_order.total_fees, closed_at=sold_order.closed_at))
 
-                logger.info("💾 Ordem vendida com sucesso", extra={"user_id": user_id,
-                                                                   "order_id": sold_order.order_id,
-                                                                   "profit": str(sold_order.profit),
-                                                                   "total_fees": str(sold_order.total_fees),
-                                                                   "closed_at": sold_order.closed_at})
+                logger.info("💾 Ordem vendida com sucesso", extra={
+                    "user_id": user_id,
+                    "order_id": sold_order.order_id,
+                    "profit": str(sold_order.profit),
+                    "total_fees": str(sold_order.total_fees),
+                    "closed_at": sold_order.closed_at
+                })
 
             except Exception as exc:
                 logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)
-
 
 
     async def closed_orders_today(self, user_id: str) -> int:
@@ -141,7 +141,7 @@ class AutomationExecutorRepository:
             print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
 
 
-    async def update_dashboard_overview(self, user_id: UUID, margin_used: Decimal, BUY: bool):
+    async def update_dashboard_overview(self, user_id: UUID, BUY: bool):
         
         if BUY:
             await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, 1)
@@ -149,12 +149,35 @@ class AutomationExecutorRepository:
         else:
             await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
 
-    async def update_user_balance(self, user_id: UUID, wallet_balance: Decimal, total_margin_used: Decimal) -> None:
 
-        await self._cache_client.hset(f"{CacheKeys.USER_BALANCE}:{user_id}",
-                                      mapping={"total_balance": str(wallet_balance + total_margin_used),
-                                               "total_balance_available": str(wallet_balance),
-                                               "total_balance_exposed": str(total_margin_used)})
+    async def set_user_balance(self, user_id: UUID, wallet_balance: Decimal, total_margin_used: Decimal) -> None:
+
+        # Documentação em: websockets/readme.md
+
+        await self._cache_client.hset(
+            f"{CacheKeys.USER_BALANCE}:{user_id}", mapping={
+            CacheKeys.BALANCE_TOTAL: str(int(wallet_balance + total_margin_used)),
+            CacheKeys.BALANCE_AVAILABLE: str(int(wallet_balance)),
+            CacheKeys.BALANCE_EXPOSED: str(int(total_margin_used)),
+        })
+
+
+    async def update_user_balance(self, user_id: UUID, margin_used: Decimal, BUY: bool, profit: Decimal = Decimal("0")) -> None:
+
+        # Documentação em: websockets/readme.md
+
+        async with self._cache_client.pipeline(transaction=True) as pipe:
+
+            if BUY:
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, -int(margin_used))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, int(margin_used))
+
+            else:
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, int(margin_used) + int(profit))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, -int(margin_used))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_TOTAL, int(profit))
+
+            await pipe.execute()
 
 
     def remove_sold_order(self, user_id: UUID, order_id: str):

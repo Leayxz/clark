@@ -82,7 +82,7 @@ class LNMarketsClient(ExchangeProtocol):
         return Decimal(f"{wallet_balance.balance}")
 
 
-    async def get_all_open_orders(self, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], float]:
+    async def get_all_open_orders(self, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], int]:
 
         assert credentials.API_KEY, f"API_KEY NÃO ENCONTRADA."
         assert credentials.API_PASSPHRASE, f"API_PASSPHRASE NÃO ENCONTRADA."
@@ -101,4 +101,4 @@ class LNMarketsClient(ExchangeProtocol):
                 positions.append(AllOpenOrdersDTO(order_id=ordem.id,
                                                entry_price=Decimal(str(ordem.entry_price))))
 
-            return positions, total_margin_used
+            return positions, int(total_margin_used)

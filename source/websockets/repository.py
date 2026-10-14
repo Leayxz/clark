@@ -30,6 +30,7 @@ class AutomationExecutorRepository:
                 self._synchronized_references: dict[UUID, bool] = {}
                 self._all_running_credentials: dict[UUID, CredentialsDTO] = {}
                 self._all_running_configuration: dict[UUID, ConfigurationDTO] = {}
+                self._synchronized_wallet_balance: dict[UUID, bool] = {}
 
 
     def add_buy_order(self, user_id: UUID, new_order: BuyOrderDTO):
@@ -61,7 +62,6 @@ class AutomationExecutorRepository:
     def _parse_configuration(self, configuration: dict[str, str], credentials: CredentialsDTO) -> ConfigurationDTO:
 
         payload = {
-            "wallet_balance": Decimal(configuration.get('wallet_balance', "0")),
             "marginUSD": int(configuration.get('marginUSD', 0)),
             "leverage": int(configuration.get('leverage', 0)),
             "percentage_profit": Decimal(configuration.get('percentage_profit', "0")) / Decimal("100"),
@@ -74,7 +74,7 @@ class AutomationExecutorRepository:
         return ConfigurationDTO(**payload)
 
 
-    async def get_all_open_orders(self, user_id: UUID, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], float]:
+    async def get_all_open_orders(self, user_id: UUID, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], int]:
 
         all_open_orders = self._all_running_open_orders.get(user_id, None)
         total_margin_used = None
@@ -150,6 +150,17 @@ class AutomationExecutorRepository:
             await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
 
 
+    async def get_user_wallet_balance(self, user_id: UUID, credentials: CredentialsDTO, total_margin_used: int) -> Decimal:
+
+        if not self._synchronized_wallet_balance.get(user_id):
+            wallet_balance = await self._exchange_gateway.get_current_wallet_balance(credentials)
+            await self.set_user_balance(user_id, wallet_balance, Decimal(total_margin_used))
+            self._synchronized_wallet_balance[user_id] = True
+
+        balance = await self._cache_client.hget(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE)
+        return Decimal(str(balance)) if balance else Decimal("0")
+
+
     async def set_user_balance(self, user_id: UUID, wallet_balance: Decimal, total_margin_used: Decimal) -> None:
 
         # Documentação em: websockets/readme.md
@@ -194,7 +205,8 @@ class AutomationExecutorRepository:
         self._all_running_credentials.pop(user_id, None)
         self._all_running_configuration.pop(user_id, None)
         self._all_running_open_orders.pop(user_id, None)
-        self._synchronized_references.pop(user_id)
+        self._synchronized_references.pop(user_id, None)
+        self._synchronized_wallet_balance.pop(user_id, None)
         print(f"REMOVENDO CREDENCIAIS")
         print(f"REMOVENDO CONFIGURATION")
         print(f"REMOVENDO ORDENS ABERTAS")

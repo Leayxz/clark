@@ -24,22 +24,20 @@ class DashboardRepository(DashboardProtocol):
     def get_overview(self, exchange: str, user_id: UUID) -> Overview:
 
         with self._cache_client.pipeline() as pipe:
-            payload = {"exchange": exchange, "user_id": user_id}
-            pipe.sismember(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}", json.dumps(payload))
             pipe.hgetall(f"{CacheKeys.USER_BALANCE}:{user_id}")
             pipe.get(f"{CacheKeys.GOAL_TARGET}:{user_id}")
             pipe.hget(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT)
             pipe.get(f"BTC_USD_PRICE")
 
-            automation, user_balance, goal_target, open_orders, btc_usd_price = cast(tuple[int, dict[str, str], str | None, str | None, str | None], pipe.execute())
+            user_balance, goal_target, open_orders, btc_usd_price = cast(tuple[dict[str, str], str | None, str | None, str | None], pipe.execute())
 
         thirty_days_ago = timezone.now() - timedelta(days=30)
-        last_operations = list(ClosedOrder.objects.filter(user_id=user_id).order_by("-closed_at")[:4])
-        result = (ClosedOrder.objects.filter(user_id=user_id).aggregate(operations=Count("user_id"),
-                                                                        last_month_profit=Sum("profit", filter=Q(closed_at__gte=thirty_days_ago)),
-                                                                        profit=Sum("profit"),
-                                                                        fees=Sum("total_fees")
-                                                                        ))
+        last_operations = list(ClosedOrder.objects.filter(user_id=user_id).order_by("-closed_at")[:10])
+
+        result = (ClosedOrder.objects.filter(user_id=user_id).aggregate(
+            last_month_profit=Sum("profit", filter=Q(closed_at__gte=thirty_days_ago)),
+            profit=Sum("profit"),
+        ))
 
         return Overview(
             btc_usd_price=int(btc_usd_price) if btc_usd_price else 0,
@@ -49,7 +47,7 @@ class DashboardRepository(DashboardProtocol):
             all_time_profit=result.get("profit") or 0,
             last_month_profit=result.get("last_month_profit") or 0,
             goal_target=int(goal_target) if goal_target else 0,
-            last_operations=[{"tipo": "Venda", "profit": operation.profit, "closed_at": operation.closed_at, "closed_at": operation.closed_at.strftime("%H:%M") if operation.closed_at else None} for operation in last_operations],
+            last_operations=[{"tipo": "Venda", "profit": operation.profit, "closed_at": timezone.localtime(operation.closed_at).strftime("%H:%M") if operation.closed_at else None} for operation in last_operations],
         )
 
 
@@ -96,7 +94,7 @@ class DashboardRepository(DashboardProtocol):
                               .first())
 
             return SidebarStatus(
-                last_operation=last_operation.strftime("%H:%M") if last_operation else "",
+                last_operation=timezone.localtime(last_operation).strftime("%H:%M") if last_operation else "",
                 status_automation=True if automation else False,
                 status_telegram=bool(notifier.get("telegram_id")),
                 leverage=int(configuration.get("leverage") or 0),

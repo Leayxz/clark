@@ -28,7 +28,7 @@ class ExchangeGateway:
         assert client, f"Exchange client não encontrado para: {credentials.EXCHANGE}"
         return await client.get_current_wallet_balance(credentials)
 
-    async def get_all_open_orders(self, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], float]:
+    async def get_all_open_orders(self, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], int]:
         assert credentials.EXCHANGE, "credentials.EXCHANGE não preenchido"
         client = self._exchange_clients.get(credentials.EXCHANGE)
         assert client, f"Exchange client não encontrado para: {credentials.EXCHANGE}"

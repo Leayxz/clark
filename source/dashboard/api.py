@@ -1,10 +1,11 @@
 from typing import cast
+from uuid import UUID
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import GoalSerializer
+from .serializers import GoalSerializer, PeriodSerializer
 from ..container import dashboard_service
 from ..authentication.decorators import authenticated
 from ..telemetry.tracing import tracer
@@ -15,7 +16,7 @@ from ..telemetry.tracing import tracer
 def overview(request):
 
     with tracer.start_as_current_span("overview"):
-        overview = dashboard_service.overview("lnmarkets", request.subject)
+        overview = dashboard_service.overview("lnmarkets", UUID(request.subject))
 
     return Response({
         "btc_usd_price": overview.btc_usd_price,
@@ -29,13 +30,14 @@ def overview(request):
         }, status.HTTP_200_OK)
 
 
+
 @api_view(["GET"])
 @authenticated
 def get_sidebar_data(request):
 
     with tracer.start_as_current_span("get_sidebar_data"):
         exchange = request.query_params.get("exchange", "lnmarkets")
-        sidebar = dashboard_service.get_sidebar_data(exchange, request.subject)
+        sidebar = dashboard_service.get_sidebar_data(exchange, UUID(request.subject))
 
     return Response({
         "last_operation": sidebar.last_operation,
@@ -52,8 +54,11 @@ def get_sidebar_data(request):
 def overview_period(request):
 
     with tracer.start_as_current_span("overview_period"):
-        period = request.query_params.get("period")
-        overview_period = dashboard_service.overview_period("lnmarkets", request.subject, period)
+        serializer = PeriodSerializer(data=request.query_params)
+        if not serializer.is_valid(): return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+        period = cast(dict, serializer.validated_data)["period"]
+        overview_period = dashboard_service.overview_period("lnmarkets", UUID(request.subject), period)
 
     return Response({
         "btc_usd_price": overview_period.btc_usd_price,
@@ -69,11 +74,10 @@ def overview_period(request):
 def update_goal_target(request):
 
     with tracer.start_as_current_span("dashboard_update_goal"):
-
         serializer = GoalSerializer(data=request.data)
         if not serializer.is_valid(): return Response({"error": "Goal Sats inválido"}, status.HTTP_400_BAD_REQUEST)
 
         goal_sats = cast(dict, serializer.validated_data)["goal_target"]
-        dashboard_service.update_goal("lnmarkets", request.subject, goal_sats)
+        dashboard_service.update_goal("lnmarkets", UUID(request.subject), goal_sats)
 
         return Response(status=status.HTTP_204_NO_CONTENT)

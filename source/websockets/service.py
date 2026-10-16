@@ -19,17 +19,18 @@ class AutomationExecutor:
                  gateway: ExchangeGateway,
                  notifier: NotifierProtocol) -> None:
 
-                self._repository = repository
-                self._gateway = gateway
-                self._notifier = notifier
+        self._repository = repository
+        self._gateway = gateway
+        self._notifier = notifier
 
 
     async def execute(self, user_id: UUID, current_price: Decimal, exchange: str):
 
         credentials, configuration = await self._repository.get_requirements(user_id, exchange)
         all_open_orders, total_margin_used = await self._repository.get_all_open_orders(user_id, credentials)
+        wallet_balance = await self._repository.get_user_wallet_balance(user_id, credentials, total_margin_used)
 
-        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price, all_open_orders, total_margin_used)
+        await self.evaluate_purchase_condition(user_id, credentials, configuration, current_price, all_open_orders, wallet_balance)
         await self.evaluate_sell_condition(user_id, credentials, configuration, current_price, all_open_orders)
 
 
@@ -39,13 +40,13 @@ class AutomationExecutor:
                                           configuration: ConfigurationDTO,
                                           current_price: Decimal,
                                           all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO],
-                                          total_margin_used: int):
+                                          wallet_balance: Decimal):
 
         new_order = None
 
         if current_price >= (configuration.last_buy_up + configuration.buy_variation):
 
-            if not await self._user_should_have_margin(user_id, credentials, configuration, current_price, total_margin_used):
+            if not await self._user_should_have_margin(configuration, current_price, wallet_balance):
                 return
 
             new_order = await self._gateway.open_purchase_order(user_id, credentials, configuration)
@@ -53,7 +54,7 @@ class AutomationExecutor:
 
         elif current_price <= (configuration.last_buy_down - configuration.buy_variation):
 
-            if not await self._user_should_have_margin(user_id, credentials, configuration, current_price, total_margin_used):
+            if not await self._user_should_have_margin(configuration, current_price, wallet_balance):
                 return
 
             new_order = await self._gateway.open_purchase_order(user_id, credentials, configuration)
@@ -84,12 +85,11 @@ class AutomationExecutor:
                 self._repository.update_last_buy(user_id, sold_order.exit_price, BUY_UP=False)
                 await self._repository.update_user_balance(user_id, margin_used=sold_order.margin_used, profit=sold_order.profit, BUY=False)
                 await self._repository.update_dashboard_overview(user_id, False)
-                await self._repository.save_closed_order(str(user_id), sold_order)
-                await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders), str(user_id))
+                await self._repository.save_closed_order(user_id, sold_order)
+                await self._notifier.send_sell_message(sold_order.profit, len(all_open_orders), user_id)
 
 
-    async def _user_should_have_margin(self, user_id: UUID, credentials: CredentialsDTO, configuration: ConfigurationDTO, current_price: Decimal, total_margin_used: int) -> bool:
-        wallet_balance = await self._repository.get_user_wallet_balance(user_id, credentials, total_margin_used)
+    async def _user_should_have_margin(self, configuration: ConfigurationDTO, current_price: Decimal, wallet_balance: Decimal) -> bool:
         margin_sats = Decimal(configuration.marginUSD) / (current_price * configuration.leverage) * 100_000_000
-        logger.debug(f"MARGIN SATS CALCULADO PARA SER USADO NA VERIFICAÇÂO DE MARGEM DISPONIVEL: {margin_sats}")
+        logger.info(f"MARGIN SATS CALCULADO PARA SER USADO NA VERIFICAÇÂO DE MARGEM DISPONIVEL: {margin_sats}")
         return wallet_balance >= margin_sats

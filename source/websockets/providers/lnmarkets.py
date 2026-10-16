@@ -28,9 +28,10 @@ class LNMarketsClient(ExchangeProtocol):
                     await websocket.send(json.dumps(subscribe_payload))
 
                     async for message in websocket:
-                        price = Decimal(str(json.loads(message)["params"]["data"]["lastPrice"]))
-                        print(f"🟢 Price: {price}")
-                        yield price
+                        current_price = json.loads(message).get("params", {}).get("data", {}).get("lastPrice")
+                        if current_price is None: continue
+                        print(f"🟢 Price: {current_price}")
+                        yield Decimal(str(current_price))
 
             except Exception as error:
                 print(f"Websocket Error: {error} | Tentando reconectar em 5 segundos...")

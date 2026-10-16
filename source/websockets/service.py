@@ -1,11 +1,10 @@
 from decimal import Decimal
 from uuid import UUID
 
+from ..dtos import AllOpenOrdersDTO, BuyOrderDTO, ConfigurationDTO, CredentialsDTO
 from ..telemetry.logging import logger
-
-from .interfaces import NotifierProtocol, AutomationExecutorProtocol
 from .gateway import ExchangeGateway
-from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderDTO
+from .interfaces import AutomationExecutorProtocol, NotifierProtocol
 
 
 class Regras:
@@ -18,7 +17,7 @@ class AutomationExecutor:
                  repository: AutomationExecutorProtocol,
                  gateway: ExchangeGateway,
                  notifier: NotifierProtocol) -> None:
-                 
+
                  self._repository = repository
                  self._gateway = gateway
                  self._notifier = notifier

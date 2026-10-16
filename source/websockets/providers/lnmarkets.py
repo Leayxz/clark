@@ -1,22 +1,48 @@
-from lnmarkets_sdk.rest.v3.http.client import APIAuthContext, APIClientConfig, LNMClient
-from lnmarkets_sdk.rest.v3.models.futures_isolated import FuturesOrder, CloseTradeParams
-
-from decimal import Decimal
+import asyncio, json, traceback, websockets
+from collections.abc import AsyncIterator
 from datetime import datetime
-
-from ..interfaces import ExchangeProtocol
-from ...dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderDTO, SellOrderDTO
-from ...telemetry.tracing import tracer
-from ...telemetry.logging import logger
+from decimal import Decimal
 from uuid import UUID
+
+from lnmarkets_sdk.rest.v3.http.client import APIAuthContext, APIClientConfig, LNMClient
+from lnmarkets_sdk.rest.v3.models.futures_isolated import CloseTradeParams, FuturesOrder
+
+from ...dtos import AllOpenOrdersDTO, BuyOrderDTO, ConfigurationDTO, CredentialsDTO, SellOrderDTO
+from ...telemetry.logging import logger
+from ...telemetry.tracing import tracer
+from ..interfaces import ExchangeProtocol
+
 
 class LNMarketsClient(ExchangeProtocol):
 
+    URL = "wss://stream.lnmarkets.com/v1"
+    TOPIC = "futures/inverse/btc_usd/ticker"
+
+    async def subscribe_ticker(self) -> AsyncIterator[Decimal]:
+
+        while True:
+
+            try:
+                async with websockets.connect(self.URL) as websocket:
+                    subscribe_payload = {"jsonrpc": "2.0", "id": 1, "method": "subscribe", "params": {"topics": [self.TOPIC]}}
+                    await websocket.send(json.dumps(subscribe_payload))
+
+                    async for message in websocket:
+                        price = Decimal(str(json.loads(message)["params"]["data"]["lastPrice"]))
+                        print(f"🟢 Price: {price}")
+                        yield price
+
+            except Exception as error:
+                print(f"Websocket Error: {error} | Tentando reconectar em 5 segundos...")
+                traceback.print_exc()
+                await asyncio.sleep(5)
+
+
     async def open_purchase_order(self, user_id: UUID, credentials:CredentialsDTO, configuration:ConfigurationDTO) -> BuyOrderDTO:
 
-        assert credentials.API_KEY, f"API_KEY NÃO ENCONTRADA."
-        assert credentials.API_PASSPHRASE, f"API_PASSPHRASE NÃO ENCONTRADA."
-        assert credentials.API_SECRET, f"API_SECRET NÃO ENCONTRADA."
+        assert credentials.API_KEY, "API_KEY NÃO ENCONTRADA."
+        assert credentials.API_PASSPHRASE, "API_PASSPHRASE NÃO ENCONTRADA."
+        assert credentials.API_SECRET, "API_SECRET NÃO ENCONTRADA."
 
         authentication = APIAuthContext(key=credentials.API_KEY, secret=credentials.API_SECRET, passphrase=credentials.API_PASSPHRASE)
         client_config = APIClientConfig(authentication=authentication, network="mainnet")
@@ -35,9 +61,9 @@ class LNMarketsClient(ExchangeProtocol):
 
     async def close_profitable_orders(self, user_id: UUID, credentials:CredentialsDTO, order_id: str) -> SellOrderDTO:
 
-        assert credentials.API_KEY, f"API_KEY NÃO ENCONTRADA."
-        assert credentials.API_PASSPHRASE, f"API_PASSPHRASE NÃO ENCONTRADA."
-        assert credentials.API_SECRET, f"API_SECRET NÃO ENCONTRADA."
+        assert credentials.API_KEY, "API_KEY NÃO ENCONTRADA."
+        assert credentials.API_PASSPHRASE, "API_PASSPHRASE NÃO ENCONTRADA."
+        assert credentials.API_SECRET, "API_SECRET NÃO ENCONTRADA."
 
         with tracer.start_as_current_span("clients.lnmarkets.close_profitable_orders"):
 
@@ -48,7 +74,7 @@ class LNMarketsClient(ExchangeProtocol):
                 ordem_fechamento = CloseTradeParams(id=order_id)
                 fechamento = await client.futures.isolated.close(ordem_fechamento)
 
-                logger.info(f"💰 Ordem fechada com sucesso", extra={
+                logger.info("💰 Ordem fechada com sucesso", extra={
                     "user_id": user_id,
                     "lucro_liquido": fechamento.pl - (fechamento.opening_fee + fechamento.closing_fee + fechamento.sum_funding_fees),
                     "opening_fee": fechamento.opening_fee,
@@ -67,9 +93,9 @@ class LNMarketsClient(ExchangeProtocol):
 
     async def get_current_wallet_balance(self, credentials: CredentialsDTO) -> Decimal:
 
-        assert credentials.API_KEY, f"API_KEY NÃO ENCONTRADA."
-        assert credentials.API_PASSPHRASE, f"API_PASSPHRASE NÃO ENCONTRADA."
-        assert credentials.API_SECRET, f"API_SECRET NÃO ENCONTRADA."
+        assert credentials.API_KEY, "API_KEY NÃO ENCONTRADA."
+        assert credentials.API_PASSPHRASE, "API_PASSPHRASE NÃO ENCONTRADA."
+        assert credentials.API_SECRET, "API_SECRET NÃO ENCONTRADA."
 
         with tracer.start_as_current_span("clients.lnmarkets.get_current_wallet_balance"):
 
@@ -84,9 +110,9 @@ class LNMarketsClient(ExchangeProtocol):
 
     async def get_all_open_orders(self, credentials: CredentialsDTO) -> tuple[list[AllOpenOrdersDTO | BuyOrderDTO], int]:
 
-        assert credentials.API_KEY, f"API_KEY NÃO ENCONTRADA."
-        assert credentials.API_PASSPHRASE, f"API_PASSPHRASE NÃO ENCONTRADA."
-        assert credentials.API_SECRET, f"API_SECRET NÃO ENCONTRADA."
+        assert credentials.API_KEY, "API_KEY NÃO ENCONTRADA."
+        assert credentials.API_PASSPHRASE, "API_PASSPHRASE NÃO ENCONTRADA."
+        assert credentials.API_SECRET, "API_SECRET NÃO ENCONTRADA."
 
         positions: list[AllOpenOrdersDTO | BuyOrderDTO] = []
         total_margin_used = 0

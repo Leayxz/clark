@@ -1,5 +1,5 @@
 import json, redis.asyncio as async_redis
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import UUID
 from collections.abc import AsyncIterator
@@ -96,9 +96,7 @@ class AutomationExecutorRepository:
 
     async def get_user_wallet_balance(self, user_id: UUID, credentials: CredentialsDTO, total_margin_used: int) -> Decimal:
 
-        wallet_balance = self._user_wallet_balance.get(user_id, None)
-
-        if not wallet_balance:
+        if user_id not in self._user_wallet_balance:
             wallet_balance = await self._exchange_gateway.get_current_wallet_balance(credentials)
             self._user_wallet_balance[user_id] = wallet_balance
 
@@ -109,7 +107,7 @@ class AutomationExecutorRepository:
                 CacheKeys.BALANCE_EXPOSED: str(int(total_margin_used)),
             })
 
-        return wallet_balance
+        return self._user_wallet_balance[user_id]
 
 
     async def save_closed_order(self, user_id: UUID, sold_order: SellOrderDTO) -> None:
@@ -184,11 +182,11 @@ class AutomationExecutorRepository:
 
     async def closed_orders_today(self, user_id: UUID) -> int:
 
-        today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
         query = (
             select(func.count(ClosedOrder.order_id))
-            .where(ClosedOrder.user_id == user_id)
+            .where(ClosedOrder.user_id == str(user_id))
             .where(ClosedOrder.closed_at >= today_start)
         )
 

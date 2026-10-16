@@ -1,4 +1,5 @@
 import json, redis.asyncio as async_redis
+from typing import cast
 from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import UUID
@@ -43,16 +44,12 @@ class AutomationExecutorRepository:
         configuration = self._all_running_configuration.get(user_id, None)
 
         if not credentials or not configuration:
-            credentials_raw: dict = await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CREDENTIALS}:{exchange}:{user_id}")
-            assert credentials_raw, f"Credenciais de API não encontradas | exchange={exchange} | Usuário: {user_id}."
+
+            credentials_raw = cast(dict[str, str], await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CREDENTIALS}:{exchange}:{user_id}"))
             credentials = CredentialsDTO(**credentials_raw)
-            assert credentials.EXCHANGE == exchange, (
-                f"Exchange inválida: esperada={exchange}, "
-                f"recebida={credentials.EXCHANGE}"
-            )
             self._all_running_credentials[user_id] = credentials
 
-            configuration_raw: dict = await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}")
+            configuration_raw = cast(dict[str, str], await self._cache_client.hgetall(f"{CacheKeys.AUTOMATION_CONFIGURATION}:{exchange}:{user_id}"))
             configuration = self._parse_configuration(configuration_raw, credentials)
             self._all_running_configuration[user_id] = configuration
 

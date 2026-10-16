@@ -30,7 +30,7 @@ class AutomationExecutorRepository:
                 self._synchronized_references: dict[UUID, bool] = {}
                 self._all_running_credentials: dict[UUID, CredentialsDTO] = {}
                 self._all_running_configuration: dict[UUID, ConfigurationDTO] = {}
-                self._synchronized_wallet_balance: dict[UUID, bool] = {}
+                self._user_wallet_balance: dict[UUID, Decimal] = {}
 
 
     def add_buy_order(self, user_id: UUID, new_order: BuyOrderDTO):
@@ -94,7 +94,25 @@ class AutomationExecutorRepository:
         return all_open_orders, total_margin_used if total_margin_used else 0
 
 
-    async def save_closed_order(self, user_id: str, sold_order: SellOrderDTO) -> None:
+    async def get_user_wallet_balance(self, user_id: UUID, credentials: CredentialsDTO, total_margin_used: int) -> Decimal:
+
+        wallet_balance = self._user_wallet_balance.get(user_id, None)
+
+        if not wallet_balance:
+            wallet_balance = await self._exchange_gateway.get_current_wallet_balance(credentials)
+            self._user_wallet_balance[user_id] = wallet_balance
+
+            await self._cache_client.hset(
+                f"{CacheKeys.USER_BALANCE}:{user_id}", mapping={
+                CacheKeys.BALANCE_TOTAL: str(int(wallet_balance + total_margin_used)),
+                CacheKeys.BALANCE_AVAILABLE: str(int(wallet_balance)),
+                CacheKeys.BALANCE_EXPOSED: str(int(total_margin_used)),
+            })
+
+        return wallet_balance
+
+
+    async def save_closed_order(self, user_id: UUID, sold_order: SellOrderDTO) -> None:
 
         with tracer.start_as_current_span("repository.save_closed_order"):
 
@@ -114,7 +132,57 @@ class AutomationExecutorRepository:
                 logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)
 
 
-    async def closed_orders_today(self, user_id: str) -> int:
+    def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):
+
+        if BUY_UP:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = entry_price
+            print(f"ATUALIZANDO REF BUY UP: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up}")
+
+        else:
+            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = entry_price
+            print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
+
+
+    async def update_dashboard_overview(self, user_id: UUID, BUY: bool):
+
+        if BUY:
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, 1)
+
+        else:
+            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
+
+
+    async def update_user_balance(self, user_id: UUID, margin_used: Decimal, BUY: bool, profit: Decimal = Decimal("0")) -> None:
+
+        # Documentação em: websockets/readme.md
+
+        async with self._cache_client.pipeline(transaction=True) as pipe:
+
+            if BUY:
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, -int(margin_used))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, int(margin_used))
+                self._user_wallet_balance[user_id] -= margin_used
+
+            else:
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, int(margin_used) + int(profit))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, -int(margin_used))
+                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_TOTAL, int(profit))
+                self._user_wallet_balance[user_id] += margin_used + profit
+
+            await pipe.execute()
+
+
+    def remove_sold_order(self, user_id: UUID, order_id: str):
+
+        orders = self._all_running_open_orders.get(user_id, [])
+
+        for order in orders:
+            if order_id == order.order_id:
+                orders.remove(order)
+                return
+
+
+    async def closed_orders_today(self, user_id: UUID) -> int:
 
         today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -130,83 +198,12 @@ class AutomationExecutorRepository:
         return result.scalar() or 0
 
 
-    def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):
-        
-        if BUY_UP:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = entry_price
-            print(f"ATUALIZANDO REF BUY UP: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up}")
-
-        else:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = entry_price
-            print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
-
-
-    async def update_dashboard_overview(self, user_id: UUID, BUY: bool):
-        
-        if BUY:
-            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, 1)
-
-        else:
-            await self._cache_client.hincrby(f"{CacheKeys.DASHBOARD_ACCOUNT_OVERVIEW}:{user_id}", CacheKeys.DASHBOARD_OPEN_ORDERS_COUNT, -1)
-
-
-    async def get_user_wallet_balance(self, user_id: UUID, credentials: CredentialsDTO, total_margin_used: int) -> Decimal:
-
-        if not self._synchronized_wallet_balance.get(user_id):
-            wallet_balance = await self._exchange_gateway.get_current_wallet_balance(credentials)
-            await self.set_user_balance(user_id, wallet_balance, Decimal(total_margin_used))
-            self._synchronized_wallet_balance[user_id] = True
-
-        balance = await self._cache_client.hget(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE)
-        return Decimal(str(balance)) if balance else Decimal("0")
-
-
-    async def set_user_balance(self, user_id: UUID, wallet_balance: Decimal, total_margin_used: Decimal) -> None:
-
-        # Documentação em: websockets/readme.md
-
-        await self._cache_client.hset(
-            f"{CacheKeys.USER_BALANCE}:{user_id}", mapping={
-            CacheKeys.BALANCE_TOTAL: str(int(wallet_balance + total_margin_used)),
-            CacheKeys.BALANCE_AVAILABLE: str(int(wallet_balance)),
-            CacheKeys.BALANCE_EXPOSED: str(int(total_margin_used)),
-        })
-
-
-    async def update_user_balance(self, user_id: UUID, margin_used: Decimal, BUY: bool, profit: Decimal = Decimal("0")) -> None:
-
-        # Documentação em: websockets/readme.md
-
-        async with self._cache_client.pipeline(transaction=True) as pipe:
-
-            if BUY:
-                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, -int(margin_used))
-                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, int(margin_used))
-
-            else:
-                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_AVAILABLE, int(margin_used) + int(profit))
-                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_EXPOSED, -int(margin_used))
-                pipe.hincrby(f"{CacheKeys.USER_BALANCE}:{user_id}", CacheKeys.BALANCE_TOTAL, int(profit))
-
-            await pipe.execute()
-
-
-    def remove_sold_order(self, user_id: UUID, order_id: str):
-
-        orders = self._all_running_open_orders.get(user_id, [])
-
-        for order in orders:
-            if order_id == order.order_id:
-                orders.remove(order)
-                return
-
-
     def clear_user_memory_state(self, user_id: UUID):
         self._all_running_credentials.pop(user_id, None)
         self._all_running_configuration.pop(user_id, None)
         self._all_running_open_orders.pop(user_id, None)
         self._synchronized_references.pop(user_id, None)
-        self._synchronized_wallet_balance.pop(user_id, None)
+        self._user_wallet_balance.pop(user_id, None)
         print(f"REMOVENDO CREDENCIAIS")
         print(f"REMOVENDO CONFIGURATION")
         print(f"REMOVENDO ORDENS ABERTAS")
@@ -222,11 +219,14 @@ class WSUserStateRepository:
         self._cache_client = cache_client
         self._all_activated_automations: list[tuple[UUID, str]] = []  # (user_id, exchange)
 
+
     def add_activated_automation(self, user_id: UUID, exchange: str) -> None:
         self._all_activated_automations.append((user_id, exchange))
 
+
     def get_all_activated_automations(self) -> list[tuple[UUID, str]]:
         return self._all_activated_automations
+
 
     async def synchronize_websocket(self, exchange: str) -> None:
         automations = await self._cache_client.smembers(f"{CacheKeys.ALL_ACTIVATED_AUTOMATION}")
@@ -236,6 +236,7 @@ class WSUserStateRepository:
             if json.loads(automation).get('exchange') == exchange
         ]
 
+
     async def subscribe_channel(self, channel: str) -> AsyncIterator[dict]:
         pubsub = self._cache_client.pubsub()
         await pubsub.subscribe(channel)
@@ -243,10 +244,12 @@ class WSUserStateRepository:
             if message["type"] == "message":
                 yield json.loads(message["data"])
 
+
     def remove_activated_automation(self, user_id: UUID):
         self._all_activated_automations = [
             (uid, ex) for uid, ex in self._all_activated_automations if uid != user_id
         ]
+
 
     async def save_btc_price(self, btc_usd_price: int):
         await self._cache_client.set("BTC_USD_PRICE", int(btc_usd_price))

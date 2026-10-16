@@ -18,10 +18,10 @@ class AutomationExecutor:
                  repository: AutomationExecutorProtocol,
                  gateway: ExchangeGateway,
                  notifier: NotifierProtocol) -> None:
-
-        self._repository = repository
-        self._gateway = gateway
-        self._notifier = notifier
+                 
+                 self._repository = repository
+                 self._gateway = gateway
+                 self._notifier = notifier
 
 
     async def execute(self, user_id: UUID, current_price: Decimal, exchange: str):

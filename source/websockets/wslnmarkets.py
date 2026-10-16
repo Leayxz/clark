@@ -1,12 +1,13 @@
 import asyncio
 from uuid import UUID
 
-from .repository import WSUserStateRepository, AutomationExecutorRepository
-from .service import AutomationExecutor
-from .providers.lnmarkets import LNMarketsClient
-from .container import automation_executor, ws_repository, automation_executor_repository
 from ..constants import EXCHANGES
 from ..events import AutomationEvent, Channel
+from .container import automation_executor, automation_executor_repository, ws_repository
+from .providers.lnmarkets import LNMarketsClient
+from .repository import AutomationExecutorRepository, WSUserStateRepository
+from .service import AutomationExecutor
+
 
 async def websocket_lnmarkets(automation_executor: AutomationExecutor, repository: WSUserStateRepository):
 

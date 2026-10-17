@@ -1,7 +1,9 @@
 from django.apps import AppConfig
-from .tracing import setup_tracing
+
 from .logging import setup_logging
 from .metrics import setup_metrics
+from .tracing import setup_tracing
+
 
 class TelemetryConfig(AppConfig):
 

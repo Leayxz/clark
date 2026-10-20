@@ -1,5 +1,7 @@
-from rest_framework import status
 from enum import Enum
+
+from rest_framework import status
+
 
 class Error(Enum):
     USER_NOT_FOUND = "Usuário não encontrado."

@@ -45,12 +45,16 @@ function getExchangeLabel(exchange: string): string {
 async function loadExchangeData(): Promise<void> {
     const exchange = getActiveExchange();
     const response = await fetch(`/api/v1/automation/dashboard?exchange=${exchange}`, {method: "GET", credentials: "include"});
-    const data: ConfiguracaoData = await response.json();
 
     if (!response.ok) {
-        console.error(data);
+        (document.getElementById("dot_animation") as HTMLElement)!.classList.remove("active");
+        (document.getElementById("dot_animation") as HTMLElement)!.classList.add("inactive");
+        (document.getElementById("status_label") as HTMLParagraphElement)!.textContent = "Erro interno no servidor.";
+        (document.getElementById("sub_status_automation") as HTMLParagraphElement)!.textContent = "Aguarde alguns minutos e tente novamente.";
         return;
     }
+
+    const data: ConfiguracaoData = await response.json();
 
     (document.getElementById("api_key") as HTMLInputElement).value = data.API_KEY || "";
     (document.getElementById("api_secret") as HTMLInputElement).value = data.API_SECRET || "";
@@ -73,12 +77,14 @@ async function loadExchangeData(): Promise<void> {
 
     if (data.status_automation) {
         dot_animation?.classList.add("active");
+        dot_animation?.classList.remove("inactive");
         botao_ligar_automacao.classList.add("active");
         status_label.textContent = "Automação Ativa";
         sub_status_automation.textContent = "Em execução...";
         botao_ligar_automacao.textContent = "Desativar Automação";
     } else {
         dot_animation?.classList.remove("active");
+        dot_animation?.classList.add("inactive");
         botao_ligar_automacao.classList.remove("active");
         status_label.textContent = "Automação Inativa";
         sub_status_automation.textContent = "Execução Parada!";
@@ -128,19 +134,21 @@ document.getElementById("configuration_form")?.addEventListener("submit", async 
     const csrf = document.querySelector("[name=csrfmiddlewaretoken]") as HTMLInputElement;
 
     // Warning: salvando
+    message.hidden = true;
     message.textContent = `Salvando configuração para ${exchange_label}...`;
-    message.className = "temporary_message";
+    message.className = "temporary_message warning";
     message.hidden = false;
 
     const response = await fetch("/api/v1/automation/configuration", {method: "POST", credentials: "include", headers: {"Content-Type": "application/json", "x-csrftoken": csrf.value}, body: JSON.stringify(body)});
-    const data = await response.json();
 
     if (!response.ok) {
         message.textContent = `Erro ao salvar configuração para ${exchange_label}. Tente novamente.`;
         message.className = "temporary_message error";
-        console.error(data.error);
+        message.hidden = false;
         return;
     }
+
+    const data = await response.json();
 
     if (data.message) {
         message.className = "temporary_message success";
@@ -157,29 +165,42 @@ document.getElementById("form_api")?.addEventListener("submit", async (event) =>
     const exchange_label = getExchangeLabel(exchange);
     const api_message = document.getElementById("api_message") as HTMLParagraphElement;
 
+    const api_key = (document.getElementById("api_key") as HTMLInputElement).value.trim();
+    const api_secret = (document.getElementById("api_secret") as HTMLInputElement).value.trim();
+    const api_passphrase = (document.getElementById("api_passphrase") as HTMLInputElement).value.trim();
+
+    if (!api_key || !api_secret) {
+        api_message.textContent = "Api Key e Secret Key são obrigatórios.";
+        api_message.className = "temporary_message error";
+        api_message.hidden = false;
+        return;
+    }
+
     const payload = {
         exchange: exchange,
-        API_KEY: (document.getElementById("api_key") as HTMLInputElement).value,
-        API_SECRET: (document.getElementById("api_secret") as HTMLInputElement).value,
-        API_PASSPHRASE: (document.getElementById("api_passphrase") as HTMLInputElement).value,
+        API_KEY: api_key,
+        API_SECRET: api_secret,
+        API_PASSPHRASE: api_passphrase,
     }
 
     const csrf = document.querySelector("[name=csrfmiddlewaretoken]") as HTMLInputElement;
 
     // Warning: salvando
+    api_message.hidden = true;
     api_message.textContent = `Salvando conexão da API para ${exchange_label}...`;
-    api_message.className = "temporary_message";
+    api_message.className = "temporary_message warning";
     api_message.hidden = false;
 
     const response = await fetch("/api/v1/automation/api", {method: "POST", credentials: "include", headers: {"content-type": "application/json", "x-csrftoken": csrf.value}, body: JSON.stringify(payload)});
-    const data = await response.json();
 
     if (!response.ok) {
         api_message.textContent = `Erro ao salvar API para ${exchange_label}. Tente novamente.`;
         api_message.className = "temporary_message error";
-        console.error(data.error);
+        api_message.hidden = false;
         return;
     }
+
+    const data = await response.json();
 
     // mensagem temporaria de api salva e depois redireciona para buscar estado atual no dom
     if (data.message) {
@@ -194,6 +215,7 @@ document.getElementById("form_api")?.addEventListener("submit", async (event) =>
 document.getElementById("enable_automation")?.addEventListener("click", async () => {
 
     const status_botao = document.getElementById("enable_automation") as HTMLButtonElement;
+
     const endpoint = status_botao.dataset.enabled == "true"
         ? "/api/v1/automation/disable"
         : "/api/v1/automation/enable";
@@ -203,10 +225,9 @@ document.getElementById("enable_automation")?.addEventListener("click", async ()
     const csrf = document.querySelector("[name=csrfmiddlewaretoken]") as HTMLInputElement;
 
     const response = await fetch(endpoint, {method: "POST", credentials: "include", headers: {"content-type": "application/json", "x-csrftoken": csrf.value}, body: JSON.stringify(payload)});
-    const data = await response.json();
 
     if (!response.ok) {
-        console.error(data.error);
+        status_botao.textContent = status_botao.dataset.enabled == "true" ? "Desativar Automação" : "Ativar Automação";
         return;
     }
 

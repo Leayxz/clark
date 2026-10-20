@@ -17,7 +17,7 @@ from .payment.providers.deflowexchange import DeflowExchangeProvider
 from .payment.repository import PaymentRepository
 from .payment.service import PaymentService
 
-redis_client = redis.Redis(decode_responses=True, socket_connect_timeout=2, socket_timeout=2)
+redis_client = redis.Redis(decode_responses=True, socket_connect_timeout=1, socket_timeout=1)
 
 automation_repository = AutomationRepository(redis_client)
 automation_service = AutomationService(automation_repository)

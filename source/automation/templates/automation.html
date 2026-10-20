@@ -4,6 +4,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clark — Automação</title>
     <meta name="description" content="Configure a estratégia, conecte sua exchange e ative a automação do Clark.">
@@ -26,23 +27,20 @@
         </div>
     </header>
 
-
     <!-- -------------------------------------- Exchange Selector -------------------------------------- -->
     <div class="clark-exchange-wrapper">
         <div class="clark-exchange-selector" role="radiogroup" aria-label="Selecione a exchange">
+            
             <button type="button" role="radio" aria-checked="true" data-exchange="lnmarkets" class="clark-exchange-card clark-exchange-card--active" id="exchange-lnmarkets">
-                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3z"/>
-                </svg>
+                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3z"/> </svg>
                 <span class="clark-exchange-name">LNMarkets</span>
             </button>
+
             <button type="button" role="radio" aria-checked="false" data-exchange="hyperliquid" class="clark-exchange-card" id="exchange-hyperliquid">
-                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M6 9a6 6 0 1 1 12 0c0 3.375 2.25 4.5 3 5v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5c.75-.5 3-1.625 3-5z"/>
-                    <path d="M9 9a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/>
-                </svg>
+                <svg class="clark-exchange-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M6 9a6 6 0 1 1 12 0c0 3.375 2.25 4.5 3 5v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5c.75-.5 3-1.625 3-5z"/> <path d="M9 9a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/> </svg>
                 <span class="clark-exchange-name">Hyperliquid</span>
             </button>
+
         </div>
     </div>
 
@@ -51,7 +49,7 @@
         <section class="clark-section">
             <h2 class="clark-section-title">Estratégia</h2>
 
-            <div class="clark-card">
+            <div class="clark-card clark-card-strategy">
                 <form id="configuration_form" method="post"> {% csrf_token %}
                     
                     <div class="clark-input-group">
@@ -113,7 +111,7 @@
                         </div>
                     </div>
 
-                    <p class="temporary_message" id="configuration_message"></p>
+                    <p class="temporary_message" id="configuration_message" hidden></p>
                     <button class="clark-btn clark-btn-primary" type="submit" id="save-strategy">Salvar Estratégia</button>
                 </form>
             </div>
@@ -123,29 +121,30 @@
 
         <section class="clark-section">
             <h2 class="clark-section-title">Conexão Api</h2>
-            <div class="clark-card">
+            <div class="clark-card clark-card-api">
+                
                 <div class="clark-api-status disconnected" id="api-status">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <polyline points="20 6 9 17 4 12"/> </svg>
                     <span id="api-status-text">Api Desconectada — Configure Suas Chaves</span>
                 </div>
 
                 <form id="form_api" method="post"> {% csrf_token %}
 
                     <div class="clark-field">
-                        <label class="clark-field-label" for="api-key">Api Key</label>
+                        <label class="clark-field-label" for="api_key">Api Key</label>
                         <input class="clark-input" type="password" id="api_key" name="API_KEY" 
-                            value="{{ api_credentials.key|default:'' }}" placeholder="cole sua api key">
+                            value="{{ api_credentials.key|default:'' }}" placeholder="cole sua api key" required>
                         <div class="clark-field-hint">Chave de acesso à exchange</div>
                     </div>
+
                     <div class="clark-field">
-                        <label class="clark-field-label" for="api-secret">Secret Key</label>
-                        <input class="clark-input" type="password" id="api_secret" name="SECRET_KEY" value="{{ api_credentials.secret|default:'' }}" placeholder="cole sua secret key">
+                        <label class="clark-field-label" for="api_secret">Secret Key</label>
+                        <input class="clark-input" type="password" id="api_secret" name="SECRET_KEY" value="{{ api_credentials.secret|default:'' }}" placeholder="cole sua secret key" required>
                         <div class="clark-field-hint">Chave secreta — Nunca compartilhada</div>
                     </div>
+
                     <div class="clark-field">
-                        <label class="clark-field-label" for="api-passphrase">Passphrase</label>
+                        <label class="clark-field-label" for="api_passphrase">Passphrase</label>
                         <input class="clark-input" type="password" id="api_passphrase" name="passphrase" value="{{ api_credentials.passphrase|default:'' }}" placeholder="sua passphrase">
                         <div class="clark-field-hint">Passphrase da api (se necessário)</div>
                     </div>
@@ -186,7 +185,7 @@
     <div class="clark-status-banner">
         <div class="clark-status-info">
 
-            <span class="clark-status-dot" id="dot_animation"></span>
+            <span class="clark-banner-dot" id="dot_animation"></span>
 
             <div>
                 <div class="clark-status-label" id="status_label">Automação Inativa</div>

@@ -10,9 +10,15 @@ class PaymentStatus(str, Enum):
 
 
 class AffiliateTier:
-    BRONZE = 5
-    PRATA = 10
-    OURO = 20
+    BRONZE = 0
+    PRATA = 15
+    OURO = 25
+
+
+class AffiliateCommission:
+    BRONZE = 10
+    PRATA = 15
+    OURO = 25
 
 
 class EXCHANGES:

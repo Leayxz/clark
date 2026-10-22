@@ -1,9 +1,11 @@
 import asyncio
 from decimal import Decimal
+from uuid import UUID
+
 from telebot import TeleBot
 
-from .interfaces import AutomationExecutorProtocol
 from ..configurations import TelegramKeys
+from .interfaces import AutomationExecutorProtocol
 
 
 class Telegram:
@@ -23,7 +25,7 @@ class Telegram:
 
         await asyncio.to_thread(self._telebot.send_message, self._chat_id, message)
 
-    async def send_sell_message(self, profit: Decimal, all_open_orders: int, user_id: str):
+    async def send_sell_message(self, profit: Decimal, all_open_orders: int, user_id: UUID):
         
         daily = await self._repository.closed_orders_today(user_id)
 

@@ -1,20 +1,20 @@
-import json, redis.asyncio as async_redis
-from typing import cast
+import json
+from collections.abc import AsyncIterator
 from datetime import datetime, timezone
 from decimal import Decimal
+from typing import cast
 from uuid import UUID
-from collections.abc import AsyncIterator
 
+import redis.asyncio as async_redis
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy import select, func
-
-from .models import ClosedOrder
-from .gateway import ExchangeGateway
 
 from ..constants import CacheKeys
-from ..dtos import CredentialsDTO, ConfigurationDTO, AllOpenOrdersDTO, BuyOrderDTO, SellOrderDTO
-from ..telemetry.tracing import tracer
+from ..dtos import AllOpenOrdersDTO, BuyOrderDTO, ConfigurationDTO, CredentialsDTO, SellOrderDTO
 from ..telemetry.logging import logger
+from ..telemetry.tracing import tracer
+from .gateway import ExchangeGateway
+from .models import ClosedOrder
 
 
 class AutomationExecutorRepository:
@@ -127,15 +127,11 @@ class AutomationExecutorRepository:
                 logger.error("Falha ao persistir ClosedOrder", extra={"error": str(exc)}, exc_info=True)
 
 
-    def update_last_buy(self, user_id: UUID, entry_price: Decimal, BUY_UP: bool):
-
-        if BUY_UP:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up = entry_price
-            print(f"ATUALIZANDO REF BUY UP: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_up}")
-
-        else:
-            self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down = entry_price
-            print(f"ATUALIZANDO REF DOWN: {self._all_running_configuration.get(user_id, ConfigurationDTO()).last_buy_down}")
+    def update_buy_references(self, user_id: UUID, configuration: ConfigurationDTO) -> None:
+        all_open_orders = self._all_running_open_orders.get(user_id) or []
+        if not all_open_orders: return
+        configuration.last_buy_up = max(order.entry_price for order in all_open_orders)
+        configuration.last_buy_down = min(order.entry_price for order in all_open_orders)
 
 
     async def update_dashboard_overview(self, user_id: UUID, BUY: bool):
@@ -199,10 +195,10 @@ class AutomationExecutorRepository:
         self._all_running_open_orders.pop(user_id, None)
         self._synchronized_references.pop(user_id, None)
         self._user_wallet_balance.pop(user_id, None)
-        print(f"REMOVENDO CREDENCIAIS")
-        print(f"REMOVENDO CONFIGURATION")
-        print(f"REMOVENDO ORDENS ABERTAS")
-        print(f"REMOVENDO SINCRONIZAÇÂO")
+        print("REMOVENDO CREDENCIAIS")
+        print("REMOVENDO CONFIGURATION")
+        print("REMOVENDO ORDENS ABERTAS")
+        print("REMOVENDO SINCRONIZAÇÂO")
         print(f"REMOÇÃO COMPLETA USER: {user_id}")
 
 
@@ -246,6 +242,6 @@ class WSUserStateRepository:
         ]
 
 
-    async def save_btc_price(self, btc_usd_price: int):
-        await self._cache_client.set("BTC_USD_PRICE", int(btc_usd_price))
-        print(f"SALVANDO PREÇO BTC USD")
+    async def save_btc_price(self, btc_usd_price: Decimal):
+        await self._cache_client.set("BTC_USD_PRICE", str(btc_usd_price), ex=300)
+        print("SALVANDO PREÇO BTC USD")

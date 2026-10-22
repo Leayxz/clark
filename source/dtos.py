@@ -1,6 +1,7 @@
-from datetime import timedelta, datetime
 from dataclasses import dataclass
+from datetime import datetime
 from decimal import Decimal
+
 from .errors import Error
 
 
@@ -91,7 +92,7 @@ class SidebarStatus:
 
 @dataclass
 class Overview:
-    btc_usd_price: int
+    btc_usd_price: Decimal
     total_patrimony: int
     total_margin_exposed: int
     open_orders: int
@@ -111,12 +112,6 @@ class OverviewPeriod:
 
 
 @dataclass
-class UltimasOperacoes:
-    profit: Decimal | int
-    closed_at: datetime
-
-
-@dataclass
 class ApiDTO:
     API_KEY: str | None = None
     API_SECRET: str | None = None
@@ -126,16 +121,15 @@ class ApiDTO:
 
 @dataclass
 class CredentialsDTO:
-    API_KEY: str | None = None
-    API_SECRET: str | None = None
-    API_PASSPHRASE: str | None = None
-    EXCHANGE: str | None = None
+    API_KEY: str
+    API_SECRET: str
+    API_PASSPHRASE: str
+    EXCHANGE: str
 
 
 @dataclass
 class ConfigurationDTO:
     """
-    - wallet_balance: Decimal
     - marginUSD: int
     - leverage: int
     - percentage_profit: Decimal
@@ -143,7 +137,6 @@ class ConfigurationDTO:
     - last_buy_up: Decimal
     - last_buy_down: Decimal
     """
-    wallet_balance: Decimal = Decimal("0")
     marginUSD: int = 0
     leverage: int = 0
     percentage_profit: Decimal = Decimal("0.000")
@@ -151,6 +144,35 @@ class ConfigurationDTO:
     last_buy_up: Decimal = Decimal("0")
     last_buy_down: Decimal = Decimal("0")
     exchange: str = ""
+
+
+@dataclass
+class AutomationDTO:
+    """
+    Visao completa da automacao do usuario em uma exchange, lida em uma unica
+    ida ao cache (pipeline): configuracao + credenciais + status de ativacao.
+
+    - marginUSD: int
+    - leverage: int
+    - percentage_profit: Decimal
+    - buy_variation: Decimal
+    - last_buy_up: Decimal
+    - last_buy_down: Decimal
+    - exchange: str
+    - API_KEY / API_SECRET / API_PASSPHRASE: str | None
+    - status_automation: bool
+    """
+    marginUSD: int = 0
+    leverage: int = 0
+    percentage_profit: Decimal = Decimal("0.000")
+    buy_variation: Decimal = Decimal("0")
+    last_buy_up: Decimal = Decimal("0")
+    last_buy_down: Decimal = Decimal("0")
+    exchange: str = ""
+    API_KEY: str | None = None
+    API_SECRET: str | None = None
+    API_PASSPHRASE: str | None = None
+    status_automation: bool = False
 
 
 @dataclass
@@ -188,3 +210,16 @@ class SellOrderDTO:
     profit: Decimal
     total_fees: Decimal
     closed_at: datetime
+
+
+@dataclass
+class OperationsResultDTO:
+    today_operations: int
+    today_profit: Decimal
+    month_operations: int
+    month_profit: Decimal
+    all_time_operations: int
+    all_time_profit: Decimal
+    total_balance: Decimal
+    total_balance_available: Decimal
+    total_balance_exposed: Decimal

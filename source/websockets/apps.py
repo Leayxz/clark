@@ -1,5 +1,5 @@
-from ..telemetry.tracing import setup_tracing
 from ..telemetry.logging import setup_logging
+from ..telemetry.tracing import setup_tracing
 
 class Telemetry:
 

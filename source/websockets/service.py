@@ -49,7 +49,6 @@ class AutomationExecutor:
                 return
 
             new_order = await self._gateway.open_purchase_order(user_id, credentials, configuration)
-            self._repository.update_last_buy(user_id, new_order.entry_price, BUY_UP=True)
 
         elif current_price <= (configuration.last_buy_down - configuration.buy_variation):
 
@@ -57,10 +56,10 @@ class AutomationExecutor:
                 return
 
             new_order = await self._gateway.open_purchase_order(user_id, credentials, configuration)
-            self._repository.update_last_buy(user_id, new_order.entry_price, BUY_UP=False)
 
         if new_order:
             self._repository.add_buy_order(user_id, new_order)
+            self._repository.update_buy_references(user_id, configuration)
             await self._repository.update_user_balance(user_id, margin_used=new_order.margin_used, BUY=True)
             await self._repository.update_dashboard_overview(user_id, True)
             await self._notifier.send_buy_message(new_order.entry_price, len(all_open_orders))
@@ -73,7 +72,6 @@ class AutomationExecutor:
                                       current_price: Decimal,
                                       all_open_orders: list[AllOpenOrdersDTO | BuyOrderDTO]):
 
-
         for order in all_open_orders.copy():
 
             target_price = order.entry_price * (Decimal("1") + configuration.percentage_profit + Regras.FIXED_RATE)
@@ -81,7 +79,7 @@ class AutomationExecutor:
             if current_price >= target_price:
                 sold_order = await self._gateway.close_profitable_orders(user_id, credentials, order.order_id)
                 self._repository.remove_sold_order(user_id, order.order_id)
-                self._repository.update_last_buy(user_id, sold_order.exit_price, BUY_UP=False)
+                self._repository.update_buy_references(user_id, configuration)
                 await self._repository.update_user_balance(user_id, margin_used=sold_order.margin_used, profit=sold_order.profit, BUY=False)
                 await self._repository.update_dashboard_overview(user_id, False)
                 await self._repository.save_closed_order(user_id, sold_order)

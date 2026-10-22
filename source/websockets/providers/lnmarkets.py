@@ -1,9 +1,12 @@
-import asyncio, json, traceback, websockets
+import asyncio
+import json
+import traceback
 from collections.abc import AsyncIterator
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
+import websockets
 from lnmarkets_sdk.rest.v3.http.client import APIAuthContext, APIClientConfig, LNMClient
 from lnmarkets_sdk.rest.v3.models.futures_isolated import CloseTradeParams, FuturesOrder
 

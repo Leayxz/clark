@@ -160,7 +160,7 @@ body {
 }
 
 .clark-section-heading {
-    margin-bottom: 48px;
+    margin-bottom: 3%;
 }
 
 .clark-section-heading .clark-eyebrow {
@@ -188,7 +188,6 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 155.8px;
-    gap: 24px;
 }
 
 .clark-stat-card {
@@ -249,14 +248,6 @@ body {
     color: var(--text);
 }
 
-.clark-stat-pct {
-    font-family: var(--math);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--muted);
-    opacity: .6;
-}
-
 .clark-stat-sub {
     font-weight: 700;
     color: var(--muted);
@@ -292,10 +283,6 @@ body {
 /* ----------------------------------------------------------------
    TIER PROGRESS — status summary
    ---------------------------------------------------------------- */
-.clark-tier {
-    padding: 40px 0 32px;
-}
-
 .clark-tier-label {
     font-family: var(--math);
     font-size: 17px;
@@ -377,7 +364,6 @@ body {
 
 .clark-tier-sep {
     color: var(--dim);
-    opacity: .4;
 }
 
 .clark-tier-cta {
@@ -982,7 +968,6 @@ body {
     .clark-stats-grid,
     .clark-metrics-grid {
         gap: 15px;
-        margin: -2% 0% -2% 0%;
     }
 }
 
@@ -1008,8 +993,8 @@ body {
     transform: translateY(0);
     animation: clark-fade-up 0.6s ease-out backwards;
     border-bottom: 1px solid var(--hairline);
-    padding-bottom: 40px;
-    margin-bottom: 40px;
+    padding-bottom: 5%;
+    margin: 5% 0% 5% 0%;
 }
 
 .clark-section:last-of-type {
@@ -1123,5 +1108,85 @@ body {
 }
 
 /* ============================================================
-   END OF overview.css
+   LOADING STATES — shimmer nos cards (affiliate)
    ============================================================ */
+.clark-stat-card.clark-loading,
+.clark-metric-card.clark-loading,
+.clark-coupon-box.clark-loading,
+.clark-tier.clark-loading,
+.clark-table-wrapper.clark-loading {
+    position: relative;
+    overflow: hidden;
+    color: transparent;
+}
+
+.clark-stat-card.clark-loading::after,
+.clark-metric-card.clark-loading::after,
+.clark-coupon-box.clark-loading::after,
+.clark-tier.clark-loading::after,
+.clark-table-wrapper.clark-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06), transparent);
+    background-size: 200% 100%;
+    animation: clark-shimmer 1.4s ease-in-out infinite;
+}
+
+.clark-stat-card.clark-loading .clark-stat-value,
+.clark-stat-card.clark-loading .clark-stat-placeholder,
+.clark-stat-card.clark-loading .clark-stat-mono,
+.clark-metric-card.clark-loading .clark-metric-value,
+.clark-coupon-box.clark-loading .clark-coupon-code,
+.clark-tier.clark-loading .clark-tier-hero-tier,
+.clark-tier.clark-loading .clark-tier-cta {
+    color: transparent;
+}
+
+.clark-app .clark-loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 0;
+}
+
+.clark-app .clark-loading-dots[hidden] { display: none; }
+
+.clark-app .clark-loading-dots > span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: clark-dots 1.2s ease-in-out infinite;
+}
+
+.clark-app .clark-loading-dots > span:nth-child(2) { animation-delay: .2s; }
+.clark-app .clark-loading-dots > span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes clark-dots {
+    0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .clark-stat-card.clark-loading::after,
+    .clark-metric-card.clark-loading::after,
+    .clark-coupon-box.clark-loading::after,
+    .clark-tier.clark-loading::after,
+    .clark-app .clark-loading-dots > span {
+        animation: none;
+    }
+}
+
+.clark-tier.clark-loading .clark-tier-hero-sep,
+.clark-tier.clark-loading .clark-tier-hero-pct {
+    visibility: hidden;
+}
+
+.clark-table-wrapper.clark-loading .clark-table-empty {
+    visibility: hidden;
+}
+
+.clark-coupon-box.clark-loading .clark-coupon-desc {
+    visibility: hidden;
+}

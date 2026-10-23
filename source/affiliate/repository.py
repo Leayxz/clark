@@ -1,22 +1,21 @@
-from uuid import UUID
 from decimal import Decimal
+from uuid import UUID
 
 from django.db import IntegrityError
-from django.db.models import Q, Sum, Count
+from django.db.models import Count, Q, Sum
 
-from .models import Affiliate
+from ..constants import AffiliateCommission, AffiliateTier, PaymentStatus
+from ..dtos import AffiliateDashboardDTO, AffiliateDTO, AffiliatePayment
 from ..errors import Error
-from ..dtos import AffiliateDTO, AffiliateDashboardDTO, AffiliatePayment
-from ..telemetry.tracing import tracer
-from ..telemetry.logging import logger
-from ..constants import PaymentStatus, AffiliateTier
 from ..payment.models import Invoice
+from ..telemetry.logging import logger
+from ..telemetry.tracing import tracer
+from .models import Affiliate
 
 
 class AffiliateRepository:
 
     def get_affiliate(self, user_id: UUID) -> bool:
-
         with tracer.start_as_current_span("repository.get_affiliate"):
             return Affiliate.objects.filter(user_id=user_id).exists()
 
@@ -27,7 +26,6 @@ class AffiliateRepository:
 
 
     def get_affiliate_dashboard_data(self, coupon_code: str) -> AffiliateDashboardDTO:
-
         with tracer.start_as_current_span("repository.get_affiliate_dashboard_data"):
 
             aggregate = Invoice.objects.filter(coupon_code=coupon_code).aggregate(
@@ -52,18 +50,18 @@ class AffiliateRepository:
             ]
 
             if paying_users >= AffiliateTier.OURO:
-                tier, tier_percentual = "Ouro", AffiliateTier.OURO
+                tier, tier_percentual = "Ouro", AffiliateCommission.OURO
                 next_tier, next_threshold, next_percentual = "—", 0, 0
                 remaining = Decimal("0")
 
             elif paying_users >= AffiliateTier.PRATA:
-                tier, tier_percentual = "Prata", AffiliateTier.PRATA
-                next_tier, next_threshold, next_percentual = "Ouro", AffiliateTier.OURO, AffiliateTier.OURO
+                tier, tier_percentual = "Prata", AffiliateCommission.PRATA
+                next_tier, next_threshold, next_percentual = "Ouro", AffiliateTier.OURO, AffiliateCommission.OURO
                 remaining = Decimal(AffiliateTier.OURO - paying_users)
 
             else:
-                tier, tier_percentual = "Bronze", AffiliateTier.BRONZE
-                next_tier, next_threshold, next_percentual = "Prata", AffiliateTier.PRATA, AffiliateTier.PRATA
+                tier, tier_percentual = "Bronze", AffiliateCommission.BRONZE
+                next_tier, next_threshold, next_percentual = "Prata", AffiliateTier.PRATA, AffiliateCommission.PRATA
                 remaining = Decimal(AffiliateTier.PRATA - paying_users)
 
             return AffiliateDashboardDTO(

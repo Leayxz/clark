@@ -28,6 +28,10 @@ GET /affiliate/ renderiza a página HTML de afiliação via views.page_affiliate
 
 A chave primária da tabela affiliate usa BigAutoField sequencial em vez de UUID, essa escolha é pior para segurança pois expõe a quantidade de registros e permite enumeração, mas é melhor para índices pois inteiros compactos ocupam menos espaço em disco e memória, resultam em buscas mais rápidas e joins mais eficientes, o user_id continua sendo o id sequencial do User garantindo consistência entre as tabelas, sem try/except no repositório usando filter().first() que retorna None naturalmente, sem status de moderação no modelo por decisão consciente, sem campo telegram no cadastro pois o usuário configura via módulo de comunicação próprio, sem FK direta Invoice→Affiliate usando relação indireta via coupon_code, tipagem forte com cast do typing para evitar warnings do Pylance no serializer.validated_data, OneToOneField em vez de ForeignKey unique para relação user-afiliado.
 
+## Tiers de comissão
+
+Regra de comissão progressiva baseada no número de usuários pagantes (invoices com status PAID/PROCESSED): de 0 a 14 pagantes a comissão é de 10% (Padrão/Bronze); de 15 a 24 pagantes a comissão é de 15% (Prata); a partir de 25 pagantes a comissão é de 25% (Ouro). Constantes em `source/constants.py`: `AffiliateTier` (thresholds: BRONZE=0, PRATA=15, OURO=25) e `AffiliateCommission` (taxas: BRONZE=10, PRATA=15, OURO=25). A comissão é calculada em `payment/repository.py::get_commission_rate` e o tier exibido no dashboard em `affiliate/repository.py::get_affiliate_dashboard_data`.
+
 # Fluxos do Módulo
 
 ### Registro de novos afiliados

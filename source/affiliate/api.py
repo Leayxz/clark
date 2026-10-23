@@ -1,15 +1,16 @@
-from uuid import UUID
 from typing import Any, cast
+from uuid import UUID
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from source.container import affiliate_service
 
-from .serializers import AffiliateRegisterSerializer
 from ..authentication.decorators import authenticated
-from ..errors import Error, ERROR_CODE_MAPPING
 from ..dtos import AffiliateDTO
+from ..errors import ERROR_CODE_MAPPING, Error
+from .serializers import AffiliateRegisterSerializer
 
 
 @api_view(["POST"])
@@ -30,7 +31,7 @@ def register_affiliate(request):
 @authenticated
 def validate_affiliate(request):
 
-    if not affiliate_service.get_affiliate(request.subject):
+    if not affiliate_service.get_affiliate(UUID(request.subject)):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     return Response(status=status.HTTP_200_OK)
@@ -56,10 +57,10 @@ def get_dashboard(request):
         "next_tier_percentual": dashboard.next_tier_percentual,
         "remaining_to_next": float(dashboard.remaining_to_next),
         "payments": [{
-            "date": p.date,
-            "coupon": p.coupon,
-            "amount_brl": float(p.amount_brl),
-            "commission_brl": float(p.commission_brl),
-            "status": p.status
-        } for p in dashboard.payments]
+            "date": payment.date,
+            "coupon": payment.coupon,
+            "amount_brl": float(payment.amount_brl),
+            "commission_brl": float(payment.commission_brl),
+            "status": payment.status
+        } for payment in dashboard.payments]
     })

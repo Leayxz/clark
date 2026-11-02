@@ -49,4 +49,5 @@ class Period:
 
 
 class Automation:
-    PRICE_IN_BRL = Decimal("150")
+    FULL_PRICE_IN_BRL = Decimal("50") # valor teste
+    DISCOUNT_PRICE_IN_BRL = FULL_PRICE_IN_BRL * Decimal("0.9")

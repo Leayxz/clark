@@ -110,7 +110,6 @@ class OverviewPeriod:
     total_fees: Decimal | int
 
 
-
 @dataclass
 class ApiDTO:
     API_KEY: str | None = None
@@ -129,14 +128,6 @@ class CredentialsDTO:
 
 @dataclass
 class ConfigurationDTO:
-    """
-    - marginUSD: int
-    - leverage: int
-    - percentage_profit: Decimal
-    - buy_variation: Decimal
-    - last_buy_up: Decimal
-    - last_buy_down: Decimal
-    """
     marginUSD: int = 0
     leverage: int = 0
     percentage_profit: Decimal = Decimal("0.000")
@@ -148,20 +139,6 @@ class ConfigurationDTO:
 
 @dataclass
 class AutomationDTO:
-    """
-    Visao completa da automacao do usuario em uma exchange, lida em uma unica
-    ida ao cache (pipeline): configuracao + credenciais + status de ativacao.
-
-    - marginUSD: int
-    - leverage: int
-    - percentage_profit: Decimal
-    - buy_variation: Decimal
-    - last_buy_up: Decimal
-    - last_buy_down: Decimal
-    - exchange: str
-    - API_KEY / API_SECRET / API_PASSPHRASE: str | None
-    - status_automation: bool
-    """
     marginUSD: int = 0
     leverage: int = 0
     percentage_profit: Decimal = Decimal("0.000")
@@ -177,21 +154,12 @@ class AutomationDTO:
 
 @dataclass
 class AllOpenOrdersDTO:
-    """
-    - order_id: str
-    - entry_price: Decimal
-    """
     order_id: str
     entry_price: Decimal
 
 
 @dataclass
 class BuyOrderDTO:
-    """
-    - order_id: str
-    - entry_price: Decimal
-    - margin_used: Decimal
-    """
     order_id: str
     entry_price: Decimal
     margin_used: Decimal
@@ -199,11 +167,6 @@ class BuyOrderDTO:
 
 @dataclass
 class SellOrderDTO:
-    """
-    - order_id: str
-    - profit: Decimal
-    - sum_funding_fees: Decimal
-    """
     order_id: str
     exit_price: Decimal
     margin_used: Decimal

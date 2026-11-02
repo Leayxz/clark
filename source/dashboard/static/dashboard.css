@@ -796,3 +796,24 @@ body {
         --hairline-strong: #b9bfc6;
     }
 }
+
+/* Loading state */
+.is-loading { position: relative; overflow: hidden; }
+.is-loading .clark-hero-value,
+.is-loading .clark-hero-sub,
+.is-loading .clark-goal-target,
+.is-loading .clark-goal-current,
+.is-loading .clark-goal-remaining,
+.is-loading .clark-stat-value,
+.is-loading .clark-stat-sub { visibility: hidden; }
+.is-loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    animation: dash-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes dash-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

@@ -737,3 +737,22 @@ body {
         --hairline-strong: #b9bfc6;
     }
 }
+
+/* Loading state (cards only) */
+.clark-summary-card.is-loading,
+.clark-capital.is-loading { position: relative; overflow: hidden; }
+.clark-summary-card.is-loading .clark-summary-count,
+.clark-summary-card.is-loading .clark-summary-net,
+.clark-capital.is-loading .clark-capital-value { visibility: hidden; }
+.clark-summary-card.is-loading::before,
+.clark-capital.is-loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    animation: operations-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes operations-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 
 <link rel="stylesheet" href="{% static 'dashboard.css' %}">
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
@@ -8,9 +9,7 @@
     {% include "sidebar.html" %}
 
 
-    <!-- --------------------------------------------              -------------------------------------------- -->
     <!-- -------------------------------------------- Main Content -------------------------------------------- -->
-    <!-- --------------------------------------------              -------------------------------------------- -->
 
     <main class="clark-main">
 
@@ -21,17 +20,17 @@
 
         <!-- Hero Metrics -->
         <section class="clark-hero">
-            <div class="clark-hero-card">
+            <div class="clark-hero-card is-loading">
                 <div class="clark-hero-label">Patrimônio Acumulado</div>
-                <div class="clark-hero-value" id="total_patrimony">丰 {{ patrimonio_btc|default:"0.00000" }}</div>
-                <div class="clark-hero-sub" id="usd_patrimony">${{ patrimonio_usd|default:"0.00" }}</div>
+                <div class="clark-hero-value" id="total_patrimony">N/A</div>
+                <div class="clark-hero-sub" id="usd_patrimony">N/A</div>
             </div>
 
 
-            <div class="clark-hero-card">
+            <div class="clark-hero-card is-loading">
                 <div class="clark-hero-label">Resultado Acumulado</div>
-                <div class="clark-hero-value" id="resultado_acumulado"></div>
-                <div class="clark-hero-sub" id="resultado_acumulado_usd">$0.00</div>
+                <div class="clark-hero-value" id="resultado_acumulado">N/A</div>
+                <div class="clark-hero-sub" id="resultado_acumulado_usd">N/A</div>
             </div>
         </section>
 
@@ -47,15 +46,15 @@
 
         <!-- ---------------------------------------------- Goal Progress ---------------------------------------------- -->
 
-        <div class="clark-goal" id="goal-progress">
+        <div class="clark-goal is-loading" id="goal-progress">
 
             <div class="clark-goal-head">
                 <span class="clark-goal-label">Objetivo</span>
                 <button class="clark-goal-change" id="change-goal" type="button">Alterar Objetivo</button>
             </div>
 
-            <div class="clark-goal-target" id="goal_target">0,00000 sats</div>
-            <div class="clark-goal-current" id="current_goal_state">0,00000 sats</div>
+            <div class="clark-goal-target" id="goal_target">N/A</div>
+            <div class="clark-goal-current" id="current_goal_state">N/A</div>
 
             <div class="clark-goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="24.96">
                 <div class="clark-goal-fill" id="goal_progress_bar" style="width: 0%;"></div>
@@ -69,28 +68,28 @@
 
         <div class="clark-stats">
             
-            <div class="clark-stat">
+            <div class="clark-stat is-loading">
                 <div class="clark-stat-label">Operações Realizadas</div>
-                <div class="clark-stat-value" id="total_operations"></div>
+                <div class="clark-stat-value" id="total_operations">N/A</div>
             </div>
 
 
-            <div class="clark-stat">
+            <div class="clark-stat is-loading">
                 <div class="clark-stat-label">Ordens Abertas</div>
-                <div class="clark-stat-value" id="open_orders">0</div>
+                <div class="clark-stat-value" id="open_orders">N/A</div>
             </div>
 
 
-            <div class="clark-stat">
+            <div class="clark-stat is-loading">
                 <div class="clark-stat-label">Taxas</div>
-                <div class="clark-stat-value" id="total_fees"> 丰 0.00 </div>
-                <div class="clark-stat-sub" id="total_fees_usd">$0.00</div>
+                <div class="clark-stat-value" id="total_fees"> N/A </div>
+                <div class="clark-stat-sub" id="total_fees_usd">N/A</div>
             </div>
 
-            <div class="clark-stat">
+            <div class="clark-stat is-loading">
                 <div class="clark-stat-label">Margem Exposta</div>
-                <div class="clark-stat-value" id="total_margin_used"> 丰 0.00 </div>
-                <div class="clark-stat-sub" id="total_margin_used_usd">$0.00</div>
+                <div class="clark-stat-value" id="total_margin_used"> N/A </div>
+                <div class="clark-stat-sub" id="total_margin_used_usd">N/A</div>
             </div>
 
         </div>
@@ -118,26 +117,6 @@
 
         <div class="clark-ops" id="last_operations"></div>
     </main>
-</div>
-
-
-<!-- ------------------------------------------------- Invoice Modal ------------------------------------------------- -->
-
-<div id="modal-invoice" class="clark-modal">
-    <div class="clark-modal-content">
-        <h3 class="clark-modal-title">confirme seu pagamento</h3>
-        <p class="clark-modal-text">
-            Se o pagamento foi feito e não foi confirmado, aguarde alguns minutos e atualize a página.
-            Se mesmo assim não for, entre em contato enviando comprovante, email, e o id abaixo.
-        </p>
-        <img id="qrcode-img" src="" alt="qr_code">
-        <p class="clark-modal-highlight"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Lightning: R$25</p>
-        <p id="deposit-id" class="clark-modal-id"></p>
-        <p id="payment-request" class="clark-modal-hash"></p>
-        <p class="clark-modal-features"><span><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Compra Automática</span><br><span><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Venda Automática</span></p>
-        <p class="clark-modal-expiry">expira em 2 minutos</p>
-        <button id="btn-pagamento" class="clark-btn">já paguei</button>
-    </div>
 </div>
 
 

@@ -8,6 +8,7 @@
 <meta name="description" content="Onboarding do Clark — cinco passos para ativar a automação da sua estratégia de Bitcoin com controle total do capital.">
 <title>Clark — Configurar minha automação</title>
 <link rel="stylesheet" href="{% static 'onboarding.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
 
@@ -30,73 +31,69 @@
 <!-- ============== TELA 1 — O QUE É O CLARK ============== -->
 <section class="step active" id="step-1" data-step="1" aria-labelledby="step1-title">
   <div class="step-inner">
-    <h1 id="step1-title">Sua estratégia de Bitcoin.<br><span class="accent">Rodando automaticamente.</span></h1>
+
+    <h1 id="step1-title">Acumule Bitcoin automaticamente.<br><span class="accent">7 dias grátis com zero KYC.</span></h1>
     <p class="lead">
-      Visibilidade total e controle sobre o seu capital. Operações explicadas com taxas visíveis e resultado líquido claro.
+      Patrimônio, resultado acumulado, operações, ordens abertas, taxas e margem exposta, tudo em um só lugar.
     </p>
 
     <div class="trust-row">
       <div class="trust-item">
+
         <div class="trust-head">
-          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/> <path d="M9 12l2 2 4-4"/> </svg>
           <span class="trust-label">NON-CUSTODIAL</span>
         </div>
-        <span class="trust-desc">Seus fundos permanecem na sua exchange.</span>
+        <span class="trust-desc">Fundos ficam na sua exchange. A API só opera, não movimenta capital.</span>
       </div>
+
       <div class="trust-item">
         <div class="trust-head">
-          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/> <circle cx="12" cy="12" r="3"/> </svg>
           <span class="trust-label">VISIBILIDADE TOTAL</span>
         </div>
-        <span class="trust-desc">Cada operação vem com o porquê explicado.</span>
+        <span class="trust-desc">Patrimônio, resultado líquido, ordens abertas e margem exposta — tudo visível.</span>
       </div>
+
       <div class="trust-item">
         <div class="trust-head">
-          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="4" y1="8" x2="20" y2="8"/>
-            <circle cx="9" cy="8" r="2.2" fill="var(--surface)"/>
-            <line x1="4" y1="16" x2="20" y2="16"/>
-            <circle cx="15" cy="16" r="2.2" fill="var(--surface)"/>
-          </svg>
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <line x1="4" y1="8" x2="20" y2="8"/> <circle cx="9" cy="8" r="2.2" fill="var(--surface)"/> <line x1="4" y1="16" x2="20" y2="16"/> <circle cx="15" cy="16" r="2.2" fill="var(--surface)"/> </svg>
           <span class="trust-label">VOCÊ NO CONTROLE</span>
         </div>
-        <span class="trust-desc">Interrompa a automação quando quiser.</span>
+        <span class="trust-desc">Configure a estratégia, opere com até 10x de alavancagem e pare quando quiser.</span>
       </div>
+
     </div>
 
     <!-- Mini mock do dashboard (prova visual) -->
     <div class="mock-mini" aria-hidden="true">
-      <div class="mock-mini-header">
+        <div class="mock-mini-header">
         <span class="mock-mini-logo">CLARK</span>
         <span class="mock-mini-status"><i class="dot"></i> AUTOMAÇÃO ATIVA</span>
-      </div>
-      <div class="mock-mini-main">
+    </div>
+
+    <div class="mock-mini-main">
         <div class="mock-mini-block">
           <span class="mock-mini-label">PATRIMÔNIO</span>
           <span class="mock-mini-big">丰 8,421,000</span>
         </div>
+        
         <div class="mock-mini-block right">
-          <span class="mock-mini-label">RESULTADO · 30 DIAS</span>
+          <span class="mock-mini-label">RESULTADO ACUMULADO</span>
           <span class="mock-mini-big up">丰 231,000</span>
         </div>
-      </div>
+    </div>
 
-      <div class="mock-mini-feed">
-        <div class="feed-row"><span class="ok">✓ VENDA</span><span>16:48</span><span class="up">+丰 42,000 líquido</span></div>
-        <div class="feed-row"><span class="ok">✓ COMPRA</span><span>14:32</span><span>丰 960,000</span></div>
+    <div class="mock-mini-feed">
+        <div class="feed-row"><span class="ok">✓ VENDA</span><span>16:48</span><span class="up">+ 42,000</span></div>
+        <div class="feed-row"><span class="ok">✓ VENDA</span><span>14:32</span><span class="up">+ 960,000</span></div>
       </div>
     </div>
 
     <p class="proof">+100 operações reais nos últimos 30 dias · resultado líquido acumulado positivo</p>
 
     <div class="step-cta">
-      <button class="btn btn-solid btn-lg" data-next="2">Começar configuração</button>
+      <button class="btn btn-solid btn-lg" data-next="2">Começar teste grátis</button>
     </div>
   </div>
 </section>
@@ -198,7 +195,7 @@
   <div class="step-inner">
 
     <!-- ÁREA 1: EXPLICAÇÃO -->
-    <p class="kicker">PASSO 4 · REVISAR RISCO</p>
+    <p class="kicker">PASSO 4 · VEJA O QUE VAI RODAR</p>
     <h1 id="step4-title">Veja exatamente o que vai rodar antes de ativar</h1>
 
     <!-- ÁREA 2: FLUXO DE DECISÃO (timeline centralizada) -->
@@ -316,10 +313,10 @@
     <label class="checkbox">
       <input type="checkbox" id="riskAck">
       <span>
-        <strong>Eu entendo os riscos.</strong>
-        Operar Bitcoin envolve risco de perda parcial do capital exposto.
-        Resultados passados não garantem resultados futuros. A automação
-        executa a <em>minha</em> estratégia — não é aconselhamento financeiro.
+        <strong>Eu assumo a responsabilidade.</strong>
+        Ao aceitar, entendo que operar Bitcoin envolve risco de perda do capital exposto.
+        Resultados passados não garantem resultados futuros. O Clark executa a estratégia que você configurou.
+        Não é aconselhamento financeiro.
       </span>
     </label>
 
@@ -350,7 +347,7 @@
         <strong>R$150</strong>
         <span class="price-per">/mês</span>
       </div>
-      <p class="price-via">Via Lightning Network ou Pix</p>
+      <p class="price-via">Mensalidade em Pix</p>
 
       <div class="plan_coupon_row">
         <div class="plan_discount_row">
@@ -387,6 +384,13 @@
 
 <!-- JS do wizard — separado em source/scripts/onboarding.ts → static/javascript/onboarding.js -->
 <script type="module" src="{% static 'javascript/onboarding.js' %}"></script>
+
+<!-- Card premium fixo — automações ativas -->
+<aside class="premium-float-card" aria-label="Automações ativas">
+  <span class="premium-float-card__dot" aria-hidden="true"></span>
+  <span class="premium-float-card__count">34</span>
+  <span class="premium-float-card__label">automações ativas</span>
+</aside>
 
 </body>
 </html>

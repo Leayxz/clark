@@ -365,3 +365,21 @@
         background: rgba(236, 238, 241, .68);
     }
 }
+
+/* Loading state (cards only) */
+.clark-automation-block.is-loading { position: relative; overflow: hidden; }
+.clark-automation-block.is-loading .clark-automation-status,
+.clark-automation-block.is-loading .clark-meta-value,
+.clark-automation-block.is-loading .clark-automation-label,
+.clark-automation-block.is-loading .clark-meta-label { visibility: hidden; }
+.clark-automation-block.is-loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    animation: sidebar-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes sidebar-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

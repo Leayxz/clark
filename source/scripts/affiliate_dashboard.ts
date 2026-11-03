@@ -66,11 +66,15 @@ function renderTier(dashboard: AffiliateDashboard): void {
 
     setText("tier_hero_pct", `${dashboard.tier_percentual}%`);
 
-    if (dashboard.next_tier === "—") {
-        setText("tier_cta", "Você já está no tier mais alto");
-        setText("tier_reward", `${dashboard.tier_percentual}%`);
+    if (dashboard.tier === "Ouro") {
+        setText("tier_cta", "Parabéns! Você chegou ao nível mais alto.");
+        setText("tier_reward", "");
+        const sep = document.querySelector(".clark-tier-sep");
+        if (sep) (sep as HTMLElement).style.display = "none";
         return;
     }
+    const sep = document.querySelector(".clark-tier-sep");
+    if (sep) (sep as HTMLElement).style.display = "";
 
     setText("tier_cta", `Faltam ${dashboard.remaining_to_next} para o ${dashboard.next_tier}`);
     setText("tier_reward", `${dashboard.next_tier_percentual}%`);

@@ -151,7 +151,7 @@ select:focus-visible,
 
 /* ---------- Tela 1 â€” Mini mock do dashboard (prova visual) ---------- */
 .mock-mini {
-  max-width: 560px;
+  max-width: 90%;
   margin: 0 auto 24px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -233,13 +233,13 @@ select:focus-visible,
   font-size: 12px;
   letter-spacing: .22em;
   color: var(--dim);
-  margin: -8% 0% 1% 0%;
+  margin: -12% 0% 1% 0%;
   text-align: center;
 }
 .step h1 {
   font-size: clamp(28px, 4vw, 38px);
   font-weight: 750;
-  margin: -7% 0% 1% 0%;   /* step 1 hero: compensa padding-top grande */
+  margin: -10% 0% 2% 0%;   /* step 1 hero: compensa padding-top grande */
   text-align: center;
 }
 
@@ -995,7 +995,38 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
-/* Tema claro (respeita preferÃªncia do sistema, mantendo dark-first) */
+/* ---------- Passo 4 — correção de margins (contexto por tela) ---------- */
+.step[data-step="4"] .kicker {margin: -10% 0% 1% 0%;}
+.step[data-step="4"] .timeline-machine { margin: 0 auto; }
+.step[data-step="4"] .idle-message { margin: 24px auto 0; }
+.step[data-step="4"] .risk-table { margin-bottom: 16px; }
+.step[data-step="4"] .net-demo { margin: 0 auto 16px; }
+.step[data-step="4"] .checkbox { margin-bottom: 16px; }
+
+
+/* ------------------------------ Card premium fixo (bottom-right) ------------------------------ */
+
+.premium-float-card {
+  position: fixed; right: 20px; bottom: 20px; z-index: 50;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  font-family: var(--math); font-size: 12px; letter-spacing: .06em;
+}
+.premium-float-card__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--up);
+  box-shadow: 0 0 0 3px rgba(52,192,124,.18);
+  animation: premiumDotPulse 1.6s ease-in-out infinite;
+}
+@keyframes premiumDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .4; transform: scale(1.35); }
+}
+.premium-float-card__count { font-weight: 700; color: var(--text); }
+.premium-float-card__label { color: var(--muted); text-transform: uppercase; }
 @media (prefers-color-scheme: light) {
   :root {
     --bg: #f6f7f9;

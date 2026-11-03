@@ -51,7 +51,7 @@ class AffiliateRepository:
 
             if paying_users >= AffiliateTier.OURO:
                 tier, tier_percentual = "Ouro", AffiliateCommission.OURO
-                next_tier, next_threshold, next_percentual = "—", 0, 0
+                next_tier, next_threshold, next_percentual = "N/A", 0, 0
                 remaining = Decimal("0")
 
             elif paying_users >= AffiliateTier.PRATA:
